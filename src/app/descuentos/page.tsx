@@ -15,7 +15,7 @@ const Page = async () => {
     (descuento) => ({
       id: descuento.id,
       titulo: descuento.titulo,
-      porcentaje: `${descuento.porcentaje}`,
+      porcentaje: `${descuento.porcentaje} %`,
     }),
   )
 
