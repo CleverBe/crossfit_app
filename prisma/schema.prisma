@@ -1,0 +1,186 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  USER
+}
+
+enum Genero {
+  MASCULINO
+  FEMENINO
+}
+
+enum Turno {
+  MANANA
+  TARDE
+  NOCHE
+}
+
+enum Estado {
+  ACTIVO
+  INACTIVO
+}
+
+model Imagen {
+  id        String   @id @default(uuid())
+  publicId  String
+  secureUrl String
+  userId    String   @unique // 1 to 1
+  user      Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  nombre    String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  imagen    Imagen?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Instructor {
+  id              String           @id @default(uuid())
+  nombre          String
+  apellido        String
+  email           String           @unique
+  genero          Genero
+  celular         String
+  estado          Estado           @default(ACTIVO)
+  horarioPeriodos HorarioPeriodo[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model Horario {
+  id              String           @id @default(uuid())
+  hora_inicio     String
+  hora_fin        String
+  turno           Turno
+  estado          Estado           @default(ACTIVO)
+  horarioPeriodos HorarioPeriodo[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model HorarioPeriodo {
+  id           String      @id @default(uuid())
+  periodo      String
+  horarioId    String
+  horario      Horario     @relation(fields: [horarioId], references: [id], onDelete: Cascade)
+  instructorId String?
+  instructor   Instructor? @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  planes       Plan[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([periodo, horarioId])
+}
+
+enum Dias {
+  LUNES
+  MARTES
+  MIERCOLES
+  JUEVES
+  VIERNES
+  SABADO
+  DOMINGO
+}
+
+model TipoDePlan {
+  id        String   @id @default(uuid())
+  tipo      String
+  costo     Decimal
+  dias      Dias[]
+  planes    Plan[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cliente {
+  id               String   @id @default(uuid())
+  nombre           String
+  apellido         String
+  genero           Genero
+  celular          String
+  fecha_nacimiento String
+  planes           Plan[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([nombre, apellido])
+}
+
+model Descuento {
+  id         String   @id @default(uuid())
+  titulo     String   @unique
+  porcentaje Decimal
+  planes     Plan[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum PlanEstado {
+  VIGENTE
+  FINALIZADO
+}
+
+model Plan {
+  id                String         @id @default(uuid())
+  fecha_inscripcion String
+  fecha_inicio      String
+  fecha_fin         String
+  peso_cliente      Decimal
+  estatura_cliente  Decimal
+  estado            PlanEstado     @default(VIGENTE)
+  clienteId         String
+  cliente           Cliente        @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  tipoDePlanId      String
+  tipoDePlan        TipoDePlan     @relation(fields: [tipoDePlanId], references: [id], onDelete: Cascade)
+  horarioPeriodoId  String
+  horarioPeriodo    HorarioPeriodo @relation(fields: [horarioPeriodoId], references: [id], onDelete: Cascade)
+  asistencias       Asistencias[]
+  pago              Pago?
+  descuentoId       String?
+  descuento         Descuento?     @relation(fields: [descuentoId], references: [id], onDelete: Cascade)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model Asistencias {
+  id        String   @id @default(uuid())
+  fecha     String
+  estado    Boolean  @default(false)
+  planId    String
+  plan      Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TipoDePago {
+  EFECTIVO
+  TARJETA
+  QR
+}
+
+model Pago {
+  id            String     @id @default(uuid())
+  monto         Decimal
+  fecha_de_pago String
+  tipo_de_pago  TipoDePago @default(EFECTIVO)
+  planId        String     @unique
+  plan          Plan       @relation(fields: [planId], references: [id], onDelete: Cascade)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
