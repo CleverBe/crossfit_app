@@ -6,7 +6,7 @@ import { CellAction } from "./cell-actions"
 export type TipoDePlanColumn = {
   id: string
   tipo: string
-  dias: string[]
+  dias: string
   costo: string
 }
 

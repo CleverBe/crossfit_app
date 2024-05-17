@@ -10,6 +10,8 @@ export const getTipoDePlanSchema = z.object({
 
 export type TipoDePlanFromApi = z.infer<typeof getTipoDePlanSchema>
 
+export const getTiposDePlanesSchema = z.array(getTipoDePlanSchema)
+
 export const formattedTipoDePlan = z.object({
   ...getTipoDePlanSchema.shape,
   dias: z.array(

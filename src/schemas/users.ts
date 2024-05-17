@@ -3,8 +3,7 @@ import { z } from "zod"
 
 export enum Role {
   ADMIN = "ADMIN",
-  EDITOR = "EDITOR",
-  USER = "USER",
+  MANAGER = "MANAGER",
 }
 
 export const getUserSchema = z.object({

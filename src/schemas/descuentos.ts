@@ -8,6 +8,8 @@ export const getDescuentoSchema = z.object({
 
 export type DescuentoFromApi = z.infer<typeof getDescuentoSchema>
 
+export const getDescuentosSchema = z.array(getDescuentoSchema)
+
 const createDescuentoSchema = z.object({
   titulo: z.string().min(4),
   porcentaje: z.coerce.number().nonnegative(),

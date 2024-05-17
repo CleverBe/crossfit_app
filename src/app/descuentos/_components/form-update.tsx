@@ -94,7 +94,7 @@ export const FormUpdate = ({ descuento, onClose }: Props) => {
           name="porcentaje"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Porcentaje</FormLabel>
+              <FormLabel>Porcentaje %</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
@@ -120,7 +120,7 @@ FormUpdate.Skeleton = function FormUpdateSkeleton() {
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="space-y-2">
-        <Label>Porcentaje</Label>
+        <Label>Porcentaje %</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="flex items-center justify-end">

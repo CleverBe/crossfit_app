@@ -1,4 +1,4 @@
-import { Horario } from "@prisma/client"
+import { Dias, Horario } from "@prisma/client"
 
 export const sleep = async (miliseconds: number = 1000) => {
   await new Promise((resolve) => setTimeout(resolve, miliseconds))
@@ -61,4 +61,61 @@ export const getCurrentDateYYYYMMDD = () => {
   const day = date.getDate().toString().padStart(2, "0")
 
   return `${year}-${month}-${day}`
+}
+
+export const getCurrentPeriodoYYYYMM = () => {
+  // Obtener la fecha actual
+  const fechaActual = new Date()
+
+  // Obtener el año y el mes
+  const año = fechaActual.getFullYear()
+  // El mes se devuelve en base 0 (enero es 0, febrero es 1, etc.), por lo que sumamos 1
+  const mes = (fechaActual.getMonth() + 1).toString().padStart(2, "0")
+
+  // Formatear en el formato deseado (YYYY-MM)
+  return `${año}-${mes}`
+}
+
+export const sortDays = (days: Dias[]) => {
+  days.sort((a, b) => {
+    const diasOrden = [
+      Dias.LUNES,
+      Dias.MARTES,
+      Dias.MIERCOLES,
+      Dias.JUEVES,
+      Dias.VIERNES,
+      Dias.SABADO,
+      Dias.DOMINGO,
+    ]
+    return diasOrden.indexOf(a) - diasOrden.indexOf(b)
+  })
+
+  return days
+}
+
+export const formatDays = (days: Dias[]) => {
+  const diasOrdenados = sortDays(days)
+
+  const formattedDays = diasOrdenados.map((day) => {
+    switch (day) {
+      case Dias.LUNES:
+        return "L"
+      case Dias.MARTES:
+        return "M"
+      case Dias.MIERCOLES:
+        return "X"
+      case Dias.JUEVES:
+        return "J"
+      case Dias.VIERNES:
+        return "V"
+      case Dias.SABADO:
+        return "S"
+      case Dias.DOMINGO:
+        return "D"
+      default:
+        return ""
+    }
+  })
+
+  return formattedDays.join(",")
 }

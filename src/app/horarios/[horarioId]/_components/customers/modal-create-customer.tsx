@@ -9,7 +9,11 @@ import {
 import { FormCreate } from "./form-create"
 import { useCustomerModalCreate } from "../../_hooks/useCustomerModal"
 
-export function ModalCreate() {
+interface Props {
+  periodo: string
+}
+
+export function ModalCreateCustomer({ periodo }: Props) {
   const modalCreate = useCustomerModalCreate()
 
   return (
@@ -19,7 +23,7 @@ export function ModalCreate() {
           <DialogTitle>Create Customer Plan</DialogTitle>
         </DialogHeader>
         <div className="flex items-center justify-center">
-          <FormCreate />
+          <FormCreate periodo={periodo} />
         </div>
       </DialogContent>
     </Dialog>

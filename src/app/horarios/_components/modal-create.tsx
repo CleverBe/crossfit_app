@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { FormCreate } from "./form-create"
-import { useHorarioModalCreate } from "../_hooks/use-user-modal"
+import { useHorarioModalCreate } from "../_hooks/use-horario-modal"
 
 export function ModalCreate() {
   const modalCreate = useHorarioModalCreate()

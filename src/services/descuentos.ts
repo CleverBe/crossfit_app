@@ -3,7 +3,16 @@ import {
   CreateDescuentoInputClient,
   UpdateDescuentoInput,
   getDescuentoSchema,
+  getDescuentosSchema,
 } from "@/schemas/descuentos"
+
+export const getDescuentosFn = async () => {
+  const response = await axiosInstance.get(`api/descuentos`)
+
+  const validatedData = getDescuentosSchema.parse(response.data)
+
+  return validatedData
+}
 
 export const getDescuentoFn = async (id: string) => {
   const response = await axiosInstance.get(`api/descuentos/${id}`)

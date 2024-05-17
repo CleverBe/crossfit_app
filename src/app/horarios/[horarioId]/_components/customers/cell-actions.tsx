@@ -14,35 +14,39 @@ import { AlertModal } from "@/components/modals/alertModal"
 import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { HorarioColumn } from "./columns"
-import { useHorarioModalUpdate } from "../_hooks/use-horario-modal"
-import { deleteHorarioFn } from "@/services/horarios"
+import { PlanColumn } from "./columns"
+import { useCustomerModalUpdate } from "../../_hooks/useCustomerModal"
+import { usePlanModalUpdate } from "../../_hooks/usePlanModal"
+import { deletePlanFn } from "@/services/plan"
 
 interface CellActionProps {
-  horario: HorarioColumn
+  plan: PlanColumn
 }
 
-export const CellAction = ({ horario }: CellActionProps) => {
+export const CellAction = ({ plan }: CellActionProps) => {
   const router = useRouter()
-  const modalUpdate = useHorarioModalUpdate()
   const queryClient = useQueryClient()
 
   const [open, setOpen] = useState(false)
 
+  const modalUpdateCustomer = useCustomerModalUpdate()
+
+  const modalUpdatePlan = usePlanModalUpdate()
+
   const { mutate, isPending } = useMutation({
-    mutationFn: deleteHorarioFn,
+    mutationFn: deletePlanFn,
   })
 
   const onDelete = async () => {
-    mutate(horario.id, {
+    mutate(plan.id, {
       onSuccess: () => {
         queryClient.removeQueries({
-          queryKey: ["horarios", horario.id],
+          queryKey: ["planes", plan.id],
           exact: true,
         })
-        queryClient.invalidateQueries({ queryKey: ["horarios"] })
+        queryClient.invalidateQueries({ queryKey: ["planes"] })
         router.refresh()
-        toast.success(`Horario deleted.`)
+        toast.success(`Plan deleted.`)
         setOpen(false)
       },
       onError: () => {
@@ -70,11 +74,19 @@ export const CellAction = ({ horario }: CellActionProps) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() => {
-              modalUpdate.onOpen(horario.id)
+              modalUpdateCustomer.onOpen(plan.customerId)
             }}
           >
-            <Edit className="mr-2 h-4 w-4" />
-            Update
+            <Eye className="mr-2 h-4 w-4" />
+            Details Customer
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              modalUpdatePlan.onOpen(plan.id)
+            }}
+          >
+            <Eye className="mr-2 h-4 w-4" />
+            Details Plan
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
@@ -83,14 +95,6 @@ export const CellAction = ({ horario }: CellActionProps) => {
           >
             <Trash className="mr-2 h-4 w-4" />
             Delete
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              router.push(`/horarios/${horario.id}`)
-            }}
-          >
-            <Eye className="mr-2 h-4 w-4" />
-            See
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

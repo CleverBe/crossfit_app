@@ -13,14 +13,14 @@ interface Props {
   changePeriodoFiltro: (newValue: string | null) => void
 }
 
-export function ModalCreate({ changePeriodoFiltro }: Props) {
+export function ModalCreatePeriodo({ changePeriodoFiltro }: Props) {
   const modalCreate = useHorarioPeriodoModalCreate()
 
   return (
     <Dialog open={modalCreate.isOpen} onOpenChange={modalCreate.onClose}>
       <DialogContent className="max-h-[calc(100vh-210px)] w-11/12 overflow-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Create Horario</DialogTitle>
+          <DialogTitle>Create Periodo</DialogTitle>
         </DialogHeader>
         <FormCreate changePeriodoFiltro={changePeriodoFiltro} />
       </DialogContent>

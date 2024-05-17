@@ -16,7 +16,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { handleGeneralErrors } from "@/lib/utils"
 import { useMutation } from "@tanstack/react-query"
-import { useHorarioModalCreate } from "../_hooks/use-user-modal"
+import { useHorarioModalCreate } from "../_hooks/use-horario-modal"
 import {
   CreateHorarioInput,
   createHorarioSchemaClient,

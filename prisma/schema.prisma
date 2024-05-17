@@ -9,8 +9,7 @@ datasource db {
 
 enum Role {
   ADMIN
-  EDITOR
-  USER
+  MANAGER
 }
 
 enum Genero {
@@ -44,7 +43,7 @@ model Usuario {
   nombre    String
   email     String   @unique
   password  String
-  role      Role     @default(USER)
+  role      Role     @default(MANAGER)
   imagen    Imagen?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -110,16 +109,18 @@ model TipoDePlan {
 
 model Cliente {
   id               String   @id @default(uuid())
-  nombre           String
-  apellido         String
+  nombre_completo  String
   genero           Genero
   celular          String
   fecha_nacimiento String
+  peso             Decimal?
+  estatura         Decimal?
+  cedula           String
   planes           Plan[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  @@unique([nombre, apellido])
+  @@unique([nombre_completo, cedula])
 }
 
 model Descuento {
@@ -141,8 +142,8 @@ model Plan {
   fecha_inscripcion String
   fecha_inicio      String
   fecha_fin         String
-  peso_cliente      Decimal
-  estatura_cliente  Decimal
+  peso_cliente      Decimal?
+  estatura_cliente  Decimal?
   estado            PlanEstado     @default(VIGENTE)
   clienteId         String
   cliente           Cliente        @relation(fields: [clienteId], references: [id], onDelete: Cascade)
@@ -151,7 +152,8 @@ model Plan {
   horarioPeriodoId  String
   horarioPeriodo    HorarioPeriodo @relation(fields: [horarioPeriodoId], references: [id], onDelete: Cascade)
   asistencias       Asistencias[]
-  pago              Pago?
+  pagoId            String         @unique
+  pago              Pago           @relation(fields: [pagoId], references: [id], onDelete: Cascade)
   descuentoId       String?
   descuento         Descuento?     @relation(fields: [descuentoId], references: [id], onDelete: Cascade)
   createdAt         DateTime       @default(now())
@@ -179,8 +181,7 @@ model Pago {
   monto         Decimal
   fecha_de_pago String
   tipo_de_pago  TipoDePago @default(EFECTIVO)
-  planId        String     @unique
-  plan          Plan       @relation(fields: [planId], references: [id], onDelete: Cascade)
+  plan          Plan?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 }

@@ -1,8 +1,7 @@
 import prismadb from "@/lib/prismadb"
 import { notFound } from "next/navigation"
-import { Heading } from "./_components/heading"
 import { Estado } from "@prisma/client"
-import { Modals } from "./_components/modals"
+import { MainContent } from "./_components/main-content"
 
 interface Props {
   params: {
@@ -37,10 +36,36 @@ const Page = async ({ params }: Props) => {
     notFound()
   }
 
+  const planes = await prismadb.plan.findMany({
+    where: {
+      horarioPeriodoId: horario.horarioPeriodos[0]?.id ?? "", // TODO: Fix this
+    },
+    include: {
+      tipoDePlan: true,
+      cliente: true,
+    },
+  })
+
+  const formattedPlanes = planes.map((plan) => {
+    return {
+      id: plan.id,
+      customerId: plan.cliente.id,
+      nombre: plan.cliente.nombre_completo,
+      celular: plan.cliente.celular,
+      cedula: plan.cliente.cedula,
+      tipoDePlan: plan.tipoDePlan.tipo,
+      fecha_inicio: plan.fecha_inicio,
+      fecha_fin: plan.fecha_fin,
+    }
+  })
+
   return (
     <main>
-      <Heading horario={horario} instructores={instructores} />
-      <Modals />
+      <MainContent
+        horario={horario}
+        instructores={instructores}
+        customers={formattedPlanes}
+      />
     </main>
   )
 }

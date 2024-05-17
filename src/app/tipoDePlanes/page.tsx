@@ -3,6 +3,7 @@ import { TipoDePlanColumn, columns } from "./_components/columns"
 import { Heading } from "./_components/heading"
 import { DataTable } from "@/components/ui/data-table"
 import { Modals } from "./_components/modals"
+import { sortDays } from "@/utils"
 
 const Page = async () => {
   const tipoDePlanes = await prismadb.tipoDePlan.findMany({
@@ -15,7 +16,7 @@ const Page = async () => {
     (tipoDePlan) => ({
       id: tipoDePlan.id,
       tipo: tipoDePlan.tipo,
-      dias: tipoDePlan.dias,
+      dias: sortDays(tipoDePlan.dias).join(", "),
       costo: `${tipoDePlan.costo}`,
     }),
   )

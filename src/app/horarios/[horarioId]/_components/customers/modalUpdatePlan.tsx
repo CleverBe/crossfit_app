@@ -6,9 +6,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { FormUpdate } from "./form-update"
 import { toast } from "sonner"
-import { useHorario } from "../_hooks/use-horario"
+import { FormUpdatePlan } from "./formUpdatePlan"
+import { usePlan } from "../../_hooks/usePlan"
 
 interface Props {
   id: string
@@ -16,8 +16,8 @@ interface Props {
   onClose: () => void
 }
 
-export function ModalUpdate({ id, isOpen, onClose }: Props) {
-  const { data, isFetching, isError } = useHorario(id)
+export function ModalUpdatePlan({ id, isOpen, onClose }: Props) {
+  const { data, isFetching, isError } = usePlan(id)
 
   if (isError && !isFetching) {
     toast.error("Something went wrong")
@@ -27,12 +27,12 @@ export function ModalUpdate({ id, isOpen, onClose }: Props) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-[calc(100vh-210px)] w-11/12 overflow-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Edit Horario</DialogTitle>
+          <DialogTitle>Edit Plan</DialogTitle>
         </DialogHeader>
         {!data || isFetching ? (
-          <FormUpdate.Skeleton />
+          <FormUpdatePlan.Skeleton />
         ) : (
-          <FormUpdate horario={data} onClose={onClose} />
+          <FormUpdatePlan plan={data} onClose={onClose} />
         )}
       </DialogContent>
     </Dialog>

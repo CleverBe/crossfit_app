@@ -1,6 +1,6 @@
 "use client"
 
-import { useHorarioModalUpdate } from "../_hooks/use-user-modal"
+import { useHorarioModalUpdate } from "../_hooks/use-horario-modal"
 import { ModalCreate } from "./modal-create"
 import { ModalUpdate } from "./modal-update"
 

@@ -2,7 +2,7 @@ import prismadb from "@/lib/prismadb"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { createCustomerSchemaServer } from "@/schemas/customer"
 import { getCurrentDateYYYYMMDD } from "@/utils"
-import { Prisma } from "@prisma/client"
+import { Descuento, Prisma } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export const POST = async (
@@ -21,9 +21,9 @@ export const POST = async (
   }
 
   const {
-    nombre,
-    apellido,
+    nombre_completo,
     genero,
+    cedula,
     celular,
     fecha_nacimiento,
     fecha_inicio,
@@ -67,27 +67,53 @@ export const POST = async (
       )
     }
 
-    const descuento = await prismadb.descuento.findUnique({
-      where: {
-        id: descuentoId,
-      },
-    })
+    let descuento: Descuento | null = null
 
-    if (!descuento) {
-      return NextResponse.json(
-        { message: "Descuento not found" },
-        { status: 404 },
-      )
+    if (descuentoId) {
+      descuento = await prismadb.descuento.findUnique({
+        where: {
+          id: descuentoId,
+        },
+      })
+
+      if (!descuento) {
+        return NextResponse.json(
+          { message: "Descuento not found / descuentoId is optional" },
+          { status: 404 },
+        )
+      }
     }
 
     const data = await prismadb.$transaction(async (tx) => {
       const customer = await tx.cliente.create({
         data: {
-          nombre,
-          apellido,
+          nombre_completo,
           celular,
+          cedula,
           fecha_nacimiento,
           genero,
+          peso: peso_cliente,
+          estatura,
+        },
+      })
+
+      let resultadoCosto = +tipoDePlan.costo
+
+      if (descuento) {
+        const costoDelPlan = +tipoDePlan.costo
+
+        const porcentaje = +descuento.porcentaje
+
+        const valorPorcentaje = (porcentaje / 100) * costoDelPlan
+
+        resultadoCosto = costoDelPlan - valorPorcentaje
+      }
+
+      const pagoCliente = await tx.pago.create({
+        data: {
+          tipo_de_pago: tipoDePago,
+          fecha_de_pago: currentDate,
+          monto: resultadoCosto,
         },
       })
 
@@ -101,33 +127,18 @@ export const POST = async (
           peso_cliente,
           estatura_cliente: estatura,
           horarioPeriodoId: periodo.id,
-          descuentoId: descuento.id,
+          descuentoId: descuento?.id,
+          pagoId: pagoCliente.id,
         },
         include: {
           tipoDePlan: true,
           cliente: true,
           descuento: true,
+          pago: true,
         },
       })
 
-      const costoDelPlan = +tipoDePlan.costo
-
-      const porcentaje = +descuento.porcentaje
-
-      const valorPorcentaje = (porcentaje / 100) * costoDelPlan
-
-      const resultadoCosto = costoDelPlan - valorPorcentaje
-
-      const pagoCliente = await tx.pago.create({
-        data: {
-          tipo_de_pago: tipoDePago,
-          planId: plan.id,
-          fecha_de_pago: currentDate,
-          monto: resultadoCosto,
-        },
-      })
-
-      return { plan, pagoCliente }
+      return plan
     })
 
     return NextResponse.json(data)
@@ -136,9 +147,9 @@ export const POST = async (
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         // @ts-ignore
-        if (error.meta?.target.includes("nombre")) {
+        if (error.meta?.target.includes("cedula")) {
           return NextResponse.json(
-            { message: "Usuario con este nombre ya existe" },
+            { message: "Usuario con esA cedula ya existe" },
             { status: 400 },
           )
         }

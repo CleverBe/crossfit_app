@@ -11,12 +11,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { handleGeneralErrors } from "@/lib/utils"
@@ -35,6 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { getInstructoresFn } from "@/services/instructores"
+import { getCurrentPeriodoYYYYMM } from "@/utils"
 
 interface Props {
   changePeriodoFiltro: (newValue: string | null) => void
@@ -51,21 +47,12 @@ export const FormCreate = ({ changePeriodoFiltro }: Props) => {
     queryFn: getInstructoresFn,
   })
 
-  // Obtener la fecha actual
-  const fechaActual = new Date()
-
-  // Obtener el año y el mes
-  const año = fechaActual.getFullYear()
-  // El mes se devuelve en base 0 (enero es 0, febrero es 1, etc.), por lo que sumamos 1
-  const mes = (fechaActual.getMonth() + 1).toString().padStart(2, "0")
-
-  // Formatear en el formato deseado (YYYY-MM)
-  const fechaFormateada = `${año}-${mes}`
+  const periodoActual = getCurrentPeriodoYYYYMM()
 
   const form = useForm<CreatePeriodoInput>({
     resolver: zodResolver(createPeriodoSchemaClient),
     values: {
-      periodo: fechaFormateada,
+      periodo: periodoActual,
       instructor: "unassigned",
     },
   })
@@ -125,7 +112,7 @@ export const FormCreate = ({ changePeriodoFiltro }: Props) => {
             <FormItem>
               <FormLabel>Instructor</FormLabel>
               <Select
-                // disabled={form.formState.isSubmitting}
+                disabled={isPending}
                 onValueChange={field.onChange}
                 value={field.value}
                 defaultValue={field.value}

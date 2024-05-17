@@ -4,7 +4,16 @@ import {
   FormattedTipoDePlan,
   UpdateTipoDePlanInput,
   getTipoDePlanSchema,
+  getTiposDePlanesSchema,
 } from "@/schemas/tipoDePlanes"
+
+export const getTiposDePlanesFn = async () => {
+  const response = await axiosInstance.get(`api/tiposDePlanes`)
+
+  const validatedData = getTiposDePlanesSchema.parse(response.data)
+
+  return validatedData
+}
 
 export const getTipoDePlanFn = async (
   id: string,

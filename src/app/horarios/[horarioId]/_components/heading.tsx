@@ -11,40 +11,38 @@ import {
 import { HorarioWithPeriodos } from "@/types"
 import { Instructor } from "@prisma/client"
 import { useHorarioPeriodoModalCreate } from "../_hooks/useHorarioPeriodoModal"
-import { useState } from "react"
-import { ModalCreate } from "./modal-create"
+import { ModalCreatePeriodo } from "./modal-create-periodo"
 import { useMutation } from "@tanstack/react-query"
 import { assignInstructoToPeriodoFn } from "@/services/periodos"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { handleGeneralErrors } from "@/lib/utils"
 import { useCustomerModalCreate } from "../_hooks/useCustomerModal"
+import { ModalCreateCustomer } from "./customers/modal-create-customer"
+import { Modals } from "./customers/modals"
 
 interface Props {
   horario: HorarioWithPeriodos
   instructores: Instructor[]
+  periodoFiltro: string | null
+  changePeriodoFiltro: (newValue: string | null) => void
 }
 
-export const Heading = ({ horario, instructores }: Props) => {
+export const Heading = ({
+  horario,
+  instructores,
+  periodoFiltro,
+  changePeriodoFiltro,
+}: Props) => {
   const router = useRouter()
 
   const modalCreateCustomer = useCustomerModalCreate()
-
-  const [periodoFiltro, setPeriodoFiltro] = useState<string | null>(() => {
-    return horario.horarioPeriodos.length > 0
-      ? horario.horarioPeriodos[0].periodo
-      : null
-  })
 
   const modalCreate = useHorarioPeriodoModalCreate()
 
   const currentPeriodo = horario.horarioPeriodos.find(
     (periodo) => periodo.periodo === periodoFiltro,
   )
-
-  const changePeriodoFiltro = (newValue: string | null) => {
-    setPeriodoFiltro(newValue)
-  }
 
   const { mutate, isPending } = useMutation({
     mutationFn: assignInstructoToPeriodoFn,
@@ -152,7 +150,8 @@ export const Heading = ({ horario, instructores }: Props) => {
           </Button>
         </div>
       </div>
-      <ModalCreate changePeriodoFiltro={changePeriodoFiltro} />
+      <ModalCreatePeriodo changePeriodoFiltro={changePeriodoFiltro} />
+      <Modals periodo={periodoFiltro} />
     </>
   )
 }

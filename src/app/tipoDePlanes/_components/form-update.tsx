@@ -66,7 +66,7 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
       { id: tipoDePlan.id, ...values },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["TipoDePlan"] })
+          queryClient.invalidateQueries({ queryKey: ["tipoDePlanes"] })
           form.reset()
           router.refresh()
           toast.success(`TipoDePlan updated.`)

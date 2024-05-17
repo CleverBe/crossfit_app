@@ -84,7 +84,7 @@ export const FormCreate = () => {
           name="porcentaje"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Porcentaje</FormLabel>
+              <FormLabel>Porcentaje %</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>

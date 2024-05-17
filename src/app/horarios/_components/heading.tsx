@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { useHorarioModalCreate } from "../_hooks/use-user-modal"
+import { useHorarioModalCreate } from "../_hooks/use-horario-modal"
 
 interface Props {
   horariosLength: number
