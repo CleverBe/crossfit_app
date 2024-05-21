@@ -53,17 +53,12 @@ export const POST = async (req: Request) => {
       )
     }
 
-    const currentDate = getCurrentDateYYYYMMDD()
-
     const lastAsistencia: Asistencias | undefined = currentPlan.asistencias[0]
 
-    if (lastAsistencia) {
-      const diferenciaDias = getDifferenceInDays(
-        currentDate,
-        lastAsistencia.fecha,
-      )
+    const currentDate = getCurrentDateYYYYMMDD()
 
-      if (diferenciaDias === 0) {
+    if (lastAsistencia) {
+      if (currentDate === lastAsistencia.fecha) {
         return NextResponse.json(
           { message: "Ya se ha registrado una asistencia hoy" },
           { status: 400 },
