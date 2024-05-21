@@ -108,13 +108,16 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="grid grid-cols-12 gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="fecha_inicio"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Fecha_inicio</FormLabel>
+            <FormItem className="col-span-6">
+              <FormLabel>Fecha inicio</FormLabel>
               <FormControl>
                 <Input type="date" {...field} />
               </FormControl>
@@ -126,8 +129,8 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
           control={form.control}
           name="fecha_fin"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Fecha_fin</FormLabel>
+            <FormItem className="col-span-6">
+              <FormLabel>Fecha fin</FormLabel>
               <FormControl>
                 <Input type="date" {...field} />
               </FormControl>
@@ -139,8 +142,8 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
           control={form.control}
           name="peso_cliente"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Peso Kilogramos {"(opcional)"}</FormLabel>
+            <FormItem className="col-span-6">
+              <FormLabel>Peso Kg {"(opcional)"}</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
@@ -152,8 +155,8 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
           control={form.control}
           name="estatura"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Estatura Centimetros {"(opcional)"}</FormLabel>
+            <FormItem className="col-span-6">
+              <FormLabel>Estatura Cm {"(opcional)"}</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
@@ -165,7 +168,7 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
           control={form.control}
           name="tipoDePago"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-12">
               <FormLabel>Tipo de Pago</FormLabel>
               <Select
                 disabled={isPending}
@@ -197,7 +200,7 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
           control={form.control}
           name="tipoDePlanId"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-12">
               <FormLabel>Tipo de Plan</FormLabel>
               <Select
                 disabled={isPending}
@@ -232,7 +235,7 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
           control={form.control}
           name="descuentoId"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-12">
               <FormLabel>Descuento</FormLabel>
               <Select
                 disabled={isPending}
@@ -262,11 +265,11 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
           )}
         />
         {form.watch("tipoDePlanId") !== "unassigned" && (
-          <div className="my-2 text-xl font-semibold">
+          <div className="col-span-12 py-1.5 text-xl font-semibold">
             {`Costo total: ${costoDelPlan} - ${descuentoPorcentaje}% = ${costoDelPlan * (1 - descuentoPorcentaje / 100)} bs`}
           </div>
         )}
-        <div className="flex w-full items-center justify-end">
+        <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
             Update
           </Button>
@@ -278,36 +281,39 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
 
 FormUpdatePlan.Skeleton = function FormUpdatePlanSkeleton() {
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label>Fecha inicio</Label>
+    <div className="grid grid-cols-12 gap-2">
+      <div className="col-span-6 space-y-2">
+        <Skeleton className="h-5 w-20 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Fecha fin</Label>
+      <div className="col-span-6 space-y-2">
+        <Skeleton className="h-5 w-20 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Peso</Label>
+      <div className="col-span-6 space-y-2">
+        <Skeleton className="h-5 w-20 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Estatura</Label>
+      <div className="col-span-6 space-y-2">
+        <Skeleton className="h-5 w-20 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Tipo de pago</Label>
+      <div className="col-span-12 space-y-2">
+        <Skeleton className="h-5 w-32 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Tipo de plan</Label>
+      <div className="col-span-12 space-y-2">
+        <Skeleton className="h-5 w-32 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Descuento</Label>
+      <div className="col-span-12 space-y-2">
+        <Skeleton className="h-5 w-32 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="flex items-center justify-end">
+      <div>
+        <Skeleton className="h-10 w-64 bg-neutral-200" />
+      </div>
+      <div className="col-span-12 flex items-center justify-end">
         <Skeleton className="h-10 w-32 bg-neutral-200" />
       </div>
     </div>

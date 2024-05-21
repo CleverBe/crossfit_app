@@ -5,6 +5,8 @@ import { getCurrentDateYYYYMMDD } from "@/utils"
 import { Descuento, Prisma } from "@prisma/client"
 import { NextResponse } from "next/server"
 
+// TODO: NO PERMITIR CREAR UN PLAN PARA UN CLIENTE QUE YA TIENE UNO ACTIVO
+
 export const POST = async (
   req: Request,
   { params }: { params: { horarioId: string; periodoCode: string } },
@@ -85,8 +87,21 @@ export const POST = async (
     }
 
     const data = await prismadb.$transaction(async (tx) => {
-      const customer = await tx.cliente.create({
-        data: {
+      const customer = await tx.cliente.upsert({
+        where: {
+          nombre_completo_cedula: {
+            nombre_completo,
+            cedula,
+          },
+        },
+        update: {
+          celular,
+          fecha_nacimiento,
+          genero,
+          peso: peso_cliente,
+          estatura,
+        },
+        create: {
           nombre_completo,
           celular,
           cedula,
@@ -149,7 +164,7 @@ export const POST = async (
         // @ts-ignore
         if (error.meta?.target.includes("cedula")) {
           return NextResponse.json(
-            { message: "Usuario con esA cedula ya existe" },
+            { message: "Usuario con esa cedula ya existe" },
             { status: 400 },
           )
         }

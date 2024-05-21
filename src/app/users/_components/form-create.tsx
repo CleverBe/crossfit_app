@@ -38,7 +38,7 @@ export const FormCreate = () => {
       nombre: "",
       email: "",
       password: "",
-      role: Role.USER,
+      role: Role.MANAGER,
     },
   })
 
@@ -80,12 +80,15 @@ export const FormCreate = () => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="grid grid-cols-12 gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="nombre"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Nombre</FormLabel>
               <FormControl>
                 <Input placeholder="MyName" {...field} />
@@ -98,7 +101,7 @@ export const FormCreate = () => {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
@@ -115,7 +118,7 @@ export const FormCreate = () => {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input placeholder="****" {...field} />
@@ -128,7 +131,7 @@ export const FormCreate = () => {
           control={form.control}
           name="role"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Role</FormLabel>
               <Select
                 disabled={isPending}
@@ -156,7 +159,7 @@ export const FormCreate = () => {
             </FormItem>
           )}
         />
-        <div className="space-y-2">
+        <div className="col-span-10 space-y-2">
           <Label
             htmlFor="image"
             className={form.formState.errors.imagen && "text-destructive"}
@@ -175,7 +178,7 @@ export const FormCreate = () => {
             </p>
           )}
         </div>
-        <div className="flex w-full items-center justify-end">
+        <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
             Create
           </Button>

@@ -96,12 +96,15 @@ export const FormUpdate = ({ user, onClose }: Props) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="grid grid-cols-12 gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="nombre"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Nombre</FormLabel>
               <FormControl>
                 <Input placeholder="MyName" {...field} />
@@ -114,7 +117,7 @@ export const FormUpdate = ({ user, onClose }: Props) => {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
@@ -131,13 +134,13 @@ export const FormUpdate = ({ user, onClose }: Props) => {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input placeholder="" {...field} />
               </FormControl>
               <FormDescription>
-                Leave empty if you dont want to change the password
+                Leave password empty if you dont want to change it
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -147,7 +150,7 @@ export const FormUpdate = ({ user, onClose }: Props) => {
           control={form.control}
           name="role"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Role</FormLabel>
               <Select
                 disabled={form.formState.isSubmitting}
@@ -175,7 +178,7 @@ export const FormUpdate = ({ user, onClose }: Props) => {
             </FormItem>
           )}
         />
-        <div className="space-y-2">
+        <div className="col-span-10 space-y-2">
           <Label htmlFor="image">Image</Label>
           <Input
             id="image"
@@ -184,7 +187,7 @@ export const FormUpdate = ({ user, onClose }: Props) => {
             className="w-full"
           />
         </div>
-        <div className="flex w-full items-center justify-end">
+        <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
             Update
           </Button>
@@ -196,28 +199,28 @@ export const FormUpdate = ({ user, onClose }: Props) => {
 
 FormUpdate.Skeleton = function FormUpdateSkeleton() {
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
+    <div className="grid grid-cols-12 gap-2">
+      <div className="col-span-6 space-y-2">
         <Label>Username</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
+      <div className="col-span-6 space-y-2">
         <Label>Email</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
+      <div className="col-span-6 space-y-2">
         <Label>Password</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
+      <div className="col-span-6 space-y-2">
         <Label>Role</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
+      <div className="col-span-10 space-y-2">
         <Label>Image</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="flex items-center justify-end">
+      <div className="col-span-12 flex items-center justify-end">
         <Skeleton className="h-10 w-32 bg-neutral-200" />
       </div>
     </div>

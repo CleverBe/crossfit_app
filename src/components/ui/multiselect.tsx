@@ -26,6 +26,7 @@ export type OptionType = {
 }
 
 interface MultiSelectProps {
+  searchInput?: boolean
   options: OptionType[]
   selected: OptionType[]
   onChange: React.Dispatch<React.SetStateAction<OptionType[]>>
@@ -34,6 +35,7 @@ interface MultiSelectProps {
 }
 
 function MultiSelect({
+  searchInput = true,
   options,
   selected,
   onChange,
@@ -81,7 +83,10 @@ function MultiSelect({
                       e.preventDefault()
                       e.stopPropagation()
                     }}
-                    onClick={() => handleUnselect(item.value)}
+                    onClick={(e) => {
+                      handleUnselect(item.value)
+                      e.stopPropagation()
+                    }}
                   >
                     <X className="h-3 w-3 hover:text-red-700" />
                   </button>
@@ -99,9 +104,9 @@ function MultiSelect({
           container={containerRef.current}
         >
           <Command className={className}>
-            <CommandInput placeholder="Search ..." />
+            {searchInput && <CommandInput placeholder="Search ..." />}
             <CommandList>
-              <CommandEmpty>No item found.</CommandEmpty>
+              {searchInput && <CommandEmpty>No item found.</CommandEmpty>}
               <CommandGroup className="max-h-64 overflow-auto">
                 {options.map((option) => (
                   <CommandItem

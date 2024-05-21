@@ -5,5 +5,7 @@ export const useDescuento = (id: string) => {
   return useQuery({
     queryKey: ["descuentos", id],
     queryFn: () => getDescuentoFn(id),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 }

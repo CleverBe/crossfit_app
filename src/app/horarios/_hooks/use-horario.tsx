@@ -5,5 +5,7 @@ export const useHorario = (id: string) => {
   return useQuery({
     queryKey: ["horarios", id],
     queryFn: () => getHorarioFn(id),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 }

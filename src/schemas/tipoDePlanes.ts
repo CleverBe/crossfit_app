@@ -23,7 +23,9 @@ export type FormattedTipoDePlan = z.infer<typeof formattedTipoDePlan>
 
 const createTipoDePlanSchema = z.object({
   tipo: z.string().min(4),
-  costo: z.coerce.number().nonnegative(),
+  costo: z
+    .union([z.string(), z.number()])
+    .pipe(z.coerce.number().nonnegative()),
 })
 
 export const createTipoDePlanSchemaClient = z.object({
@@ -33,7 +35,7 @@ export const createTipoDePlanSchemaClient = z.object({
     .min(1),
 })
 
-export type CreateTipoDePlanInputClient = z.infer<
+export type CreateTipoDePlanInputClient = z.input<
   typeof createTipoDePlanSchemaClient
 >
 

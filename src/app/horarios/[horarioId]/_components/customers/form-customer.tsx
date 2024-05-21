@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
 import { handleGeneralErrors } from "@/lib/utils"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -87,12 +86,15 @@ export const FormUpdateCustomer = ({ customer, onClose }: Props) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="grid grid-cols-12 gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="nombre_completo"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-12">
               <FormLabel>Nombre completo</FormLabel>
               <FormControl>
                 <Input placeholder="MyName" {...field} />
@@ -103,9 +105,35 @@ export const FormUpdateCustomer = ({ customer, onClose }: Props) => {
         />
         <FormField
           control={form.control}
+          name="cedula"
+          render={({ field }) => (
+            <FormItem className="col-span-6">
+              <FormLabel>Cedula</FormLabel>
+              <FormControl>
+                <Input placeholder="" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="celular"
+          render={({ field }) => (
+            <FormItem className="col-span-6">
+              <FormLabel>Celular</FormLabel>
+              <FormControl>
+                <Input placeholder="MyPhoneNumber" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="genero"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Genero</FormLabel>
               <Select
                 disabled={isPending}
@@ -135,35 +163,9 @@ export const FormUpdateCustomer = ({ customer, onClose }: Props) => {
         />
         <FormField
           control={form.control}
-          name="celular"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Celular</FormLabel>
-              <FormControl>
-                <Input placeholder="MyPhoneNumber" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="cedula"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cedula</FormLabel>
-              <FormControl>
-                <Input placeholder="" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="fecha_nacimiento"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Fecha de nacimiento</FormLabel>
               <FormControl>
                 <Input type="date" {...field} />
@@ -176,8 +178,8 @@ export const FormUpdateCustomer = ({ customer, onClose }: Props) => {
           control={form.control}
           name="peso_cliente"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Peso Kilogramos {"(opcional)"}</FormLabel>
+            <FormItem className="col-span-6">
+              <FormLabel>Peso Kg {"(opcional)"}</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
@@ -189,8 +191,8 @@ export const FormUpdateCustomer = ({ customer, onClose }: Props) => {
           control={form.control}
           name="estatura"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Estatura Centimetros {"(opcional)"}</FormLabel>
+            <FormItem className="col-span-6">
+              <FormLabel>Estatura Cm {"(opcional)"}</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
@@ -198,7 +200,7 @@ export const FormUpdateCustomer = ({ customer, onClose }: Props) => {
             </FormItem>
           )}
         />
-        <div className="flex w-full items-center justify-end">
+        <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
             Update
           </Button>
@@ -210,36 +212,36 @@ export const FormUpdateCustomer = ({ customer, onClose }: Props) => {
 
 FormUpdateCustomer.Skeleton = function FormUpdateCustomerSkeleton() {
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label>Nombre Completo</Label>
+    <div className="grid grid-cols-12 gap-2">
+      <div className="col-span-12 space-y-2">
+        <Skeleton className="h-5 w-32 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Genero</Label>
+      <div className="col-span-6 space-y-2">
+        <Skeleton className="h-5 w-20 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Celular</Label>
+      <div className="col-span-6 space-y-2">
+        <Skeleton className="h-5 w-20 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Cedula</Label>
+      <div className="col-span-6 space-y-2">
+        <Skeleton className="h-5 w-20 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Fecha nacimiento</Label>
+      <div className="col-span-6 space-y-2">
+        <Skeleton className="h-5 w-20 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Peso cliente</Label>
+      <div className="col-span-6 space-y-2">
+        <Skeleton className="h-5 w-20 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
-        <Label>Estatura</Label>
+      <div className="col-span-6 space-y-2">
+        <Skeleton className="h-5 w-20 bg-neutral-200" />
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="flex items-center justify-end">
+      <div className="col-span-12 flex items-center justify-end">
         <Skeleton className="h-10 w-32 bg-neutral-200" />
       </div>
     </div>

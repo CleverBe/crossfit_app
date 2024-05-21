@@ -12,14 +12,16 @@ export const getDescuentosSchema = z.array(getDescuentoSchema)
 
 const createDescuentoSchema = z.object({
   titulo: z.string().min(4),
-  porcentaje: z.coerce.number().nonnegative(),
+  porcentaje: z
+    .union([z.string(), z.number()])
+    .pipe(z.coerce.number().positive().min(1).max(100)),
 })
 
 export const createDescuentoSchemaClient = z.object({
   ...createDescuentoSchema.shape,
 })
 
-export type CreateDescuentoInputClient = z.infer<
+export type CreateDescuentoInputClient = z.input<
   typeof createDescuentoSchemaClient
 >
 
@@ -35,4 +37,4 @@ export const updateDescuentoSchemaServer = z.object({
   ...createDescuentoSchemaServer.shape,
 })
 
-export type UpdateDescuentoInput = z.infer<typeof updateDescuentoSchemaClient>
+export type UpdateDescuentoInput = z.input<typeof updateDescuentoSchemaClient>

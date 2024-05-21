@@ -1,3 +1,4 @@
+import { checkTwoDates } from "@/utils"
 import { Genero, TipoDePago } from "@prisma/client"
 import { z } from "zod"
 
@@ -67,24 +68,50 @@ const createCustomerSchema = z.object({
   tipoDePago: z.nativeEnum(TipoDePago),
 })
 
-export const createCustomerSchemaClient = z.object({
-  ...createCustomerSchema.shape,
-  tipoDePlanId: z
-    .string({ invalid_type_error: "Value must be a string" })
-    .uuid("Seleccione un tipo de plan"),
-  descuentoId: z
-    .union([z.string().uuid(), z.literal("unassigned")])
-    .transform((value) => (value === "unassigned" ? undefined : value)),
-})
+export const createCustomerSchemaClient = z
+  .object({
+    ...createCustomerSchema.shape,
+    tipoDePlanId: z
+      .string({ invalid_type_error: "Value must be a string" })
+      .uuid("Seleccione un tipo de plan"),
+    descuentoId: z
+      .union([z.string().uuid(), z.literal("unassigned")])
+      .transform((value) => (value === "unassigned" ? undefined : value)),
+  })
+  .refine(
+    (values) => {
+      return checkTwoDates({
+        dateInicial: values.fecha_inicio,
+        dateFinal: values.fecha_fin,
+      })
+    },
+    {
+      message: "La fecha de inicio no puede ser mayor a la fecha de fin",
+      path: ["fecha_inicio"],
+    },
+  )
 
 export type CreateCustomerInput = z.input<typeof createCustomerSchemaClient>
 export type CreateCustomerOutput = z.output<typeof createCustomerSchemaClient>
 
-export const createCustomerSchemaServer = z.object({
-  ...createCustomerSchema.shape,
-  tipoDePlanId: z.string().uuid(),
-  descuentoId: z.string().uuid().optional(),
-})
+export const createCustomerSchemaServer = z
+  .object({
+    ...createCustomerSchema.shape,
+    tipoDePlanId: z.string().uuid(),
+    descuentoId: z.string().uuid().optional(),
+  })
+  .refine(
+    (values) => {
+      return checkTwoDates({
+        dateInicial: values.fecha_inicio,
+        dateFinal: values.fecha_fin,
+      })
+    },
+    {
+      message: "La fecha de inicio no puede ser mayor a la fecha de fin",
+      path: ["fecha_inicio"],
+    },
+  )
 
 const updateCustomerSchema = z
   .object({

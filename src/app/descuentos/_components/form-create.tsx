@@ -31,7 +31,7 @@ export const FormCreate = () => {
     resolver: zodResolver(createDescuentoSchemaClient),
     defaultValues: {
       titulo: "",
-      porcentaje: 0.0,
+      porcentaje: "",
     },
   })
 

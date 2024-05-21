@@ -83,12 +83,15 @@ export const FormUpdate = ({ horario, onClose }: Props) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="grid grid-cols-12 gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="hora_inicio"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Hora inicio</FormLabel>
               <FormControl>
                 <Input type="time" placeholder="MyName" {...field} />
@@ -101,7 +104,7 @@ export const FormUpdate = ({ horario, onClose }: Props) => {
           control={form.control}
           name="hora_fin"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Hora Fin</FormLabel>
               <FormControl>
                 <Input type="time" placeholder="MyName" {...field} />
@@ -114,7 +117,7 @@ export const FormUpdate = ({ horario, onClose }: Props) => {
           control={form.control}
           name="estado"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Estado</FormLabel>
               <Select
                 disabled={form.formState.isSubmitting}
@@ -142,7 +145,7 @@ export const FormUpdate = ({ horario, onClose }: Props) => {
             </FormItem>
           )}
         />
-        <div className="flex w-full items-center justify-end">
+        <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
             Update
           </Button>
@@ -154,20 +157,20 @@ export const FormUpdate = ({ horario, onClose }: Props) => {
 
 FormUpdate.Skeleton = function FormUpdateSkeleton() {
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
+    <div className="grid grid-cols-12 gap-2">
+      <div className="col-span-6 space-y-2">
         <Label>Hora inicio</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
+      <div className="col-span-6 space-y-2">
         <Label>Hora fin</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
+      <div className="col-span-6 space-y-2">
         <Label>Estado</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="flex items-center justify-end">
+      <div className="col-span-12 flex items-center justify-end">
         <Skeleton className="h-10 w-32 bg-neutral-200" />
       </div>
     </div>

@@ -5,5 +5,7 @@ export const useInstructor = (id: string) => {
   return useQuery({
     queryKey: ["instructores", id],
     queryFn: () => getInstructorFn(id),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 }

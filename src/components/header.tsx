@@ -28,6 +28,7 @@ export const Header = () => {
     { label: "Horarios", href: "/horarios" },
     { label: "Tipo De Planes", href: "/tipoDePlanes" },
     { label: "Descuentos", href: "/descuentos" },
+    { label: "Asistencias", href: "/asistencias" },
   ]
 
   return (

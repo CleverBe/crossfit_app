@@ -5,5 +5,7 @@ export const usePlan = (id: string) => {
   return useQuery({
     queryKey: ["plans", id],
     queryFn: () => getPlanFn(id),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 }

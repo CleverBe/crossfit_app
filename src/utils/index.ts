@@ -1,4 +1,6 @@
 import { Dias, Horario } from "@prisma/client"
+import { z } from "zod"
+import dayjs from "dayjs"
 
 export const sleep = async (miliseconds: number = 1000) => {
   await new Promise((resolve) => setTimeout(resolve, miliseconds))
@@ -63,6 +65,21 @@ export const getCurrentDateYYYYMMDD = () => {
   return `${year}-${month}-${day}`
 }
 
+export const getCurrentDateWithTime = () => {
+  // Obtener la fecha y hora actual
+  const now = new Date()
+
+  // Extraer componentes de la fecha y hora
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, "0") // Los meses son base 0
+  const day = String(now.getDate()).padStart(2, "0")
+  const hours = String(now.getHours()).padStart(2, "0")
+  const minutes = String(now.getMinutes()).padStart(2, "0")
+  const seconds = String(now.getSeconds()).padStart(2, "0")
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
+
 export const getCurrentPeriodoYYYYMM = () => {
   // Obtener la fecha actual
   const fechaActual = new Date()
@@ -74,6 +91,12 @@ export const getCurrentPeriodoYYYYMM = () => {
 
   // Formatear en el formato deseado (YYYY-MM)
   return `${año}-${mes}`
+}
+
+export const getDifferenceInDays = (fecha1: string, fecha2: string) => {
+  const date1 = dayjs(fecha2)
+
+  return date1.diff(fecha1, "days")
 }
 
 export const sortDays = (days: Dias[]) => {
@@ -118,4 +141,31 @@ export const formatDays = (days: Dias[]) => {
   })
 
   return formattedDays.join(",")
+}
+
+export const checkTwoDates = ({
+  dateInicial,
+  dateFinal,
+}: {
+  dateInicial: string
+  dateFinal: string
+}) => {
+  const validateDateSchema = z.object({
+    date1: z.string().date(),
+    date2: z.string().date(),
+  })
+
+  const { date1, date2 } = validateDateSchema.parse({
+    date1: dateInicial,
+    date2: dateFinal,
+  })
+
+  const dateInicio = new Date(date1)
+  const dateFin = new Date(date2)
+
+  if (dateInicio < dateFin) {
+    return true
+  } else {
+    return false
+  }
 }

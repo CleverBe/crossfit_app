@@ -74,12 +74,15 @@ export const FormCreate = () => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="grid grid-cols-12 gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="nombre"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Nombre</FormLabel>
               <FormControl>
                 <Input placeholder="MyName" {...field} />
@@ -92,7 +95,7 @@ export const FormCreate = () => {
           control={form.control}
           name="apellido"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Apellido</FormLabel>
               <FormControl>
                 <Input placeholder="MyName" {...field} />
@@ -105,7 +108,7 @@ export const FormCreate = () => {
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
@@ -122,7 +125,7 @@ export const FormCreate = () => {
           control={form.control}
           name="genero"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Genero</FormLabel>
               <Select
                 disabled={isPending}
@@ -154,7 +157,7 @@ export const FormCreate = () => {
           control={form.control}
           name="celular"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Celular</FormLabel>
               <FormControl>
                 <Input placeholder="MyName" {...field} />
@@ -163,7 +166,7 @@ export const FormCreate = () => {
             </FormItem>
           )}
         />
-        <div className="flex w-full items-center justify-end">
+        <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
             Create
           </Button>

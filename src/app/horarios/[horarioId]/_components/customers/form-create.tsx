@@ -24,7 +24,7 @@ import {
   CreateCustomerOutput,
   createCustomerSchemaClient,
 } from "@/schemas/customer"
-import { createCustomerFn } from "@/services/customer"
+import { createCustomerFn, getCustomersFn } from "@/services/customer"
 import { getDescuentosFn } from "@/services/descuentos"
 import { getTiposDePlanesFn } from "@/services/tipoDePlanes"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -35,15 +35,20 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { useCustomerModalCreate } from "../../_hooks/useCustomerModal"
 import { formatDays } from "@/utils"
-import { z } from "zod"
+import { useRef, useState } from "react"
+import { useOnClickOutside } from "usehooks-ts"
 
 interface Props {
   periodo: string
 }
 
 export const FormCreate = ({ periodo }: Props) => {
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const ref = useRef(null)
+
   const params = useParams<{ horarioId: string }>()
   const router = useRouter()
+
   const modalCreate = useCustomerModalCreate()
 
   const { data: descuentos } = useQuery({
@@ -54,6 +59,11 @@ export const FormCreate = ({ periodo }: Props) => {
   const { data: tiposDePlanes } = useQuery({
     queryKey: ["tipoDePlanes"],
     queryFn: getTiposDePlanesFn,
+  })
+
+  const { data: customers } = useQuery({
+    queryKey: ["customers"],
+    queryFn: getCustomersFn,
   })
 
   const form = useForm<CreateCustomerInput>({
@@ -107,6 +117,12 @@ export const FormCreate = ({ periodo }: Props) => {
     )
   }
 
+  const handleClickOutside = () => {
+    setSuggestions([])
+  }
+
+  useOnClickOutside(ref, handleClickOutside)
+
   const costoDelPlan =
     tiposDePlanes?.find((item) => item.id === form.watch("tipoDePlanId"))
       ?.costo ?? 0
@@ -136,19 +152,49 @@ export const FormCreate = ({ periodo }: Props) => {
     form.formState.errors["descuentoId"],
   ].some((val) => val !== undefined)
 
-  const names = ["lucas", "juan", "andres", "jason"]
+  const handleSuggestions = (value: string) => {
+    const customersNames =
+      customers?.map((customer) => customer.nombre_completo) ?? []
 
-  const filteredNames = names.filter(
-    (name) =>
-      name.includes(form.getValues("nombre_completo")) &&
-      name !== form.getValues("nombre_completo"),
-  )
+    if (value.length > 0) {
+      const filteredSuggestions = customersNames.filter((suggestion) => {
+        const suggestionLowerCase = suggestion.toLowerCase()
+        const valueLowerCase = value.toLowerCase()
+
+        return (
+          suggestionLowerCase.includes(valueLowerCase) &&
+          suggestionLowerCase !== valueLowerCase
+        )
+      })
+      setSuggestions(filteredSuggestions)
+    } else {
+      setSuggestions([])
+    }
+  }
+
+  const handleClickOnSuggestion = (name: string) => {
+    setSuggestions([])
+
+    const customerData = customers?.find(
+      (customer) => customer.nombre_completo === name,
+    )
+
+    if (!customerData) return
+
+    form.setValue("nombre_completo", customerData.nombre_completo)
+    form.setValue("cedula", customerData.cedula)
+    form.setValue("celular", customerData.celular)
+    form.setValue("fecha_nacimiento", customerData.fecha_nacimiento)
+    form.setValue("genero", customerData.genero)
+    form.setValue("peso_cliente", customerData.peso ?? "")
+    form.setValue("estatura", customerData.estatura ?? "")
+  }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Tabs defaultValue="customer" className="w-[400px]">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger
               value="customer"
               className={cn(errorOnCustomerTab && "text-red-400")}
@@ -161,23 +207,17 @@ export const FormCreate = ({ periodo }: Props) => {
             >
               Plan
             </TabsTrigger>
-            <TabsTrigger
-              value="pago"
-              className={cn(errorOnPagoTab && "text-red-400")}
-            >
-              Pago
-            </TabsTrigger>
           </TabsList>
           <TabsContent value="customer">
-            <div className="space-y-2">
+            <div className="grid grid-cols-12 gap-2">
               <FormField
                 control={form.control}
                 name="nombre_completo"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-12">
                     <FormLabel>Nombre completo</FormLabel>
                     <FormControl>
-                      <div>
+                      <div ref={ref}>
                         <Input
                           autoFocus
                           autoComplete="off"
@@ -186,33 +226,62 @@ export const FormCreate = ({ periodo }: Props) => {
                           aria-controls="autocomplete-list"
                           className={cn(
                             "outline-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
-                            form.getValues("nombre_completo").length > 0 &&
-                              filteredNames.length > 0 &&
+                            suggestions.length > 0 &&
                               "rounded-b-none border-b-0",
                           )}
                           {...field}
+                          onChange={(e) => {
+                            const value = e.target.value
+
+                            handleSuggestions(value)
+
+                            field.onChange(e)
+                          }}
                         />
-                        {form.getValues("nombre_completo").length > 0 &&
-                          filteredNames.length > 0 && (
-                            <ul
-                              className="w-full rounded-b-md border border-input bg-background p-0.5"
-                              id="autocomplete-list"
-                              role="listbox"
-                            >
-                              {filteredNames.map((name) => (
-                                <li
-                                  className="flex items-center rounded-sm px-3 py-0.5 hover:bg-muted-foreground"
-                                  key={name}
-                                  onClick={() => {
-                                    form.setValue("nombre_completo", name)
-                                  }}
-                                >
-                                  {name}
-                                </li>
-                              ))}
-                            </ul>
-                          )}
+                        {suggestions.length > 0 && (
+                          <ul
+                            className="max-h-28 w-full overflow-y-auto rounded-b-md border border-input bg-background p-0.5"
+                            id="autocomplete-list"
+                            role="listbox"
+                          >
+                            {suggestions.map((name) => (
+                              <li
+                                className="flex items-center rounded-sm px-3 py-0.5 hover:bg-accent"
+                                key={name}
+                                onClick={() => handleClickOnSuggestion(name)}
+                              >
+                                {name}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="cedula"
+                render={({ field }) => (
+                  <FormItem className="col-span-6">
+                    <FormLabel>Cedula</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="celular"
+                render={({ field }) => (
+                  <FormItem className="col-span-6">
+                    <FormLabel>Celular</FormLabel>
+                    <FormControl>
+                      <Input placeholder="MyPhoneNumber" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -222,7 +291,7 @@ export const FormCreate = ({ periodo }: Props) => {
                 control={form.control}
                 name="genero"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-6">
                     <FormLabel>Genero</FormLabel>
                     <Select
                       disabled={isPending}
@@ -252,35 +321,9 @@ export const FormCreate = ({ periodo }: Props) => {
               />
               <FormField
                 control={form.control}
-                name="celular"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Celular</FormLabel>
-                    <FormControl>
-                      <Input placeholder="MyPhoneNumber" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="cedula"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Cedula</FormLabel>
-                    <FormControl>
-                      <Input placeholder="" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="fecha_nacimiento"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-6">
                     <FormLabel>Fecha de nacimiento</FormLabel>
                     <FormControl>
                       <Input type="date" {...field} />
@@ -289,15 +332,41 @@ export const FormCreate = ({ periodo }: Props) => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="peso_cliente"
+                render={({ field }) => (
+                  <FormItem className="col-span-6">
+                    <FormLabel>Peso Kg {"(opcional)"}</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="estatura"
+                render={({ field }) => (
+                  <FormItem className="col-span-6">
+                    <FormLabel>Estatura Cm {"(opcional)"}</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </TabsContent>
           <TabsContent value="plan">
-            <div className="space-y-2">
+            <div className="grid grid-cols-12 gap-2">
               <FormField
                 control={form.control}
                 name="fecha_inicio"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-6">
                     <FormLabel>Fecha de inicio</FormLabel>
                     <FormControl>
                       <Input type="date" {...field} />
@@ -310,7 +379,7 @@ export const FormCreate = ({ periodo }: Props) => {
                 control={form.control}
                 name="fecha_fin"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-6">
                     <FormLabel>Fecha de finalización</FormLabel>
                     <FormControl>
                       <Input type="date" {...field} />
@@ -321,39 +390,9 @@ export const FormCreate = ({ periodo }: Props) => {
               />
               <FormField
                 control={form.control}
-                name="peso_cliente"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Peso Kilogramos {"(opcional)"}</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="estatura"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Estatura Centimetros {"(opcional)"}</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </TabsContent>
-          <TabsContent value="pago">
-            <div className="space-y-2">
-              <FormField
-                control={form.control}
                 name="tipoDePago"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-12">
                     <FormLabel>Tipo de Pago</FormLabel>
                     <Select
                       disabled={isPending}
@@ -385,7 +424,7 @@ export const FormCreate = ({ periodo }: Props) => {
                 control={form.control}
                 name="tipoDePlanId"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-12">
                     <FormLabel>Tipo de Plan</FormLabel>
                     <Select
                       disabled={isPending}
@@ -420,7 +459,7 @@ export const FormCreate = ({ periodo }: Props) => {
                 control={form.control}
                 name="descuentoId"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="col-span-12">
                     <FormLabel>Descuento</FormLabel>
                     <Select
                       disabled={isPending}
@@ -452,11 +491,11 @@ export const FormCreate = ({ periodo }: Props) => {
                 )}
               />
               {form.watch("tipoDePlanId") !== "unassigned" && (
-                <div className="my-2 text-xl font-semibold">
-                  {`Total a pagar: ${costoDelPlan} - ${descuentoPorcentaje}% = ${costoDelPlan * (1 - descuentoPorcentaje / 100)} bs`}
+                <div className="col-span-12 py-1.5 text-xl font-semibold">
+                  {`Total a pagar: ${costoDelPlan} - ${descuentoPorcentaje}% = ${costoDelPlan * (1 - descuentoPorcentaje / 100)} Bs`}
                 </div>
               )}
-              <div className="flex w-full items-center justify-end">
+              <div className="col-span-12 flex w-full items-center justify-end">
                 <Button disabled={isPending} type="submit">
                   Create
                 </Button>

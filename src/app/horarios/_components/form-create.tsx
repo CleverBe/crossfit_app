@@ -63,12 +63,15 @@ export const FormCreate = () => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="grid grid-cols-12 gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="hora_inicio"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Hora inicio</FormLabel>
               <FormControl>
                 <Input type="time" placeholder="MyName" {...field} />
@@ -81,7 +84,7 @@ export const FormCreate = () => {
           control={form.control}
           name="hora_fin"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Hora Fin</FormLabel>
               <FormControl>
                 <Input type="time" placeholder="MyName" {...field} />
@@ -90,7 +93,7 @@ export const FormCreate = () => {
             </FormItem>
           )}
         />
-        <div className="flex w-full items-center justify-end">
+        <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
             Create
           </Button>

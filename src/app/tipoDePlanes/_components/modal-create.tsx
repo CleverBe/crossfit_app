@@ -16,7 +16,7 @@ export function ModalCreate() {
     <Dialog open={modalCreate.isOpen} onOpenChange={modalCreate.onClose}>
       <DialogContent className="max-h-[calc(100vh-210px)] w-11/12 overflow-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Create TipoDePlan</DialogTitle>
+          <DialogTitle>Create Tipo De Plan</DialogTitle>
         </DialogHeader>
         <FormCreate />
       </DialogContent>

@@ -115,7 +115,7 @@ model Cliente {
   fecha_nacimiento String
   peso             Decimal?
   estatura         Decimal?
-  cedula           String
+  cedula           String   @unique
   planes           Plan[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

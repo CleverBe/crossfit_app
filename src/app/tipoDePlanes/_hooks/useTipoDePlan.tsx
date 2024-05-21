@@ -5,5 +5,7 @@ export const useTipoDePlan = (id: string) => {
   return useQuery({
     queryKey: ["tipoDePlanes", id],
     queryFn: () => getTipoDePlanFn(id),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 }

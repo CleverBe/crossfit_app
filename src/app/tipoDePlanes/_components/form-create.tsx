@@ -23,13 +23,6 @@ import {
 } from "@/schemas/tipoDePlanes"
 import { createTipoDePlanFn } from "@/services/tipoDePlanes"
 import { Dias } from "@prisma/client"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { MultiSelect, OptionType } from "@/components/ui/multiselect"
 
 export const FormCreate = () => {
@@ -41,7 +34,7 @@ export const FormCreate = () => {
     defaultValues: {
       tipo: "",
       dias: [],
-      costo: 0,
+      costo: "",
     },
   })
 
@@ -101,6 +94,7 @@ export const FormCreate = () => {
             <FormItem>
               <FormLabel>Dias</FormLabel>
               <MultiSelect
+                searchInput={false}
                 selected={field.value}
                 options={options}
                 placeholder="Select the dias"
@@ -115,7 +109,7 @@ export const FormCreate = () => {
           name="costo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Costo</FormLabel>
+              <FormLabel>Costo en bs</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>

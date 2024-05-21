@@ -26,8 +26,8 @@ export const createHorarioSchemaClient = z
       return compareTimes(values.hora_inicio, values.hora_fin)
     },
     {
-      path: ["hora_fin"],
-      message: "Horario final debe ser posterior al horario inicial",
+      path: ["hora_inicio"],
+      message: "El horario inicial debe ser anterior al horario final",
     },
   )
 
@@ -40,8 +40,8 @@ export const createHorarioSchemaServer = z
       return compareTimes(values.hora_inicio, values.hora_fin)
     },
     {
-      path: ["hora_fin"],
-      message: "Horario final debe ser posterior al horario inicial",
+      path: ["hora_inicio"],
+      message: "El horario inicial debe ser anterior al horario final",
     },
   )
 
@@ -61,8 +61,8 @@ export const updateHorarioSchemaClient = z
       return compareTimes(values.hora_inicio, values.hora_fin)
     },
     {
-      path: ["hora_fin"],
-      message: "Horario final debe ser posterior al horario inicial",
+      path: ["hora_inicio"],
+      message: "El horario inicial debe ser anterior al horario final",
     },
   )
 
@@ -82,7 +82,7 @@ export const updateHorarioSchemaServer = z
       return true
     },
     {
-      path: ["hora_fin"],
-      message: "Horario final debe ser posterior al horario inicial",
+      path: ["hora_inicio"],
+      message: "El horario inicial debe ser anterior al horario final",
     },
   )

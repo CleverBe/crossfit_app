@@ -5,6 +5,14 @@ import {
   updateCustomerSchemaClientOutput,
 } from "@/schemas/customer"
 
+export const getCustomersFn = async () => {
+  const response = await axiosInstance.get(`api/customers`)
+
+  const validatedData = getCustomerSchema.array().parse(response.data)
+
+  return validatedData
+}
+
 export const getCustomerFn = async (id: string) => {
   const response = await axiosInstance.get(`api/customers/${id}`)
 

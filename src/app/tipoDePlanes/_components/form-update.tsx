@@ -124,7 +124,7 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
           name="costo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Costo</FormLabel>
+              <FormLabel>Costo en bs</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
