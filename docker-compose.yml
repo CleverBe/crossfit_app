@@ -1,13 +1,18 @@
-version: '3'
+version: '3.9'
+
 services:
   postgres:
     image: postgres:latest
+    restart: always
     container_name: postgresCrossfitApp
     ports:
-      - '6501:5432'
+      - '5432:5432'
     volumes:
-      - crossfitAppVol:/data/postgres
+      - crossfitAppVol:/var/lib/postgresql/data
     env_file:
       - ./.env
+
 volumes:
   crossfitAppVol:
+
+
