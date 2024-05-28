@@ -14,10 +14,6 @@ export type HorarioColumn = {
 
 export const columns: ColumnDef<HorarioColumn>[] = [
   {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
     accessorKey: "hora_inicio",
     header: "Hora inicio",
   },

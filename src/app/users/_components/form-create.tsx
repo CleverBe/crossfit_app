@@ -91,7 +91,7 @@ export const FormCreate = () => {
             <FormItem className="col-span-6">
               <FormLabel>Nombre</FormLabel>
               <FormControl>
-                <Input placeholder="MyName" {...field} />
+                <Input placeholder="Carlos Perez" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -105,7 +105,7 @@ export const FormCreate = () => {
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="myUsername@gmail.com"
+                  placeholder="carlosperez@gmail.com"
                   type="email"
                   {...field}
                 />
@@ -132,7 +132,7 @@ export const FormCreate = () => {
           name="role"
           render={({ field }) => (
             <FormItem className="col-span-6">
-              <FormLabel>Role</FormLabel>
+              <FormLabel>Rol</FormLabel>
               <Select
                 disabled={isPending}
                 onValueChange={field.onChange}
@@ -164,7 +164,7 @@ export const FormCreate = () => {
             htmlFor="image"
             className={form.formState.errors.imagen && "text-destructive"}
           >
-            Image
+            Imagen
           </Label>
           <Input
             id="image"
@@ -180,7 +180,7 @@ export const FormCreate = () => {
         </div>
         <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Create
+            Crear
           </Button>
         </div>
       </form>

@@ -23,10 +23,10 @@ export const Header = () => {
   }
 
   const routes = [
-    { label: "Users", href: "/users" },
+    { label: "Usuarios", href: "/users" },
     { label: "Instructores", href: "/instructores" },
     { label: "Horarios", href: "/horarios" },
-    { label: "Tipo De Planes", href: "/tipoDePlanes" },
+    { label: "Tipos de planes", href: "/tipoDePlanes" },
     { label: "Descuentos", href: "/descuentos" },
     { label: "Asistencias", href: "/asistencias" },
   ]
@@ -45,7 +45,7 @@ export const Header = () => {
             <path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" />
           </svg>
           <span className="text-base font-semibold tracking-tight md:text-lg lg:text-xl">
-            Tailwind CSS
+            Crossfit App
           </span>
         </Link>
 

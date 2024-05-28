@@ -79,9 +79,9 @@ export const FormCreate = () => {
           name="tipo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tipo</FormLabel>
+              <FormLabel>Título</FormLabel>
               <FormControl>
-                <Input placeholder="Completo, Básico" {...field} />
+                <Input placeholder="Completo, normal, etc" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -97,7 +97,7 @@ export const FormCreate = () => {
                 searchInput={false}
                 selected={field.value}
                 options={options}
-                placeholder="Select the dias"
+                placeholder="Seleccione los dias"
                 {...field}
               />
               <FormMessage />

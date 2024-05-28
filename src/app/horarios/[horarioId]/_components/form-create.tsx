@@ -140,7 +140,7 @@ export const FormCreate = ({ changePeriodoFiltro }: Props) => {
         />
         <div className="flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Create
+            Crear
           </Button>
         </div>
       </form>

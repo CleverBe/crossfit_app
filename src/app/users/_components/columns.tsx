@@ -30,7 +30,7 @@ export const columns: ColumnDef<UserColumn>[] = [
   },
   {
     accessorKey: "name",
-    header: "Name",
+    header: "Nombre",
   },
   {
     accessorKey: "email",

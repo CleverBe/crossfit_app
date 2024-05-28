@@ -54,7 +54,7 @@ const Page = () => {
     <div className="flex h-[calc(100vh-210px)] items-center justify-center">
       <Card className="w-96">
         <CardHeader>
-          <CardTitle>Sign in to your account</CardTitle>
+          <CardTitle>Ingresa a tu cuenta</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -70,7 +70,7 @@ const Page = () => {
                     <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="jason@gmail.com"
+                        placeholder="carlos@gmail.com"
                         type="email"
                         autoFocus
                         {...field}
@@ -87,18 +87,14 @@ const Page = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="mypassword"
-                        type="password"
-                        {...field}
-                      />
+                      <Input type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <Button disabled={form.formState.isSubmitting} className="w-full">
-                Log in
+                Ingresar
               </Button>
             </form>
           </Form>

@@ -14,7 +14,7 @@ export type InstructorColumn = {
 export const columns: ColumnDef<InstructorColumn>[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    header: "Nombre",
   },
   {
     accessorKey: "email",
@@ -22,7 +22,7 @@ export const columns: ColumnDef<InstructorColumn>[] = [
   },
   {
     accessorKey: "genero",
-    header: "Genero",
+    header: "Género",
   },
   {
     accessorKey: "celular",

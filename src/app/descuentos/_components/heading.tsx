@@ -18,7 +18,7 @@ export const Heading = ({ descuentosLength }: Props) => {
       </div>
       <Button onClick={() => modalCreate.onOpen()}>
         <Plus className="mr h-4 w-4" />
-        Add new
+        Añadir nuevo
       </Button>
     </div>
   )

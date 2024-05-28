@@ -14,11 +14,11 @@ export const Heading = ({ usersLength }: Props) => {
   return (
     <div className="flex items-center justify-between">
       <div className="p-5">
-        <h1 className="text-2xl font-bold">{`Users (${usersLength})`}</h1>
+        <h1 className="text-2xl font-bold">{`Usuarios (${usersLength})`}</h1>
       </div>
       <Button onClick={() => userModal.onOpen()}>
         <Plus className="mr h-4 w-4" />
-        Add new
+        Añadir nuevo
       </Button>
     </div>
   )

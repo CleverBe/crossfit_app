@@ -18,7 +18,6 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { handleGeneralErrors } from "@/lib/utils"
 import { useCustomerModalCreate } from "../_hooks/useCustomerModal"
-import { ModalCreateCustomer } from "./customers/modal-create-customer"
 import { Modals } from "./customers/modals"
 
 interface Props {
@@ -125,7 +124,7 @@ export const Heading = ({
               disabled={isPending}
               value={currentPeriodo?.instructor?.id || "unassigned"}
             >
-              <SelectTrigger className="h-8 w-full px-1 sm:w-32 md:px-2">
+              <SelectTrigger className="h-8 w-full px-1 sm:w-48 md:px-2">
                 <SelectValue placeholder="Sin asignar" />
               </SelectTrigger>
               <SelectContent>

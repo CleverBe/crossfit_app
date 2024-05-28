@@ -65,7 +65,7 @@ export const FormCard = () => {
       <Card className="w-96">
         <CardHeader>
           {/* <CardTitle>Sign in to your account</CardTitle> */}
-          <p>Por favor ingrese su codigo para registrar su asistencia</p>
+          <p>Por favor ingrese su código para registrar su asistencia</p>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -78,7 +78,7 @@ export const FormCard = () => {
                 name="codigo"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Codigo</FormLabel>
+                    <FormLabel>Código</FormLabel>
                     <FormControl>
                       <Input autoFocus autoComplete="off" {...field} />
                     </FormControl>
@@ -87,7 +87,7 @@ export const FormCard = () => {
                 )}
               />
               <Button disabled={isPending} className="w-full">
-                Enviar
+                Registar asistencia
               </Button>
             </form>
           </Form>

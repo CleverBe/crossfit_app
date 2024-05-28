@@ -85,7 +85,7 @@ export const FormCreate = () => {
             <FormItem className="col-span-6">
               <FormLabel>Nombre</FormLabel>
               <FormControl>
-                <Input placeholder="MyName" {...field} />
+                <Input placeholder="Carlos" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -98,7 +98,7 @@ export const FormCreate = () => {
             <FormItem className="col-span-6">
               <FormLabel>Apellido</FormLabel>
               <FormControl>
-                <Input placeholder="MyName" {...field} />
+                <Input placeholder="Perez" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -112,7 +112,7 @@ export const FormCreate = () => {
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="myUsername@gmail.com"
+                  placeholder="carlosperez@gmail.com"
                   type="email"
                   {...field}
                 />
@@ -126,7 +126,7 @@ export const FormCreate = () => {
           name="genero"
           render={({ field }) => (
             <FormItem className="col-span-6">
-              <FormLabel>Genero</FormLabel>
+              <FormLabel>Género</FormLabel>
               <Select
                 disabled={isPending}
                 onValueChange={field.onChange}
@@ -160,7 +160,7 @@ export const FormCreate = () => {
             <FormItem className="col-span-6">
               <FormLabel>Celular</FormLabel>
               <FormControl>
-                <Input placeholder="MyName" {...field} />
+                <Input placeholder="66776677" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -168,7 +168,7 @@ export const FormCreate = () => {
         />
         <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Create
+            Crear
           </Button>
         </div>
       </form>

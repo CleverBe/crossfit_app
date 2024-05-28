@@ -146,12 +146,6 @@ export const FormCreate = ({ periodo }: Props) => {
     form.formState.errors["estatura"],
   ].some((val) => val !== undefined)
 
-  const errorOnPagoTab = [
-    form.formState.errors["tipoDePago"],
-    form.formState.errors["tipoDePlanId"],
-    form.formState.errors["descuentoId"],
-  ].some((val) => val !== undefined)
-
   const handleSuggestions = (value: string) => {
     const customersNames =
       customers?.map((customer) => customer.nombre_completo) ?? []
@@ -199,7 +193,7 @@ export const FormCreate = ({ periodo }: Props) => {
               value="customer"
               className={cn(errorOnCustomerTab && "text-red-400")}
             >
-              Customer
+              Cliente
             </TabsTrigger>
             <TabsTrigger
               value="plan"
@@ -281,7 +275,7 @@ export const FormCreate = ({ periodo }: Props) => {
                   <FormItem className="col-span-6">
                     <FormLabel>Celular</FormLabel>
                     <FormControl>
-                      <Input placeholder="MyPhoneNumber" {...field} />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -497,7 +491,7 @@ export const FormCreate = ({ periodo }: Props) => {
               )}
               <div className="col-span-12 flex w-full items-center justify-end">
                 <Button disabled={isPending} type="submit">
-                  Create
+                  Registrar
                 </Button>
               </div>
             </div>

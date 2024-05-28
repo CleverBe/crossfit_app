@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
 import { handleGeneralErrors } from "@/lib/utils"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -271,7 +270,7 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
         )}
         <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Update
+            Guardar
           </Button>
         </div>
       </form>
