@@ -14,13 +14,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
 import { handleGeneralErrors } from "@/lib/utils"
@@ -54,6 +47,7 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
       tipo: tipoDePlan.tipo,
       dias: tipoDePlan.dias,
       costo: tipoDePlan.costo,
+      cantidadDeClases: tipoDePlan.cantidadDeClases,
     },
   })
 
@@ -95,7 +89,7 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
           name="tipo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tipo</FormLabel>
+              <FormLabel>Nombre del plan</FormLabel>
               <FormControl>
                 <Input placeholder="Completo, Básico" {...field} />
               </FormControl>
@@ -132,9 +126,22 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="cantidadDeClases"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Cantidad de clases</FormLabel>
+              <FormControl>
+                <Input type="number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Update
+            Actualizar
           </Button>
         </div>
       </form>
@@ -146,7 +153,7 @@ FormUpdate.Skeleton = function FormUpdateSkeleton() {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label>Tipo</Label>
+        <Label>Nombre del plan</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="space-y-2">
@@ -155,6 +162,10 @@ FormUpdate.Skeleton = function FormUpdateSkeleton() {
       </div>
       <div className="space-y-2">
         <Label>Costo</Label>
+        <Skeleton className="h-10 bg-neutral-200" />
+      </div>
+      <div className="space-y-2">
+        <Label>Cantidad de clases</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="flex items-center justify-end">

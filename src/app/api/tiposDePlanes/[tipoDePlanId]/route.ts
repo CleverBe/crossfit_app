@@ -46,7 +46,7 @@ export const PATCH = async (
       return NextResponse.json({ errors }, { status: 400 })
     }
 
-    const { tipo, dias, costo } = parseResult.data
+    const { tipo, dias, costo, cantidadDeClases } = parseResult.data
 
     const tipoDePlanFound = await prismadb.tipoDePlan.findUnique({
       where: { id: params.tipoDePlanId },
@@ -67,6 +67,7 @@ export const PATCH = async (
         tipo,
         dias,
         costo,
+        cantidadDeClases,
       },
     })
 

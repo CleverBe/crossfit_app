@@ -67,14 +67,22 @@ export const CellAction = ({ horario }: CellActionProps) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={() => {
+              router.push(`/horarios/${horario.id}`)
+            }}
+          >
+            <Eye className="mr-2 h-4 w-4" />
+            Revisar
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
               modalUpdate.onOpen(horario.id)
             }}
           >
             <Edit className="mr-2 h-4 w-4" />
-            Update
+            Actualizar
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
@@ -82,15 +90,7 @@ export const CellAction = ({ horario }: CellActionProps) => {
             }}
           >
             <Trash className="mr-2 h-4 w-4" />
-            Delete
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              router.push(`/horarios/${horario.id}`)
-            }}
-          >
-            <Eye className="mr-2 h-4 w-4" />
-            See
+            Eliminar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

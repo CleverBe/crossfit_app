@@ -67,14 +67,14 @@ export const CellAction = ({ instructor }: CellActionProps) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Acciones</DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() => {
               modalUpdate.onOpen(instructor.id)
             }}
           >
             <Edit className="mr-2 h-4 w-4" />
-            Update
+            Actualizar
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
@@ -82,7 +82,7 @@ export const CellAction = ({ instructor }: CellActionProps) => {
             }}
           >
             <Trash className="mr-2 h-4 w-4" />
-            Delete
+            Eliminar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

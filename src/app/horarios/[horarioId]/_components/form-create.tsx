@@ -15,7 +15,7 @@ import { useParams, useRouter } from "next/navigation"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { handleGeneralErrors } from "@/lib/utils"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useHorarioPeriodoModalCreate } from "../_hooks/useHorarioPeriodoModal"
 import {
   CreatePeriodoInput,
@@ -43,8 +43,8 @@ export const FormCreate = ({ changePeriodoFiltro }: Props) => {
   const modalCreate = useHorarioPeriodoModalCreate()
 
   const { data: instructores } = useQuery({
-    queryKey: ["instructores"],
-    queryFn: getInstructoresFn,
+    queryKey: ["instructores_activos"],
+    queryFn: () => getInstructoresFn({ estado: "ACTIVO" }),
   })
 
   const periodoActual = getCurrentPeriodoYYYYMM()

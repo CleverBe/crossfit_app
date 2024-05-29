@@ -5,9 +5,20 @@ import {
   getInstructorSchema,
   getInstructoresSchema,
 } from "@/schemas/instructores"
+import { Estado } from "@prisma/client"
 
-export const getInstructoresFn = async () => {
-  const response = await axiosInstance.get(`api/instructores`)
+interface Props {
+  estado?: Estado
+}
+
+export const getInstructoresFn = async ({ estado }: Props) => {
+  const params = new URLSearchParams()
+
+  if (estado) {
+    params.append("estado", estado)
+  }
+
+  const response = await axiosInstance.get(`api/instructores`, { params })
 
   const validatedData = getInstructoresSchema.parse(response.data)
 

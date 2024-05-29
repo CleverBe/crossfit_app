@@ -2,6 +2,7 @@ import { PlanEstado, TipoDePago } from "@prisma/client"
 import { z } from "zod"
 import { getTipoDePlanSchema } from "./tipoDePlanes"
 import { getDescuentoSchema } from "./descuentos"
+import { checkTwoDates } from "@/utils"
 
 export const getPlanSchema = z.object({
   id: z.string(),
@@ -24,12 +25,6 @@ export const getPlanSchema = z.object({
 export type PlanFromApi = z.infer<typeof getPlanSchema>
 
 const updatePlanSchema = z.object({
-  fecha_inicio: z
-    .string()
-    .date("Formato de fecha incorrecto, ejemplo: 2000-01-01"),
-  fecha_fin: z
-    .string()
-    .date("Formato de fecha incorrecto, ejemplo: 2000-01-01"),
   peso_cliente: z
     .string()
     .optional()
@@ -69,22 +64,66 @@ const updatePlanSchema = z.object({
   tipoDePago: z.nativeEnum(TipoDePago),
 })
 
-export const updatePlanSchemaClient = z.object({
-  ...updatePlanSchema.shape,
-  tipoDePlanId: z
-    .string({ invalid_type_error: "Value must be a string" })
-    .uuid("Seleccione un tipo de plan"),
-  descuentoId: z
-    .union([z.string().uuid(), z.literal("unassigned")])
-    .transform((value) => (value === "unassigned" ? undefined : value))
-    .optional(),
-})
+export const updatePlanSchemaClient = z
+  .object({
+    ...updatePlanSchema.shape,
+    fecha_inicio: z.string().date("Este campo es requerido"),
+    fecha_fin: z.string().date("Este campo es requerido"),
+    tipoDePlanId: z
+      .string({ invalid_type_error: "Value must be a string" })
+      .uuid("Seleccione un tipo de plan"),
+    descuentoId: z
+      .union([z.string().uuid(), z.literal("unassigned")])
+      .transform((value) => (value === "unassigned" ? undefined : value))
+      .optional(),
+  })
+  .refine(
+    (values) => {
+      if (values.fecha_inicio && values.fecha_fin) {
+        const result = checkTwoDates({
+          dateInicial: values.fecha_inicio,
+          dateFinal: values.fecha_fin,
+        })
+
+        return result.result
+      }
+      return false
+    },
+    {
+      message: "La fecha de inicio no puede ser posterior a la fecha de fin",
+      path: ["fecha_inicio"],
+    },
+  )
 
 export type UpdatePlanSchemaInput = z.input<typeof updatePlanSchemaClient>
 export type UpdatePlanSchemaOutput = z.output<typeof updatePlanSchemaClient>
 
-export const updatePlanSchemaServer = z.object({
-  ...updatePlanSchema.shape,
-  tipoDePlanId: z.string().uuid(),
-  descuentoId: z.string().uuid().optional(),
-})
+export const updatePlanSchemaServer = z
+  .object({
+    ...updatePlanSchema.shape,
+    fecha_inicio: z
+      .string()
+      .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
+    fecha_fin: z
+      .string()
+      .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
+    tipoDePlanId: z.string().uuid(),
+    descuentoId: z.string().uuid().optional(),
+  })
+  .refine(
+    (values) => {
+      if (values.fecha_inicio && values.fecha_fin) {
+        const result = checkTwoDates({
+          dateInicial: values.fecha_inicio,
+          dateFinal: values.fecha_fin,
+        })
+
+        return result.result
+      }
+      return false
+    },
+    {
+      message: "La fecha de inicio no puede ser posterior a la fecha de fin",
+      path: ["fecha_inicio"],
+    },
+  )

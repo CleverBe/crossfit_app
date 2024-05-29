@@ -109,7 +109,7 @@ export const FormCreate = () => {
           name="email"
           render={({ field }) => (
             <FormItem className="col-span-6">
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Correo electrónico</FormLabel>
               <FormControl>
                 <Input
                   placeholder="carlosperez@gmail.com"

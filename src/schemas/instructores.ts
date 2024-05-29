@@ -1,4 +1,4 @@
-import { Genero } from "@prisma/client"
+import { Estado, Genero } from "@prisma/client"
 import { z } from "zod"
 
 export const getInstructorSchema = z.object({
@@ -8,6 +8,7 @@ export const getInstructorSchema = z.object({
   email: z.string(),
   genero: z.nativeEnum(Genero),
   celular: z.string(),
+  estado: z.nativeEnum(Estado),
 })
 
 export type InstructorFromApi = z.infer<typeof getInstructorSchema>
@@ -34,14 +35,28 @@ export const createInstructorSchemaServer = z.object({
 
 export type CreateInstructorInput = z.infer<typeof createInstructorSchemaClient>
 
-export const updateInstructorSchemaClient = z.object({
+const updateInstructorSchema = z.object({
   ...createInstructorSchemaClient.shape,
+  estado: z.nativeEnum(Estado),
 })
 
-export type UpdateInstructorInput = z.infer<typeof updateInstructorSchemaClient>
+export const updateInstructorSchemaClient = z.object({
+  ...updateInstructorSchema.shape,
+})
+
+export type UpdateInstructorInput = z.input<typeof updateInstructorSchemaClient>
+export type UpdateInstructorOutput = z.output<
+  typeof updateInstructorSchemaClient
+>
 
 export const updateInstructorSchemaServer = z
   .object({
-    ...createInstructorSchema.shape,
+    ...updateInstructorSchema.shape,
+  })
+  .partial()
+
+export const getInstructoresSearchParamsSchema = z
+  .object({
+    estado: z.nativeEnum(Estado),
   })
   .partial()

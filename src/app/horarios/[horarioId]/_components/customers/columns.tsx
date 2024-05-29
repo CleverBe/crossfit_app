@@ -10,6 +10,7 @@ export type PlanColumn = {
   celular: string
   cedula: string
   tipoDePlan: string
+  fecha_inscripcion: string
   fecha_inicio: string
   fecha_fin: string
 }
@@ -30,6 +31,10 @@ export const columns: ColumnDef<PlanColumn>[] = [
   {
     accessorKey: "tipoDePlan",
     header: "Tipo de plan",
+  },
+  {
+    accessorKey: "fecha_inscripcion",
+    header: "Fecha inscripcion",
   },
   {
     accessorKey: "fecha_inicio",

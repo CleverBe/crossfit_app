@@ -5,9 +5,20 @@ import {
   getDescuentoSchema,
   getDescuentosSchema,
 } from "@/schemas/descuentos"
+import { Estado } from "@prisma/client"
 
-export const getDescuentosFn = async () => {
-  const response = await axiosInstance.get(`api/descuentos`)
+interface Props {
+  estado?: Estado
+}
+
+export const getDescuentosFn = async ({ estado }: Props) => {
+  const params = new URLSearchParams()
+
+  if (estado) {
+    params.append("estado", estado)
+  }
+
+  const response = await axiosInstance.get(`api/descuentos`, { params })
 
   const validatedData = getDescuentosSchema.parse(response.data)
 

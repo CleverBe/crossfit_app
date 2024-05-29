@@ -1,7 +1,6 @@
 import prismadb from "@/lib/prismadb"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { createCustomerSchemaServer } from "@/schemas/customer"
-import { getCurrentDateYYYYMMDD } from "@/utils"
 import { Descuento, Prisma } from "@prisma/client"
 import { NextResponse } from "next/server"
 
@@ -36,8 +35,6 @@ export const POST = async (
     tipoDePlanId,
     descuentoId,
   } = parseResult.data
-
-  const currentDate = getCurrentDateYYYYMMDD()
 
   try {
     const periodo = await prismadb.horarioPeriodo.findUnique({
@@ -127,7 +124,7 @@ export const POST = async (
       const pagoCliente = await tx.pago.create({
         data: {
           tipo_de_pago: tipoDePago,
-          fecha_de_pago: currentDate,
+          fecha_de_pago: new Date(),
           monto: resultadoCosto,
         },
       })
@@ -136,7 +133,7 @@ export const POST = async (
         data: {
           clienteId: customer.id,
           tipoDePlanId: tipoDePlan.id,
-          fecha_inscripcion: currentDate,
+          fecha_inscripcion: new Date(),
           fecha_inicio,
           fecha_fin,
           peso_cliente,

@@ -93,7 +93,7 @@ export const Header = () => {
                         signOut()
                       }}
                     >
-                      Sign out
+                      Salir
                     </button>
                   </li>
                 </ul>

@@ -95,7 +95,7 @@ export const FormCreate = () => {
         />
         <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Create
+            Crear
           </Button>
         </div>
       </form>

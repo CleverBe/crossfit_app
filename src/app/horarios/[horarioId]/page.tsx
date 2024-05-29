@@ -2,6 +2,7 @@ import prismadb from "@/lib/prismadb"
 import { notFound } from "next/navigation"
 import { Estado } from "@prisma/client"
 import { MainContent } from "./_components/main-content"
+import { dayjsEs } from "@/lib/dayjs"
 
 interface Props {
   params: {
@@ -54,8 +55,11 @@ const Page = async ({ params }: Props) => {
       celular: plan.cliente.celular,
       cedula: plan.cliente.cedula,
       tipoDePlan: plan.tipoDePlan.tipo,
-      fecha_inicio: plan.fecha_inicio,
-      fecha_fin: plan.fecha_fin,
+      fecha_inscripcion: dayjsEs(plan.fecha_inscripcion).format(
+        "DD/MM/YYYY HH:mm",
+      ),
+      fecha_inicio: dayjsEs(plan.fecha_inicio).format("DD/MM/YYYY"),
+      fecha_fin: dayjsEs(plan.fecha_fin).format("DD/MM/YYYY"),
     }
   })
 

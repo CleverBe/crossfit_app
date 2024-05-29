@@ -8,7 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Edit, Eye, MoreHorizontal, Trash } from "lucide-react"
+import {
+  CalendarDays,
+  Contact,
+  MoreHorizontal,
+  NotepadText,
+  Trash,
+} from "lucide-react"
 import { useRouter } from "next/navigation"
 import { AlertModal } from "@/components/modals/alertModal"
 import { useState } from "react"
@@ -18,6 +24,7 @@ import { PlanColumn } from "./columns"
 import { useCustomerModalUpdate } from "../../_hooks/useCustomerModal"
 import { usePlanModalUpdate } from "../../_hooks/usePlanModal"
 import { deletePlanFn } from "@/services/plan"
+import { useAsistenciasModal } from "../../_hooks/useAsistenciasModal"
 
 interface CellActionProps {
   plan: PlanColumn
@@ -32,6 +39,8 @@ export const CellAction = ({ plan }: CellActionProps) => {
   const modalUpdateCustomer = useCustomerModalUpdate()
 
   const modalUpdatePlan = usePlanModalUpdate()
+
+  const modalAsistencias = useAsistenciasModal()
 
   const { mutate, isPending } = useMutation({
     mutationFn: deletePlanFn,
@@ -71,22 +80,30 @@ export const CellAction = ({ plan }: CellActionProps) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Acciones</DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() => {
               modalUpdateCustomer.onOpen(plan.customerId)
             }}
           >
-            <Eye className="mr-2 h-4 w-4" />
-            Details Customer
+            <Contact className="mr-2 h-4 w-4" />
+            Detalles cliente
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
               modalUpdatePlan.onOpen(plan.id)
             }}
           >
-            <Eye className="mr-2 h-4 w-4" />
-            Details Plan
+            <NotepadText className="mr-2 h-4 w-4" />
+            Detalles plan
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              modalAsistencias.onOpen(plan.id)
+            }}
+          >
+            <CalendarDays className="mr-2 h-4 w-4" />
+            Asistencias
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
@@ -94,7 +111,7 @@ export const CellAction = ({ plan }: CellActionProps) => {
             }}
           >
             <Trash className="mr-2 h-4 w-4" />
-            Delete
+            Eliminar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

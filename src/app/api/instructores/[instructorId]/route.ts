@@ -1,5 +1,5 @@
 import prismadb from "@/lib/prismadb"
-import { Prisma } from "@prisma/client"
+import { Estado, Prisma } from "@prisma/client"
 import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { updateInstructorSchemaServer } from "@/schemas/instructores"
@@ -47,7 +47,8 @@ export const PATCH = async (
       return NextResponse.json({ errors }, { status: 400 })
     }
 
-    const { nombre, apellido, celular, email, genero } = parseResult.data
+    const { nombre, apellido, celular, email, genero, estado } =
+      parseResult.data
 
     const instructorFound = await prismadb.instructor.findUnique({
       where: { id: params.instructorId },
@@ -70,6 +71,7 @@ export const PATCH = async (
         email,
         celular,
         genero,
+        estado,
       },
     })
 

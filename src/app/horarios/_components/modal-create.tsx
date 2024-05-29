@@ -16,7 +16,7 @@ export function ModalCreate() {
     <Dialog open={modalCreate.isOpen} onOpenChange={modalCreate.onClose}>
       <DialogContent className="max-h-[calc(100vh-210px)] w-11/12 overflow-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Crear horario</DialogTitle>
+          <DialogTitle>Crear Horario</DialogTitle>
         </DialogHeader>
         <FormCreate />
       </DialogContent>

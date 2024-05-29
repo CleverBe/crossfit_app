@@ -1,9 +1,11 @@
+import { Estado } from "@prisma/client"
 import { z } from "zod"
 
 export const getDescuentoSchema = z.object({
   id: z.string(),
   titulo: z.string(),
   porcentaje: z.coerce.number().nonnegative(),
+  estado: z.nativeEnum(Estado),
 })
 
 export type DescuentoFromApi = z.infer<typeof getDescuentoSchema>
@@ -29,12 +31,25 @@ export const createDescuentoSchemaServer = z.object({
   ...createDescuentoSchema.shape,
 })
 
-export const updateDescuentoSchemaClient = z.object({
-  ...createDescuentoSchemaClient.shape,
+const updateDescuentoSchema = z.object({
+  ...createDescuentoSchema.shape,
+  estado: z.nativeEnum(Estado),
 })
 
-export const updateDescuentoSchemaServer = z.object({
-  ...createDescuentoSchemaServer.shape,
+export const updateDescuentoSchemaClient = z.object({
+  ...updateDescuentoSchema.shape,
 })
 
 export type UpdateDescuentoInput = z.input<typeof updateDescuentoSchemaClient>
+
+export const updateDescuentoSchemaServer = z
+  .object({
+    ...updateDescuentoSchema.shape,
+  })
+  .partial()
+
+export const getDescuentosSearchParamsSchema = z
+  .object({
+    estado: z.nativeEnum(Estado),
+  })
+  .partial()

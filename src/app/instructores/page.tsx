@@ -12,12 +12,13 @@ const Page = async () => {
   })
 
   const formattedInstructores: InstructorColumn[] = instructores.map(
-    (user) => ({
-      id: user.id,
-      name: user.nombre + " " + user.apellido,
-      email: user.email,
-      genero: user.genero,
-      celular: user.celular,
+    (instructor) => ({
+      id: instructor.id,
+      name: instructor.nombre + " " + instructor.apellido,
+      email: instructor.email,
+      genero: instructor.genero,
+      celular: instructor.celular,
+      estado: instructor.estado,
     }),
   )
 

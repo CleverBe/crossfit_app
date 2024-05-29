@@ -6,18 +6,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { FormUpdate } from "./form-update"
 import { toast } from "sonner"
-import { useTipoDePlan } from "../_hooks/useTipoDePlan"
+import { useAsistencias } from "../../_hooks/useAsistencias"
+import { AsistenciasList } from "./asistencias/asistenciasList"
 
 interface Props {
-  id: string
+  planId: string
   isOpen: boolean
   onClose: () => void
 }
 
-export function ModalUpdate({ id, isOpen, onClose }: Props) {
-  const { data, isFetching, isError } = useTipoDePlan(id)
+export function ModalAsistenciasList({ planId, isOpen, onClose }: Props) {
+  const { data, isFetching, isError } = useAsistencias(planId)
 
   if (isError && !isFetching) {
     toast.error("Something went wrong")
@@ -27,12 +27,12 @@ export function ModalUpdate({ id, isOpen, onClose }: Props) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-[calc(100vh-210px)] w-11/12 overflow-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Editar tipo de plan</DialogTitle>
+          <DialogTitle>Lista de asistencias</DialogTitle>
         </DialogHeader>
         {!data || isFetching ? (
-          <FormUpdate.Skeleton />
+          <AsistenciasList.Skeleton />
         ) : (
-          <FormUpdate tipoDePlan={data} onClose={onClose} />
+          <AsistenciasList asistencias={data} />
         )}
       </DialogContent>
     </Dialog>

@@ -31,13 +31,14 @@ export const POST = async (req: Request) => {
       return NextResponse.json({ errors }, { status: 400 })
     }
 
-    const { tipo, dias, costo } = parseResult.data
+    const { tipo, dias, costo, cantidadDeClases } = parseResult.data
 
     const newTipoDePlan = await prismadb.tipoDePlan.create({
       data: {
         tipo,
-        dias,
         costo,
+        cantidadDeClases,
+        dias,
       },
     })
 

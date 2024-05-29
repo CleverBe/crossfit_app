@@ -24,6 +24,14 @@ import {
   updateDescuentoSchemaClient,
 } from "@/schemas/descuentos"
 import { updateDescuentoFn } from "@/services/descuentos"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Estado } from "@prisma/client"
 
 interface Props {
   descuento: DescuentoFromApi
@@ -39,6 +47,7 @@ export const FormUpdate = ({ descuento, onClose }: Props) => {
     values: {
       titulo: descuento.titulo,
       porcentaje: descuento.porcentaje,
+      estado: descuento.estado,
     },
   })
 
@@ -75,12 +84,15 @@ export const FormUpdate = ({ descuento, onClose }: Props) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="grid grid-cols-12 gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="titulo"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-12">
               <FormLabel>Titulo</FormLabel>
               <FormControl>
                 <Input placeholder="Por pareja, por familiar" {...field} />
@@ -93,7 +105,7 @@ export const FormUpdate = ({ descuento, onClose }: Props) => {
           control={form.control}
           name="porcentaje"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Porcentaje %</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
@@ -102,9 +114,41 @@ export const FormUpdate = ({ descuento, onClose }: Props) => {
             </FormItem>
           )}
         />
-        <div className="flex w-full items-center justify-end">
+        <FormField
+          control={form.control}
+          name="estado"
+          render={({ field }) => (
+            <FormItem className="col-span-6">
+              <FormLabel>Estado</FormLabel>
+              <Select
+                disabled={form.formState.isSubmitting}
+                onValueChange={field.onChange}
+                value={field.value}
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue
+                      defaultValue={field.value}
+                      placeholder="Seleccione un estado"
+                    />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {Object.values(Estado).map((estado) => (
+                    <SelectItem key={estado} value={estado}>
+                      {estado}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Update
+            Actualizar
           </Button>
         </div>
       </form>
@@ -114,16 +158,20 @@ export const FormUpdate = ({ descuento, onClose }: Props) => {
 
 FormUpdate.Skeleton = function FormUpdateSkeleton() {
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
+    <div className="grid grid-cols-12 gap-2">
+      <div className="col-span-12">
         <Label>Titulo</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
+      <div className="col-span-6">
         <Label>Porcentaje %</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="flex items-center justify-end">
+      <div className="col-span-6">
+        <Label>Estado</Label>
+        <Skeleton className="h-10 bg-neutral-200" />
+      </div>
+      <div className="col-span-12 flex items-center justify-end">
         <Skeleton className="h-10 w-32 bg-neutral-200" />
       </div>
     </div>

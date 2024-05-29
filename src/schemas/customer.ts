@@ -7,8 +7,8 @@ export const getCustomerSchema = z.object({
   nombre_completo: z.string(),
   genero: z.nativeEnum(Genero),
   celular: z.string(),
-  cedula: z.string(),
-  fecha_nacimiento: z.string().date("Formato de fecha incorrecto"),
+  cedula: z.string().min(6).max(7),
+  fecha_nacimiento: z.string().date(),
   peso: z.string().nullable(),
   estatura: z.string().nullable(),
 })
@@ -19,16 +19,7 @@ const createCustomerSchema = z.object({
   nombre_completo: z.string().min(3),
   genero: z.nativeEnum(Genero),
   celular: z.string().min(7),
-  cedula: z.string().min(7),
-  fecha_nacimiento: z
-    .string()
-    .date("Formato de fecha incorrecto, ejemplo: 2000-01-01"),
-  fecha_inicio: z
-    .string()
-    .date("Formato de fecha incorrecto, ejemplo: 2000-01-01"),
-  fecha_fin: z
-    .string()
-    .date("Formato de fecha incorrecto, ejemplo: 2000-01-01"),
+  cedula: z.string().min(6).max(7),
   peso_cliente: z
     .string()
     .optional()
@@ -71,6 +62,9 @@ const createCustomerSchema = z.object({
 export const createCustomerSchemaClient = z
   .object({
     ...createCustomerSchema.shape,
+    fecha_nacimiento: z.string().date("Este campo es requerido"),
+    fecha_inicio: z.string().date("Este campo es requerido"),
+    fecha_fin: z.string().date("Este campo es requerido"),
     tipoDePlanId: z
       .string({ invalid_type_error: "Value must be a string" })
       .uuid("Seleccione un tipo de plan"),
@@ -80,13 +74,18 @@ export const createCustomerSchemaClient = z
   })
   .refine(
     (values) => {
-      return checkTwoDates({
-        dateInicial: values.fecha_inicio,
-        dateFinal: values.fecha_fin,
-      })
+      if (values.fecha_inicio && values.fecha_fin) {
+        const result = checkTwoDates({
+          dateInicial: values.fecha_inicio,
+          dateFinal: values.fecha_fin,
+        })
+
+        return result.result
+      }
+      return false
     },
     {
-      message: "La fecha de inicio no puede ser mayor a la fecha de fin",
+      message: "La fecha de inicio no puede ser posterior a la fecha de fin",
       path: ["fecha_inicio"],
     },
   )
@@ -97,18 +96,32 @@ export type CreateCustomerOutput = z.output<typeof createCustomerSchemaClient>
 export const createCustomerSchemaServer = z
   .object({
     ...createCustomerSchema.shape,
+    fecha_nacimiento: z
+      .string()
+      .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
+    fecha_inicio: z
+      .string()
+      .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
+    fecha_fin: z
+      .string()
+      .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
     tipoDePlanId: z.string().uuid(),
     descuentoId: z.string().uuid().optional(),
   })
   .refine(
     (values) => {
-      return checkTwoDates({
-        dateInicial: values.fecha_inicio,
-        dateFinal: values.fecha_fin,
-      })
+      if (values.fecha_inicio && values.fecha_fin) {
+        const result = checkTwoDates({
+          dateInicial: values.fecha_inicio,
+          dateFinal: values.fecha_fin,
+        })
+
+        return result.result
+      }
+      return false
     },
     {
-      message: "La fecha de inicio no puede ser mayor a la fecha de fin",
+      message: "La fecha de inicio no puede ser posterior a la fecha de fin",
       path: ["fecha_inicio"],
     },
   )
@@ -118,10 +131,7 @@ const updateCustomerSchema = z
     nombre_completo: z.string().min(3),
     genero: z.nativeEnum(Genero),
     celular: z.string().min(7),
-    cedula: z.string().min(7),
-    fecha_nacimiento: z
-      .string()
-      .date("Formato de fecha incorrecto, ejemplo: 2000-01-01"),
+    cedula: z.string().min(6).max(7),
     peso_cliente: z
       .string()
       .optional()
@@ -163,6 +173,7 @@ const updateCustomerSchema = z
 
 export const updateCustomerSchemaClient = z.object({
   ...updateCustomerSchema.shape,
+  fecha_nacimiento: z.string().date("Este campo es requerido."),
 })
 
 export type updateCustomerSchemaClientInput = z.input<
@@ -175,4 +186,7 @@ export type updateCustomerSchemaClientOutput = z.output<
 
 export const updateCustomerSchemaServer = z.object({
   ...updateCustomerSchema.shape,
+  fecha_nacimiento: z
+    .string()
+    .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
 })

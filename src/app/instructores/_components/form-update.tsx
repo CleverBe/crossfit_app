@@ -31,7 +31,7 @@ import {
   updateInstructorSchemaClient,
 } from "@/schemas/instructores"
 import { updateInstructorFn } from "@/services/instructores"
-import { Genero } from "@prisma/client"
+import { Estado, Genero } from "@prisma/client"
 
 interface Props {
   instructor: InstructorFromApi
@@ -50,6 +50,7 @@ export const FormUpdate = ({ instructor, onClose }: Props) => {
       email: instructor.email,
       celular: instructor.celular,
       genero: instructor.genero,
+      estado: instructor.estado,
     },
   })
 
@@ -121,7 +122,7 @@ export const FormUpdate = ({ instructor, onClose }: Props) => {
           name="email"
           render={({ field }) => (
             <FormItem className="col-span-6">
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Correo electrónico</FormLabel>
               <FormControl>
                 <Input
                   placeholder="myUsername@gmail.com"
@@ -133,7 +134,6 @@ export const FormUpdate = ({ instructor, onClose }: Props) => {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="genero"
@@ -166,9 +166,6 @@ export const FormUpdate = ({ instructor, onClose }: Props) => {
             </FormItem>
           )}
         />
-
-        {/* TODO: ALLOW USER CHANGE INSTRUCTOR STATUS */}
-
         <FormField
           control={form.control}
           name="celular"
@@ -182,9 +179,41 @@ export const FormUpdate = ({ instructor, onClose }: Props) => {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="estado"
+          render={({ field }) => (
+            <FormItem className="col-span-6">
+              <FormLabel>Estado</FormLabel>
+              <Select
+                disabled={form.formState.isSubmitting}
+                onValueChange={field.onChange}
+                value={field.value}
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue
+                      defaultValue={field.value}
+                      placeholder="Seleccione un estado"
+                    />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {Object.values(Estado).map((estado) => (
+                    <SelectItem key={estado} value={estado}>
+                      {estado}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Update
+            Actualizar
           </Button>
         </div>
       </form>
@@ -204,7 +233,7 @@ FormUpdate.Skeleton = function FormUpdateSkeleton() {
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="col-span-6 space-y-2">
-        <Label>Email</Label>
+        <Label>Correo electrónico</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="col-span-6 space-y-2">
@@ -213,6 +242,10 @@ FormUpdate.Skeleton = function FormUpdateSkeleton() {
       </div>
       <div className="col-span-6 space-y-2">
         <Label>Celular</Label>
+        <Skeleton className="h-10 bg-neutral-200" />
+      </div>
+      <div className="col-span-6 space-y-2">
+        <Label>Estado</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="col-span-12 flex items-center justify-end">

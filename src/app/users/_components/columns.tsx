@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-actions"
 import Image from "next/image"
+import { Badge } from "@/components/ui/badge"
 
 export type UserColumn = {
   id: string
@@ -34,11 +35,18 @@ export const columns: ColumnDef<UserColumn>[] = [
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: "Correo electrónico",
   },
   {
     accessorKey: "role",
-    header: "Role",
+    header: "Rol",
+    cell: ({ row }) => (
+      <Badge
+        variant={`${row.original.role === "ADMIN" ? "default" : "secondary"}`}
+      >
+        {row.original.role}
+      </Badge>
+    ),
   },
 
   {

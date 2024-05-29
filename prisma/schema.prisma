@@ -98,13 +98,14 @@ enum Dias {
 }
 
 model TipoDePlan {
-  id        String   @id @default(uuid())
-  tipo      String
-  costo     Decimal
-  dias      Dias[]
-  planes    Plan[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String   @id @default(uuid())
+  tipo             String
+  costo            Decimal
+  cantidadDeClases Int
+  dias             Dias[]
+  planes           Plan[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model Cliente {
@@ -127,6 +128,7 @@ model Descuento {
   id         String   @id @default(uuid())
   titulo     String   @unique
   porcentaje Decimal
+  estado     Estado   @default(ACTIVO)
   planes     Plan[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -139,7 +141,7 @@ enum PlanEstado {
 
 model Plan {
   id                String         @id @default(uuid())
-  fecha_inscripcion String
+  fecha_inscripcion DateTime
   fecha_inicio      String
   fecha_fin         String
   peso_cliente      Decimal?
@@ -152,7 +154,7 @@ model Plan {
   horarioPeriodoId  String
   horarioPeriodo    HorarioPeriodo @relation(fields: [horarioPeriodoId], references: [id], onDelete: Cascade)
   asistencias       Asistencias[]
-  pagoId            String         @unique
+  pagoId            String         @unique // 1 to 1
   pago              Pago           @relation(fields: [pagoId], references: [id], onDelete: Cascade)
   descuentoId       String?
   descuento         Descuento?     @relation(fields: [descuentoId], references: [id], onDelete: Cascade)
@@ -162,7 +164,7 @@ model Plan {
 
 model Asistencias {
   id        String   @id @default(uuid())
-  fecha     String
+  fecha     DateTime
   estado    Boolean  @default(false)
   planId    String
   plan      Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
@@ -179,7 +181,7 @@ enum TipoDePago {
 model Pago {
   id            String     @id @default(uuid())
   monto         Decimal
-  fecha_de_pago String
+  fecha_de_pago DateTime
   tipo_de_pago  TipoDePago @default(EFECTIVO)
   plan          Plan?
   createdAt     DateTime   @default(now())

@@ -2,11 +2,33 @@ import prismadb from "@/lib/prismadb"
 import { Prisma } from "@prisma/client"
 import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
-import { createInstructorSchemaServer } from "@/schemas/instructores"
+import {
+  createInstructorSchemaServer,
+  getInstructoresSearchParamsSchema,
+} from "@/schemas/instructores"
 
 export const GET = async (req: Request) => {
+  const { searchParams } = new URL(req.url)
+
+  const estadoSearchParam = searchParams.get("estado")
+
+  const validation = getInstructoresSearchParamsSchema.safeParse({
+    estado: estadoSearchParam || undefined,
+  })
+
+  if (!validation.success) {
+    const errors = formatErrorsToResponse(validation.error.issues)
+
+    return NextResponse.json({ errors }, { status: 400 })
+  }
+
+  const { estado } = validation.data
+
   try {
     const instructores = await prismadb.instructor.findMany({
+      where: {
+        estado,
+      },
       orderBy: { createdAt: "asc" },
     })
 

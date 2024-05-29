@@ -1,12 +1,34 @@
 import prismadb from "@/lib/prismadb"
 import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
-import { createDescuentoSchemaServer } from "@/schemas/descuentos"
+import {
+  createDescuentoSchemaServer,
+  getDescuentosSearchParamsSchema,
+} from "@/schemas/descuentos"
 import { Prisma } from "@prisma/client"
 
 export const GET = async (req: Request) => {
+  const { searchParams } = new URL(req.url)
+
+  const estadoSearchParam = searchParams.get("estado")
+
+  const validation = getDescuentosSearchParamsSchema.safeParse({
+    estado: estadoSearchParam || undefined,
+  })
+
+  if (!validation.success) {
+    const errors = formatErrorsToResponse(validation.error.issues)
+
+    return NextResponse.json({ errors }, { status: 400 })
+  }
+
+  const { estado } = validation.data
+
   try {
     const descuentos = await prismadb.descuento.findMany({
+      where: {
+        estado,
+      },
       orderBy: { createdAt: "asc" },
     })
 

@@ -5,7 +5,8 @@ export const getTipoDePlanSchema = z.object({
   id: z.string(),
   tipo: z.string().min(4),
   dias: z.array(z.nativeEnum(Dias)),
-  costo: z.coerce.number().nonnegative(),
+  costo: z.coerce.number().positive(),
+  cantidadDeClases: z.number().int().positive(),
 })
 
 export type TipoDePlanFromApi = z.infer<typeof getTipoDePlanSchema>
@@ -23,9 +24,10 @@ export type FormattedTipoDePlan = z.infer<typeof formattedTipoDePlan>
 
 const createTipoDePlanSchema = z.object({
   tipo: z.string().min(4),
-  costo: z
+  costo: z.union([z.string(), z.number()]).pipe(z.coerce.number().positive()),
+  cantidadDeClases: z
     .union([z.string(), z.number()])
-    .pipe(z.coerce.number().nonnegative()),
+    .pipe(z.coerce.number().int().positive()),
 })
 
 export const createTipoDePlanSchemaClient = z.object({

@@ -35,6 +35,7 @@ export const FormCreate = () => {
       tipo: "",
       dias: [],
       costo: "",
+      cantidadDeClases: "",
     },
   })
 
@@ -79,7 +80,7 @@ export const FormCreate = () => {
           name="tipo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Título</FormLabel>
+              <FormLabel>Nombre del plan</FormLabel>
               <FormControl>
                 <Input placeholder="Completo, normal, etc" {...field} />
               </FormControl>
@@ -109,7 +110,20 @@ export const FormCreate = () => {
           name="costo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Costo en bs</FormLabel>
+              <FormLabel>Costo en Bs</FormLabel>
+              <FormControl>
+                <Input type="number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="cantidadDeClases"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Cantidad de clases</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>
@@ -119,7 +133,7 @@ export const FormCreate = () => {
         />
         <div className="flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Create
+            Crear
           </Button>
         </div>
       </form>

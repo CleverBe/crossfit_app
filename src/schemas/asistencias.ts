@@ -1,5 +1,12 @@
 import { z } from "zod"
 
+export const getAsistenciaSchema = z.object({
+  id: z.string(),
+  fecha: z.string().datetime(),
+})
+
+export type AsistenciaFromApi = z.infer<typeof getAsistenciaSchema>
+
 const createAsistenciaSchema = z.object({
   codigo: z.string().min(6).max(7),
 })

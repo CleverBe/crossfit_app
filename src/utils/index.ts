@@ -155,17 +155,23 @@ export const checkTwoDates = ({
     date2: z.string().date(),
   })
 
-  const { date1, date2 } = validateDateSchema.parse({
+  const validation = validateDateSchema.safeParse({
     date1: dateInicial,
     date2: dateFinal,
   })
+
+  if (!validation.success) {
+    return { result: false, message: "Invalid format" }
+  }
+
+  const { date1, date2 } = validation.data
 
   const dateInicio = new Date(date1)
   const dateFin = new Date(date2)
 
   if (dateInicio < dateFin) {
-    return true
+    return { result: true, message: "Date inicio is before date final" }
   } else {
-    return false
+    return { result: false, message: "Date inicio is after date final" }
   }
 }

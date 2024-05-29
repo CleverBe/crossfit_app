@@ -2,6 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-actions"
+import { Estado } from "@prisma/client"
+import { Badge } from "@/components/ui/badge"
 
 export type InstructorColumn = {
   id: string
@@ -9,6 +11,7 @@ export type InstructorColumn = {
   email: string
   genero: string
   celular: string
+  estado: Estado
 }
 
 export const columns: ColumnDef<InstructorColumn>[] = [
@@ -18,7 +21,7 @@ export const columns: ColumnDef<InstructorColumn>[] = [
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: "Correo electrónico",
   },
   {
     accessorKey: "genero",
@@ -27,6 +30,17 @@ export const columns: ColumnDef<InstructorColumn>[] = [
   {
     accessorKey: "celular",
     header: "Celular",
+  },
+  {
+    accessorKey: "estado",
+    header: "Celular",
+    cell: ({ row }) => (
+      <Badge
+        variant={`${row.original.estado === "ACTIVO" ? "default" : "destructive"}`}
+      >
+        {row.original.estado}
+      </Badge>
+    ),
   },
   {
     id: "actions",

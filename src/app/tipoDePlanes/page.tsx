@@ -18,6 +18,7 @@ const Page = async () => {
       tipo: tipoDePlan.tipo,
       dias: sortDays(tipoDePlan.dias).join(", "),
       costo: `${tipoDePlan.costo}`,
+      cantidadDeClases: `${tipoDePlan.cantidadDeClases}`,
     }),
   )
 

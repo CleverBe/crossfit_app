@@ -27,7 +27,7 @@ export function ModalUpdate({ id, isOpen, onClose }: Props) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-h-[calc(100vh-210px)] w-11/12 overflow-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Edit Horario</DialogTitle>
+          <DialogTitle>Editar Horario</DialogTitle>
         </DialogHeader>
         {!data || isFetching ? (
           <FormUpdate.Skeleton />

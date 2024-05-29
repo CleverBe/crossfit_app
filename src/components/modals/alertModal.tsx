@@ -15,8 +15,8 @@ export const AlertModal = ({
   onClose,
   onConfirm,
   loading,
-  title = "Are you sure?",
-  description = "This action cannot be undone",
+  title = "¿Estas seguro?",
+  description = "Esta accion no se puede deshacer",
 }: Props) => {
   return (
     <ConfirmModal
@@ -27,10 +27,10 @@ export const AlertModal = ({
     >
       <div className="flex w-full items-center justify-end space-x-2 pt-6">
         <Button disabled={loading} variant="outline" onClick={onClose}>
-          Cancel
+          Cancelar
         </Button>
         <Button disabled={loading} variant="destructive" onClick={onConfirm}>
-          Continue
+          Confirmar
         </Button>
       </div>
     </ConfirmModal>

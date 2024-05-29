@@ -52,8 +52,8 @@ export const FormCreate = ({ periodo }: Props) => {
   const modalCreate = useCustomerModalCreate()
 
   const { data: descuentos } = useQuery({
-    queryKey: ["descuentos"],
-    queryFn: getDescuentosFn,
+    queryKey: ["descuentos_activos"],
+    queryFn: () => getDescuentosFn({ estado: "ACTIVO" }),
   })
 
   const { data: tiposDePlanes } = useQuery({
@@ -440,7 +440,7 @@ export const FormCreate = ({ periodo }: Props) => {
                         </SelectItem>
                         {tiposDePlanes?.map((tipoDePlan) => (
                           <SelectItem key={tipoDePlan.id} value={tipoDePlan.id}>
-                            {`${tipoDePlan.tipo} - ${tipoDePlan.costo} bs - ${formatDays(tipoDePlan.dias)}`}
+                            {`${tipoDePlan.tipo} - ${tipoDePlan.cantidadDeClases} clases - ${formatDays(tipoDePlan.dias)} - ${tipoDePlan.costo} Bs`}
                           </SelectItem>
                         ))}
                       </SelectContent>

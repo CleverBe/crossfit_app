@@ -118,7 +118,7 @@ export const FormUpdate = ({ user, onClose }: Props) => {
           name="email"
           render={({ field }) => (
             <FormItem className="col-span-6">
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Correo electrónico</FormLabel>
               <FormControl>
                 <Input
                   placeholder="myUsername@gmail.com"
@@ -135,12 +135,12 @@ export const FormUpdate = ({ user, onClose }: Props) => {
           name="password"
           render={({ field }) => (
             <FormItem className="col-span-6">
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Contraseña</FormLabel>
               <FormControl>
                 <Input placeholder="" {...field} />
               </FormControl>
               <FormDescription>
-                Leave password empty if you dont want to change it
+                Dejar en blanco si no deseas cambiar
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -151,7 +151,7 @@ export const FormUpdate = ({ user, onClose }: Props) => {
           name="role"
           render={({ field }) => (
             <FormItem className="col-span-6">
-              <FormLabel>Role</FormLabel>
+              <FormLabel>Rol</FormLabel>
               <Select
                 disabled={form.formState.isSubmitting}
                 onValueChange={field.onChange}
@@ -179,7 +179,7 @@ export const FormUpdate = ({ user, onClose }: Props) => {
           )}
         />
         <div className="col-span-10 space-y-2">
-          <Label htmlFor="image">Image</Label>
+          <Label htmlFor="image">Imagen</Label>
           <Input
             id="image"
             type="file"
@@ -189,7 +189,7 @@ export const FormUpdate = ({ user, onClose }: Props) => {
         </div>
         <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Update
+            Actualizar
           </Button>
         </div>
       </form>
@@ -201,23 +201,23 @@ FormUpdate.Skeleton = function FormUpdateSkeleton() {
   return (
     <div className="grid grid-cols-12 gap-2">
       <div className="col-span-6 space-y-2">
-        <Label>Username</Label>
+        <Label>Nombre</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="col-span-6 space-y-2">
-        <Label>Email</Label>
+        <Label>Correo electrónico</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="col-span-6 space-y-2">
-        <Label>Password</Label>
+        <Label>Contraseña</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="col-span-6 space-y-2">
-        <Label>Role</Label>
+        <Label>Rol</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="col-span-10 space-y-2">
-        <Label>Image</Label>
+        <Label>Imagen</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
       <div className="col-span-12 flex items-center justify-end">

@@ -147,7 +147,7 @@ export const FormUpdate = ({ horario, onClose }: Props) => {
         />
         <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
-            Update
+            Actualizar
           </Button>
         </div>
       </form>

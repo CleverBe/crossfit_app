@@ -7,17 +7,23 @@ export type TipoDePlanColumn = {
   id: string
   tipo: string
   dias: string
+  cantidadDeClases: string
   costo: string
 }
 
 export const columns: ColumnDef<TipoDePlanColumn>[] = [
   {
     accessorKey: "tipo",
-    header: "Tipo",
+    header: "Plan",
   },
   {
     accessorKey: "dias",
     header: "Dias",
+  },
+
+  {
+    accessorKey: "cantidadDeClases",
+    header: "Cantidad de clases",
   },
   {
     accessorKey: "costo",
