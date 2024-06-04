@@ -5,12 +5,19 @@ import { NextResponse } from "next/server"
 import bcrypt from "bcrypt"
 import { updateUserSchemaServer } from "@/schemas/users"
 import { formatErrorsToResponse } from "@/lib/utils"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (
   req: Request,
   { params }: { params: { userId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const user = await prismadb.usuario.findUnique({
       where: {
         id: params.userId,
@@ -46,6 +53,12 @@ export const PATCH = async (
   { params }: { params: { userId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const formData = await req.formData()
 
     const form = Object.fromEntries(formData.entries())
@@ -154,6 +167,12 @@ export const DELETE = async (
   { params }: { params: { userId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const userFound = await prismadb.usuario.findUnique({
       where: { id: params.userId },
     })

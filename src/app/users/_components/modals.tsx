@@ -1,6 +1,6 @@
 "use client"
 
-import { useUserModalUpdate } from "../_hooks/use-user-modal"
+import { useUserModalUpdate } from "../_hooks/useUserModal"
 import { ModalCreate } from "./modal-create"
 import { ModalUpdate } from "./modal-update"
 

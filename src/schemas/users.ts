@@ -112,3 +112,16 @@ export const updateUserSchemaServer = z
     ...createUserSchemaServer.shape,
   })
   .partial()
+
+const createUserSchemaWithoutPassword = createUserSchemaServer.omit({
+  password: true,
+})
+
+const updateUserWithoutPasswordSchema = z.object({
+  ...createUserSchemaWithoutPassword.shape,
+  imagen: z.string().optional(),
+})
+
+export const validateUserForJwtSchema = z.object({
+  ...updateUserWithoutPasswordSchema.shape,
+})

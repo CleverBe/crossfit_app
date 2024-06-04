@@ -3,28 +3,23 @@ import { formatErrorsToResponse } from "@/lib/utils"
 import { createAsistenciaSchemaServer } from "@/schemas/asistencias"
 import { PlanEstado } from "@prisma/client"
 import { NextResponse } from "next/server"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (req: Request) => {
-  const { searchParams } = new URL(req.url)
-
-  const planId = searchParams.get("planId")
-
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const asistencias = await prismadb.asistencias.findMany({
-      where: {
-        planId: planId || undefined,
-      },
       orderBy: {
-        createdAt: "desc",
+        fecha: "desc",
       },
     })
 
-    const formattedAsistencias = asistencias.map((asistencia) => ({
-      ...asistencia,
-      fecha: asistencia.fecha.toISOString(),
-    }))
-
-    return NextResponse.json(formattedAsistencias)
+    return NextResponse.json(asistencias)
   } catch (error) {
     console.log("[ASISTENCIAS-GET]", error)
     return NextResponse.json(
@@ -35,9 +30,13 @@ export const GET = async (req: Request) => {
 }
 
 export const POST = async (req: Request) => {
-  // TODO : LIMITAR EL NUMERO DE ASISTENCIAS
-
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     const parseResult = createAsistenciaSchemaServer.safeParse(body)
@@ -74,12 +73,24 @@ export const POST = async (req: Request) => {
             createdAt: "desc",
           },
         },
+        tipoDePlan: true,
       },
     })
 
     if (!currentPlan) {
       return NextResponse.json(
         { message: "El cliente no tiene un plan activo o no existe" },
+        { status: 400 },
+      )
+    }
+
+    if (
+      currentPlan.asistencias.length === currentPlan.tipoDePlan.cantidadDeClases
+    ) {
+      return NextResponse.json(
+        {
+          message: `Ya se han registrado todas las clases del plan`,
+        },
         { status: 400 },
       )
     }

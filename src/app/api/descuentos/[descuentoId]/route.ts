@@ -3,12 +3,19 @@ import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { updateDescuentoSchemaServer } from "@/schemas/descuentos"
 import { Prisma } from "@prisma/client"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (
   req: Request,
   { params }: { params: { descuentoId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const descuento = await prismadb.descuento.findUnique({
       where: {
         id: params.descuentoId,
@@ -37,6 +44,12 @@ export const PATCH = async (
   { params }: { params: { descuentoId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     const parseResult = updateDescuentoSchemaServer.safeParse(body)
@@ -100,6 +113,12 @@ export const DELETE = async (
   { params }: { params: { descuentoId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const descuentoFound = await prismadb.descuento.findUnique({
       where: { id: params.descuentoId },
     })

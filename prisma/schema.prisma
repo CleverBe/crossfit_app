@@ -165,7 +165,6 @@ model Plan {
 model Asistencias {
   id        String   @id @default(uuid())
   fecha     DateTime
-  estado    Boolean  @default(false)
   planId    String
   plan      Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())

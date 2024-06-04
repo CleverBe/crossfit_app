@@ -60,11 +60,10 @@ export const FormUpdate = ({ descuento, onClose }: Props) => {
       { id: descuento.id, ...values },
       {
         onSuccess: () => {
-          // TODO: VERIFICAR QUERYKEYS DE TODOS LOS COMPONENTES
           queryClient.invalidateQueries({ queryKey: ["descuentos"] })
           form.reset()
           router.refresh()
-          toast.success(`Descuento updated.`)
+          toast.success(`Descuento actualizado.`)
           onClose()
         },
         onError: (err: unknown) => {

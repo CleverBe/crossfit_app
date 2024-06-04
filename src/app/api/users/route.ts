@@ -5,9 +5,16 @@ import bcrypt from "bcrypt"
 import { uploadImageBuffer } from "@/lib/cloudinary"
 import { createUserSchemaServer } from "@/schemas/users"
 import { formatErrorsToResponse } from "@/lib/utils"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (req: Request) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const users = await prismadb.usuario.findMany({
       include: {
         imagen: true,
@@ -33,6 +40,12 @@ export const GET = async (req: Request) => {
 
 export const POST = async (req: Request) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const formData = await req.formData()
 
     const form = Object.fromEntries(formData.entries())

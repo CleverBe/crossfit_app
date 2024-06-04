@@ -17,26 +17,29 @@ interface Props {
 
 export const AsistenciasList = ({ asistencias }: Props) => {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead colSpan={2}>Fecha</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {asistencias.length > 0 ? (
-          asistencias.map((asistencia) => (
-            <AsistenciaCell key={asistencia.id} asistencia={asistencia} />
-          ))
-        ) : (
+    <div className="max-h-96 w-full overflow-y-auto">
+      <Table>
+        <TableHeader>
           <TableRow>
-            <TableCell colSpan={2} className="h-12 text-center">
-              Sin resultados.
-            </TableCell>
+            <TableHead>Fecha</TableHead>
+            <TableHead colSpan={2}>Hora</TableHead>
           </TableRow>
-        )}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {asistencias.length > 0 ? (
+            asistencias.map((asistencia) => (
+              <AsistenciaCell key={asistencia.id} asistencia={asistencia} />
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={3} className="h-12 p-1 text-center">
+                Sin resultados.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   )
 }
 

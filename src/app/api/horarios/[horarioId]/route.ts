@@ -3,13 +3,20 @@ import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { updateHorarioSchemaServer } from "@/schemas/horarios"
 import { Estado, Turno } from "@prisma/client"
-import { checkForConflict } from "@/utils"
+import { checkForConflict, compareTimes } from "@/utils"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (
   req: Request,
   { params }: { params: { horarioId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const horario = await prismadb.horario.findUnique({
       where: {
         id: params.horarioId,
@@ -38,6 +45,12 @@ export const PATCH = async (
   { params }: { params: { horarioId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     // Validate body
@@ -54,6 +67,9 @@ export const PATCH = async (
     // Check if horario exists
     const horarioFound = await prismadb.horario.findUnique({
       where: { id: params.horarioId },
+      include: {
+        horarioPeriodos: true,
+      },
     })
 
     if (!horarioFound) {
@@ -61,6 +77,30 @@ export const PATCH = async (
         { messsage: "Horario not found" },
         { status: 404 },
       )
+    }
+
+    // Check if new hora_inicio  is valid
+    if (hora_inicio) {
+      const isValid = compareTimes(hora_inicio, horarioFound.hora_fin)
+
+      if (!isValid) {
+        return NextResponse.json(
+          { message: "La hora inicial debe ser anterior a la hora final" },
+          { status: 400 },
+        )
+      }
+    }
+
+    // Check if new hora_fin  is valid
+    if (hora_fin) {
+      const isValid = compareTimes(horarioFound.hora_inicio, hora_fin)
+
+      if (!isValid) {
+        return NextResponse.json(
+          { message: "La hora final debe ser posterior a la hora inicial" },
+          { status: 400 },
+        )
+      }
     }
 
     // Check if there is a conflict
@@ -87,8 +127,16 @@ export const PATCH = async (
         )
       }
     }
-    // TODO: No permitir al usuario actualizar los horarios si hay periodo_horarios porque romperia la integridad
-    // en caso quiera actualizar enviar mensaje de que cree otro horario
+
+    if (horarioFound.horarioPeriodos.length > 0) {
+      return NextResponse.json(
+        {
+          message:
+            "No es posible actualizar el horario ya que existen registros relacionados a este horario, cree otro horario",
+        },
+        { status: 400 },
+      )
+    }
 
     // Update turno if hora_inicio is provided based on hora_inicio
     let turno: undefined | Turno = undefined
@@ -131,6 +179,12 @@ export const DELETE = async (
   { params }: { params: { horarioId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const horarioFound = await prismadb.horario.findUnique({
       where: { id: params.horarioId },
     })

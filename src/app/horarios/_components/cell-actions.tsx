@@ -15,8 +15,9 @@ import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { HorarioColumn } from "./columns"
-import { useHorarioModalUpdate } from "../_hooks/use-horario-modal"
+import { useHorarioModalUpdate } from "../_hooks/useHorarioModal"
 import { deleteHorarioFn } from "@/services/horarios"
+import { useSession } from "next-auth/react"
 
 interface CellActionProps {
   horario: HorarioColumn
@@ -26,6 +27,8 @@ export const CellAction = ({ horario }: CellActionProps) => {
   const router = useRouter()
   const modalUpdate = useHorarioModalUpdate()
   const queryClient = useQueryClient()
+  const { data: session } = useSession()
+  const user = session?.user
 
   const [open, setOpen] = useState(false)
 
@@ -42,7 +45,7 @@ export const CellAction = ({ horario }: CellActionProps) => {
         })
         queryClient.invalidateQueries({ queryKey: ["horarios"] })
         router.refresh()
-        toast.success(`Horario deleted.`)
+        toast.success(`Horario eliminado.`)
         setOpen(false)
       },
       onError: () => {
@@ -84,14 +87,16 @@ export const CellAction = ({ horario }: CellActionProps) => {
             <Edit className="mr-2 h-4 w-4" />
             Actualizar
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setOpen(true)
-            }}
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            Eliminar
-          </DropdownMenuItem>
+          {user?.role === "ADMIN" && (
+            <DropdownMenuItem
+              onClick={() => {
+                setOpen(true)
+              }}
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Eliminar
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

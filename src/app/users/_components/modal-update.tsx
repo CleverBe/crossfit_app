@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useUser } from "../_hooks/use-user"
+import { useUser } from "../_hooks/useUser"
 import { FormUpdate } from "./form-update"
 import { toast } from "sonner"
 

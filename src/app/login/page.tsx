@@ -36,11 +36,11 @@ const Page = () => {
         password: data.password,
         redirect: false,
       })
-
+      console.log({ res })
       if (res?.error) {
         toast.error("Something went wrong")
       } else {
-        toast.success("You are logged in")
+        toast.success("Ingresaste con exito")
         router.push("/users")
         // router.refresh()
       }

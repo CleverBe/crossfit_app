@@ -67,7 +67,7 @@ export const FormUpdate = ({ instructor, onClose }: Props) => {
 
           form.reset()
           router.refresh()
-          toast.success(`Instructor ${values.nombre} updated.`)
+          toast.success(`Instructor ${values.nombre} actualizado.`)
           onClose()
         },
         onError: (err: unknown) => {

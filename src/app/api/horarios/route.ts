@@ -4,9 +4,16 @@ import { formatErrorsToResponse } from "@/lib/utils"
 import { createHorarioSchemaServer } from "@/schemas/horarios"
 import { Estado, Turno } from "@prisma/client"
 import { checkForConflict } from "@/utils"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (req: Request) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const horarios = await prismadb.horario.findMany({
       orderBy: { createdAt: "asc" },
     })
@@ -23,6 +30,12 @@ export const GET = async (req: Request) => {
 
 export const POST = async (req: Request) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     // Validate body

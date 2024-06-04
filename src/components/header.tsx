@@ -9,15 +9,21 @@ import { NavBarLink } from "./navlink"
 import { ThemeToggle } from "./theme-toggle"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
-import { Separator } from "./ui/separator"
+import { Badge } from "./ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
 
 export const Header = () => {
   const [showNav, setShowNav] = useState(false)
   const [userMenu, setUserMenu] = useState(false)
-
+  // TODO: add loading state for session
   const { data: session, status } = useSession()
-
   const changeShowNav = (newState: boolean) => {
     setShowNav(newState)
   }
@@ -28,6 +34,7 @@ export const Header = () => {
     { label: "Horarios", href: "/horarios" },
     { label: "Tipos de planes", href: "/tipoDePlanes" },
     { label: "Descuentos", href: "/descuentos" },
+    { label: "Clientes", href: "/customers" },
     { label: "Asistencias", href: "/asistencias" },
   ]
 
@@ -48,57 +55,63 @@ export const Header = () => {
             Crossfit App
           </span>
         </Link>
-
         <div className="flex items-center gap-x-2 lg:order-2">
           <ThemeToggle />
           {session?.user && (
-            <Popover>
-              <PopoverTrigger asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <Button
                   size="icon"
-                  variant="ghost"
-                  className="size-8 rounded-full"
+                  variant="outline"
+                  className="select-none rounded-full"
                   onClick={() => {
                     setUserMenu(!userMenu)
                   }}
                 >
-                  <span className="sr-only">Open user menu</span>
+                  <span className="sr-only">Abrir menu de usuario</span>
                   <Image
                     width={60}
                     height={60}
-                    className="size-8 rounded-full"
-                    src="https://res.cloudinary.com/dldf8bt5g/image/upload/v1686697003/Users/default_user_jr8kfs.png"
+                    className="size-10 rounded-full"
+                    src={
+                      session.user.image ||
+                      "https://res.cloudinary.com/dldf8bt5g/image/upload/v1686697003/Users/default_user_jr8kfs.png"
+                    }
                     alt="user photo"
                   />
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent align="center" className="mx-1 w-64">
-                <div className="px-1 py-2">
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center">
+                <DropdownMenuGroup className="max-w-56 px-2">
+                  <div className="flex justify-center">
+                    <Badge variant="outline">{session.user.role}</Badge>
+                  </div>
                   <span
                     title={`${session.user.name}`}
-                    className="block truncate text-xl text-gray-900 dark:text-white"
+                    className="text-md block truncate text-gray-900 dark:text-white"
                   >
                     {session.user.name}
                   </span>
-                  <span className="block truncate text-sm text-gray-500 dark:text-gray-400">
+                  <span
+                    title={`${session.user.email}`}
+                    className="block truncate text-sm text-gray-500 dark:text-gray-400"
+                  >
                     {session.user.email}
                   </span>
-                </div>
-                <Separator />
-                <ul className="space-y-2 pt-2">
-                  <li>
-                    <button
-                      className="flex w-full justify-start rounded-lg px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                      onClick={() => {
-                        signOut()
-                      }}
-                    >
-                      Salir
-                    </button>
-                  </li>
-                </ul>
-              </PopoverContent>
-            </Popover>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      signOut()
+                    }}
+                  >
+                    Salir
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+              <DropdownMenuSeparator />
+            </DropdownMenu>
           )}
           <Button
             variant="default"

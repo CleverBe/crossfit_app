@@ -7,8 +7,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { toast } from "sonner"
-import { useAsistencias } from "../../_hooks/useAsistencias"
 import { AsistenciasList } from "./asistencias/asistenciasList"
+import { usePlan } from "../../_hooks/usePlan"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface Props {
   planId: string
@@ -17,7 +18,7 @@ interface Props {
 }
 
 export function ModalAsistenciasList({ planId, isOpen, onClose }: Props) {
-  const { data, isFetching, isError } = useAsistencias(planId)
+  const { data, isFetching, isError } = usePlan(planId)
 
   if (isError && !isFetching) {
     toast.error("Something went wrong")
@@ -25,14 +26,20 @@ export function ModalAsistenciasList({ planId, isOpen, onClose }: Props) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[calc(100vh-210px)] w-11/12 overflow-auto sm:max-w-lg">
+      <DialogContent className="w-11/12 overflow-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Lista de asistencias</DialogTitle>
+          {!data || isFetching ? (
+            <Skeleton className="h-5 w-3/4 bg-neutral-200" />
+          ) : (
+            <DialogTitle className="w-11/12">
+              {`Asistencias de ${data.cliente.nombre_completo} ${data.asistencias.length}/${data.tipoDePlan.cantidadDeClases}`}
+            </DialogTitle>
+          )}
         </DialogHeader>
         {!data || isFetching ? (
           <AsistenciasList.Skeleton />
         ) : (
-          <AsistenciasList asistencias={data} />
+          <AsistenciasList asistencias={data.asistencias} />
         )}
       </DialogContent>
     </Dialog>

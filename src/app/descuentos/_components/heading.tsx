@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { useDescuentoModalCreate } from "../_hooks/use-user-modal"
+import { useDescuentoModalCreate } from "../_hooks/useDescuentoModal"
 
 interface Props {
   descuentosLength: number

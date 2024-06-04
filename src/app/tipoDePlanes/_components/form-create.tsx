@@ -16,7 +16,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { handleGeneralErrors } from "@/lib/utils"
 import { useMutation } from "@tanstack/react-query"
-import { useTipoDePlanModalCreate } from "../_hooks/use-user-modal"
+import { useTipoDePlanModalCreate } from "../_hooks/useTipoDePlanModal"
 import {
   CreateTipoDePlanInputClient,
   createTipoDePlanSchemaClient,
@@ -50,7 +50,7 @@ export const FormCreate = () => {
       onSuccess: () => {
         form.reset()
         router.refresh()
-        toast.success(`TipoDePlan created.`)
+        toast.success(`Tipo de plan creado.`)
         modalCreate.onClose()
       },
       onError: (err: unknown) => {

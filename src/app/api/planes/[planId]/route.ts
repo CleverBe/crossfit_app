@@ -1,3 +1,4 @@
+import { getSessionServerSide } from "@/lib/getSession"
 import prismadb from "@/lib/prismadb"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { updatePlanSchemaServer } from "@/schemas/plan"
@@ -9,14 +10,22 @@ export const GET = async (
   { params }: { params: { planId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const plan = await prismadb.plan.findUnique({
       where: {
         id: params.planId,
       },
       include: {
+        cliente: true,
         tipoDePlan: true,
         descuento: true,
         pago: true,
+        asistencias: true,
       },
     })
 
@@ -39,6 +48,12 @@ export const PUT = async (
   { params }: { params: { planId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     const parseResult = updatePlanSchemaServer.safeParse(body)
@@ -189,6 +204,12 @@ export const DELETE = async (
   { params }: { params: { planId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const planFound = await prismadb.plan.findUnique({
       where: { id: params.planId },
     })

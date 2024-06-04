@@ -63,7 +63,7 @@ export const FormUpdate = ({ horario, onClose }: Props) => {
           queryClient.invalidateQueries({ queryKey: ["horarios"] })
           form.reset()
           router.refresh()
-          toast.success(`Horario updated.`)
+          toast.success(`Horario actualizado.`)
           onClose()
         },
         onError: (err: unknown) => {

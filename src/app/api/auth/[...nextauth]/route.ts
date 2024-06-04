@@ -3,8 +3,40 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import prismadb from "@/lib/prismadb"
 import bcrypt from "bcrypt"
 import { NextAuthOptions } from "next-auth"
+import { validateUserForJwtSchema } from "@/schemas/users"
 
 export const authOptions: NextAuthOptions = {
+  callbacks: {
+    jwt: ({ token, user, trigger, session }) => {
+      if (trigger === "update") {
+        const validation = validateUserForJwtSchema.safeParse(session)
+        if (validation.success) {
+          token.name = validation.data.nombre
+          token.email = validation.data.email
+          if (validation.data.role) {
+            token.role = validation.data.role
+          }
+          if (validation.data.imagen) {
+            token.image = validation.data.imagen
+          }
+        }
+      }
+      // The arguments user, account, profile and isNewUser are only passed the first time this callback is called on a new session
+      if (user) {
+        token.id = user.id
+        token.role = user.role
+        token.image = user.image
+      }
+      return token
+    },
+    session({ session, token }) {
+      session.user.id = token.id
+      session.user.role = token.role
+      session.user.image = token.image
+
+      return session
+    },
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -19,6 +51,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         const user = await prismadb.usuario.findUnique({
           where: { email: credentials?.email },
+          include: { imagen: true },
         })
 
         if (!user) {
@@ -38,10 +71,13 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           name: user.nombre,
           email: user.email,
+          role: user.role,
+          image: user.imagen?.secureUrl,
         }
       },
     }),
   ],
+
   pages: {
     signIn: "/login",
   },

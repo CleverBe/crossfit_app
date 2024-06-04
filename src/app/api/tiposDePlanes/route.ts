@@ -2,9 +2,16 @@ import prismadb from "@/lib/prismadb"
 import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { createTipoDePlanSchemaServer } from "@/schemas/tipoDePlanes"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (req: Request) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const tiposDePlanes = await prismadb.tipoDePlan.findMany({
       orderBy: { createdAt: "asc" },
     })
@@ -21,6 +28,12 @@ export const GET = async (req: Request) => {
 
 export const POST = async (req: Request) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     const parseResult = createTipoDePlanSchemaServer.safeParse(body)

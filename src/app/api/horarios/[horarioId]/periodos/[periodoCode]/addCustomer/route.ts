@@ -1,42 +1,47 @@
+import { getSessionServerSide } from "@/lib/getSession"
 import prismadb from "@/lib/prismadb"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { createCustomerSchemaServer } from "@/schemas/customer"
 import { Descuento, Prisma } from "@prisma/client"
 import { NextResponse } from "next/server"
 
-// TODO: NO PERMITIR CREAR UN PLAN PARA UN CLIENTE QUE YA TIENE UNO ACTIVO
-
 export const POST = async (
   req: Request,
   { params }: { params: { horarioId: string; periodoCode: string } },
 ) => {
-  const body = await req.json()
-
-  // Validate body
-  const parseResult = createCustomerSchemaServer.safeParse(body)
-
-  if (!parseResult.success) {
-    const errors = formatErrorsToResponse(parseResult.error.issues)
-
-    return NextResponse.json({ errors }, { status: 400 })
-  }
-
-  const {
-    nombre_completo,
-    genero,
-    cedula,
-    celular,
-    fecha_nacimiento,
-    fecha_inicio,
-    fecha_fin,
-    peso_cliente,
-    estatura,
-    tipoDePago,
-    tipoDePlanId,
-    descuentoId,
-  } = parseResult.data
-
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    const body = await req.json()
+
+    // Validate body
+    const parseResult = createCustomerSchemaServer.safeParse(body)
+
+    if (!parseResult.success) {
+      const errors = formatErrorsToResponse(parseResult.error.issues)
+
+      return NextResponse.json({ errors }, { status: 400 })
+    }
+
+    const {
+      nombre_completo,
+      genero,
+      cedula,
+      celular,
+      fecha_nacimiento,
+      fecha_inicio,
+      fecha_fin,
+      peso_cliente,
+      estatura,
+      tipoDePago,
+      tipoDePlanId,
+      descuentoId,
+    } = parseResult.data
+
     const periodo = await prismadb.horarioPeriodo.findUnique({
       where: {
         periodo_horarioId: {
@@ -79,6 +84,33 @@ export const POST = async (
         return NextResponse.json(
           { message: "Descuento not found / descuentoId is optional" },
           { status: 404 },
+        )
+      }
+    }
+
+    // GET CUSTOMER IF ALREADY EXISTS
+    const customer = await prismadb.cliente.findUnique({
+      where: {
+        nombre_completo_cedula: {
+          nombre_completo,
+          cedula,
+        },
+      },
+    })
+
+    // CHECK IF CUSTOMER HAS ACTIVE PLAN
+    if (customer) {
+      const userActivePlan = await prismadb.plan.findFirst({
+        where: {
+          clienteId: customer.id,
+          estado: "VIGENTE",
+        },
+      })
+
+      if (userActivePlan) {
+        return NextResponse.json(
+          { message: "El cliente ya tiene un plan activo" },
+          { status: 400 },
         )
       }
     }

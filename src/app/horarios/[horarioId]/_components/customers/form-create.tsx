@@ -52,12 +52,12 @@ export const FormCreate = ({ periodo }: Props) => {
   const modalCreate = useCustomerModalCreate()
 
   const { data: descuentos } = useQuery({
-    queryKey: ["descuentos_activos"],
+    queryKey: ["descuentos", { estado: "ACTIVO" }],
     queryFn: () => getDescuentosFn({ estado: "ACTIVO" }),
   })
 
   const { data: tiposDePlanes } = useQuery({
-    queryKey: ["tipoDePlanes"],
+    queryKey: ["tiposDePlanes"],
     queryFn: getTiposDePlanesFn,
   })
 

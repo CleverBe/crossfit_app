@@ -2,12 +2,19 @@ import prismadb from "@/lib/prismadb"
 import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { updateTipoDePlanSchemaServer } from "@/schemas/tipoDePlanes"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (
   req: Request,
   { params }: { params: { tipoDePlanId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const tipoDePlan = await prismadb.tipoDePlan.findUnique({
       where: {
         id: params.tipoDePlanId,
@@ -36,6 +43,12 @@ export const PATCH = async (
   { params }: { params: { tipoDePlanId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     const parseResult = updateTipoDePlanSchemaServer.safeParse(body)
@@ -86,6 +99,12 @@ export const DELETE = async (
   { params }: { params: { tipoDePlanId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const tipoDePlanFound = await prismadb.tipoDePlan.findUnique({
       where: { id: params.tipoDePlanId },
     })

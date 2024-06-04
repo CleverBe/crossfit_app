@@ -68,7 +68,6 @@ export const updateHorarioSchemaClient = z
 
 export type UpdateHorarioInput = z.infer<typeof updateHorarioSchemaClient>
 
-// TODO: check time validations with thunder client
 export const updateHorarioSchemaServer = z
   .object({
     ...updateHorarioSchema.shape,

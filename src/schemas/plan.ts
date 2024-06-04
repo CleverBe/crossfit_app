@@ -3,6 +3,8 @@ import { z } from "zod"
 import { getTipoDePlanSchema } from "./tipoDePlanes"
 import { getDescuentoSchema } from "./descuentos"
 import { checkTwoDates } from "@/utils"
+import { getCustomerSchema } from "./customer"
+import { getAsistenciaSchema } from "./asistencias"
 
 export const getPlanSchema = z.object({
   id: z.string(),
@@ -14,12 +16,14 @@ export const getPlanSchema = z.object({
   estado: z.nativeEnum(PlanEstado),
   tipoDePlan: getTipoDePlanSchema,
   descuento: getDescuentoSchema.nullable(),
+  cliente: getCustomerSchema,
   pago: z.object({
     id: z.string(),
     tipo_de_pago: z.nativeEnum(TipoDePago),
     fecha_de_pago: z.string(),
     monto: z.string(),
   }),
+  asistencias: z.array(getAsistenciaSchema),
 })
 
 export type PlanFromApi = z.infer<typeof getPlanSchema>

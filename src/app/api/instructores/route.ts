@@ -6,25 +6,32 @@ import {
   createInstructorSchemaServer,
   getInstructoresSearchParamsSchema,
 } from "@/schemas/instructores"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (req: Request) => {
-  const { searchParams } = new URL(req.url)
-
-  const estadoSearchParam = searchParams.get("estado")
-
-  const validation = getInstructoresSearchParamsSchema.safeParse({
-    estado: estadoSearchParam || undefined,
-  })
-
-  if (!validation.success) {
-    const errors = formatErrorsToResponse(validation.error.issues)
-
-    return NextResponse.json({ errors }, { status: 400 })
-  }
-
-  const { estado } = validation.data
-
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    const { searchParams } = new URL(req.url)
+
+    const estadoSearchParam = searchParams.get("estado")
+
+    const validation = getInstructoresSearchParamsSchema.safeParse({
+      estado: estadoSearchParam || undefined,
+    })
+
+    if (!validation.success) {
+      const errors = formatErrorsToResponse(validation.error.issues)
+
+      return NextResponse.json({ errors }, { status: 400 })
+    }
+
+    const { estado } = validation.data
+
     const instructores = await prismadb.instructor.findMany({
       where: {
         estado,
@@ -44,6 +51,12 @@ export const GET = async (req: Request) => {
 
 export const POST = async (req: Request) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     const parseResult = createInstructorSchemaServer.safeParse(body)

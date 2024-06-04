@@ -7,5 +7,6 @@ export const config = {
     "/horarios/:path*",
     "/tipoDePlanes/:path*",
     "/descuentos/:path*",
+    "/customers/:path*",
   ],
 }

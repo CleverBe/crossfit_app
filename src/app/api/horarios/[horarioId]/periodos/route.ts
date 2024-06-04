@@ -1,16 +1,20 @@
 import prismadb from "@/lib/prismadb"
 import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
-import { createHorarioSchemaServer } from "@/schemas/horarios"
-import { Estado, Turno } from "@prisma/client"
-import { checkForConflict } from "@/utils"
 import { createPeriodoSchemaServer } from "@/schemas/periodos"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (
   req: Request,
   { params }: { params: { horarioId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const periodos = await prismadb.horarioPeriodo.findMany({
       where: {
         horarioId: params.horarioId,
@@ -35,6 +39,12 @@ export const POST = async (
   { params }: { params: { horarioId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     // Validate body
@@ -74,7 +84,7 @@ export const POST = async (
       }
     }
 
-    // TODO: Check if PERIODO EXISTS
+    // Check if PERIODO EXISTS
     const duplicatePeriodo = await prismadb.horarioPeriodo.findFirst({
       where: {
         horarioId: params.horarioId,
@@ -88,8 +98,6 @@ export const POST = async (
         { status: 409 },
       )
     }
-
-    // TODO: Check IF INSTRUCTOR IS BUSY IN THAT HORARIO
 
     // Create periodo
     const newPeriodo = await prismadb.horarioPeriodo.create({

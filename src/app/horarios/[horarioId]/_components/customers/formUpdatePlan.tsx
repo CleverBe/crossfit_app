@@ -51,7 +51,7 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
 
   const { data: descuentos } = useQuery({
     queryKey: ["descuentos"],
-    queryFn: getDescuentosFn,
+    queryFn: () => getDescuentosFn({ estado: "ACTIVO" }),
   })
 
   const form = useForm<UpdatePlanSchemaInput>({
@@ -79,7 +79,7 @@ export const FormUpdatePlan = ({ plan, onClose }: Props) => {
           queryClient.invalidateQueries({ queryKey: ["planes"] })
           form.reset()
           router.refresh()
-          toast.success(`Plan updated.`)
+          toast.success(`Plan actualizado.`)
           onClose()
         },
         onError: (err: unknown) => {

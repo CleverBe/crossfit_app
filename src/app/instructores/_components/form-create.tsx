@@ -23,7 +23,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { handleGeneralErrors } from "@/lib/utils"
 import { useMutation } from "@tanstack/react-query"
-import { useInstructorModalCreate } from "../_hooks/use-user-modal"
+import { useInstructorModalCreate } from "../_hooks/useInstructorModal"
 import {
   CreateInstructorInput,
   createInstructorSchemaClient,
@@ -55,7 +55,7 @@ export const FormCreate = () => {
       onSuccess: () => {
         form.reset()
         router.refresh()
-        toast.success(`Instructor ${values.nombre} created.`)
+        toast.success(`Instructor ${values.nombre} creado.`)
         modalCreate.onClose()
       },
       onError: (err: unknown) => {

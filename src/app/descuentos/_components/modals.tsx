@@ -1,6 +1,6 @@
 "use client"
 
-import { useDescuentoModalUpdate } from "../_hooks/use-user-modal"
+import { useDescuentoModalUpdate } from "../_hooks/useDescuentoModal"
 import { ModalCreate } from "./modal-create"
 import { ModalUpdate } from "./modal-update"
 

@@ -4,7 +4,7 @@ import {
   getAsistenciaSchema,
 } from "@/schemas/asistencias"
 
-export const getAsistenciasFn = async (planId: string) => {
+export const getAsistenciasFn = async ({ planId }: { planId: string }) => {
   const response = await axiosInstance.get(`api/asistencias?planId=${planId}`)
 
   const validatedData = getAsistenciaSchema.array().parse(response.data)

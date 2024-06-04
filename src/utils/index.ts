@@ -175,3 +175,13 @@ export const checkTwoDates = ({
     return { result: false, message: "Date inicio is after date final" }
   }
 }
+
+export function calcularEdad(fechaNacimiento: string) {
+  const hoy = dayjs()
+
+  const nacimiento = dayjs(fechaNacimiento)
+
+  const edad = hoy.diff(nacimiento, "year")
+
+  return edad
+}

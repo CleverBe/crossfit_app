@@ -1,3 +1,4 @@
+import { getSessionServerSide } from "@/lib/getSession"
 import prismadb from "@/lib/prismadb"
 import { NextResponse } from "next/server"
 
@@ -6,6 +7,12 @@ export const DELETE = async (
   { params }: { params: { asistenciaId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const asistenciaFound = await prismadb.asistencias.findUnique({
       where: { id: params.asistenciaId },
     })

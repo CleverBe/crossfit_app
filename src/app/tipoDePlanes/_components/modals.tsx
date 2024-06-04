@@ -1,6 +1,6 @@
 "use client"
 
-import { useTipoDePlanModalUpdate } from "../_hooks/use-user-modal"
+import { useTipoDePlanModalUpdate } from "../_hooks/useTipoDePlanModal"
 import { ModalCreate } from "./modal-create"
 import { ModalUpdate } from "./modal-update"
 

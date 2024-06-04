@@ -3,12 +3,19 @@ import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { Prisma } from "@prisma/client"
 import { updateCustomerSchemaServer } from "@/schemas/customer"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (
   req: Request,
   { params }: { params: { customerId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const customer = await prismadb.cliente.findUnique({
       where: {
         id: params.customerId,
@@ -37,6 +44,12 @@ export const PATCH = async (
   { params }: { params: { customerId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     const parseResult = updateCustomerSchemaServer.safeParse(body)
@@ -112,6 +125,12 @@ export const DELETE = async (
   { params }: { params: { customerId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const customerFound = await prismadb.cliente.findUnique({
       where: { id: params.customerId },
     })

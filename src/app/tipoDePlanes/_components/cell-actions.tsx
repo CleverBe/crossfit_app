@@ -15,8 +15,9 @@ import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { TipoDePlanColumn } from "./columns"
-import { useTipoDePlanModalUpdate } from "../_hooks/use-user-modal"
+import { useTipoDePlanModalUpdate } from "../_hooks/useTipoDePlanModal"
 import { deleteTipoDePlanFn } from "@/services/tipoDePlanes"
+import { useSession } from "next-auth/react"
 
 interface CellActionProps {
   tipoDePlan: TipoDePlanColumn
@@ -26,6 +27,8 @@ export const CellAction = ({ tipoDePlan }: CellActionProps) => {
   const router = useRouter()
   const modalUpdate = useTipoDePlanModalUpdate()
   const queryClient = useQueryClient()
+  const { data: session } = useSession()
+  const user = session?.user
 
   const [open, setOpen] = useState(false)
 
@@ -37,12 +40,12 @@ export const CellAction = ({ tipoDePlan }: CellActionProps) => {
     mutate(tipoDePlan.id, {
       onSuccess: () => {
         queryClient.removeQueries({
-          queryKey: ["tipoDePlanes", tipoDePlan.id],
+          queryKey: ["tiposDePlanes", tipoDePlan.id],
           exact: true,
         })
-        queryClient.invalidateQueries({ queryKey: ["tipoDePlanes"] })
+        queryClient.invalidateQueries({ queryKey: ["tiposDePlanes"] })
         router.refresh()
-        toast.success(`Tipo de plan deleted.`)
+        toast.success(`Tipo de plan eliminado.`)
         setOpen(false)
       },
       onError: () => {
@@ -76,14 +79,16 @@ export const CellAction = ({ tipoDePlan }: CellActionProps) => {
             <Edit className="mr-2 h-4 w-4" />
             Actualizar
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setOpen(true)
-            }}
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            Eliminar
-          </DropdownMenuItem>
+          {user?.role === "ADMIN" && (
+            <DropdownMenuItem
+              onClick={() => {
+                setOpen(true)
+              }}
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Eliminar
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

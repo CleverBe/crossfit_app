@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useInstructor } from "../_hooks/use-user"
+import { useInstructor } from "../_hooks/useInstructor"
 import { FormUpdate } from "./form-update"
 import { toast } from "sonner"
 

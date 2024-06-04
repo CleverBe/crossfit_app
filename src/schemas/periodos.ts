@@ -4,13 +4,15 @@ export const periodoSearchParamsSchema = z.object({
   periodo: z.string().regex(/^(?:20\d{2})-(?:0[1-9]|1[0-2])$/),
 })
 
+export const validatePeriodoStringSchema = z
+  .string()
+  .regex(
+    /^(?:20\d{2})-(?:0[1-9]|1[0-2])$/,
+    "Formato de periodo incorrecto, ejemplo: 2020-01",
+  )
+
 const createPeriodoSchema = z.object({
-  periodo: z
-    .string()
-    .regex(
-      /^(?:20\d{2})-(?:0[1-9]|1[0-2])$/,
-      "Formato de fecha incorrecto, ejemplo: 2020-01",
-    ),
+  periodo: validatePeriodoStringSchema,
 })
 
 export const createPeriodoSchemaClient = z.object({

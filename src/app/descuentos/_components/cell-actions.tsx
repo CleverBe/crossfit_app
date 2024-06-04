@@ -15,8 +15,9 @@ import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { DescuentoColumn } from "./columns"
-import { useDescuentoModalUpdate } from "../_hooks/use-user-modal"
+import { useDescuentoModalUpdate } from "../_hooks/useDescuentoModal"
 import { deleteDescuentoFn } from "@/services/descuentos"
+import { useSession } from "next-auth/react"
 
 interface CellActionProps {
   descuento: DescuentoColumn
@@ -26,6 +27,8 @@ export const CellAction = ({ descuento }: CellActionProps) => {
   const router = useRouter()
   const modalUpdate = useDescuentoModalUpdate()
   const queryClient = useQueryClient()
+  const { data: session } = useSession()
+  const user = session?.user
 
   const [open, setOpen] = useState(false)
 
@@ -42,7 +45,7 @@ export const CellAction = ({ descuento }: CellActionProps) => {
         })
         queryClient.invalidateQueries({ queryKey: ["descuentos"] })
         router.refresh()
-        toast.success(`Descuento deleted.`)
+        toast.success(`Descuento eliminado.`)
         setOpen(false)
       },
       onError: () => {
@@ -76,14 +79,16 @@ export const CellAction = ({ descuento }: CellActionProps) => {
             <Edit className="mr-2 h-4 w-4" />
             Actualizar
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setOpen(true)
-            }}
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            Eliminar
-          </DropdownMenuItem>
+          {user?.role === "ADMIN" && (
+            <DropdownMenuItem
+              onClick={() => {
+                setOpen(true)
+              }}
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Eliminar
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

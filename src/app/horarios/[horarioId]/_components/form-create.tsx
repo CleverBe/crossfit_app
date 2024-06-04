@@ -43,7 +43,7 @@ export const FormCreate = ({ changePeriodoFiltro }: Props) => {
   const modalCreate = useHorarioPeriodoModalCreate()
 
   const { data: instructores } = useQuery({
-    queryKey: ["instructores_activos"],
+    queryKey: ["instructores", { estado: "ACTIVO" }],
     queryFn: () => getInstructoresFn({ estado: "ACTIVO" }),
   })
 
@@ -67,11 +67,9 @@ export const FormCreate = ({ changePeriodoFiltro }: Props) => {
       {
         onSuccess: () => {
           form.reset()
-
           router.refresh()
           changePeriodoFiltro(values.periodo)
-          toast.success(`Periodo created.`)
-
+          toast.success(`Periodo creado.`)
           modalCreate.onClose()
         },
         onError: (err: unknown) => {

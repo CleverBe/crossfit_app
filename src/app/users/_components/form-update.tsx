@@ -33,6 +33,7 @@ import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
 import { handleGeneralErrors } from "@/lib/utils"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useSession } from "next-auth/react"
 
 interface Props {
   user: UserFromApi
@@ -42,6 +43,7 @@ interface Props {
 export const FormUpdate = ({ user, onClose }: Props) => {
   const queryClient = useQueryClient()
   const router = useRouter()
+  const { data: session, status, update } = useSession()
 
   const form = useForm<UpdateUserInput>({
     resolver: zodResolver(updateUserSchemaClient),
@@ -58,40 +60,48 @@ export const FormUpdate = ({ user, onClose }: Props) => {
   })
 
   const onSubmit = async (values: UpdateUserInput) => {
-    const formData = new FormData()
+    if (status === "authenticated") {
+      const formData = new FormData()
 
-    formData.append("id", user.id)
-    formData.append("nombre", values.nombre)
-    formData.append("email", values.email)
-    if (values.password) {
-      formData.append("password", values.password)
-    }
-    formData.append("role", values.role)
-    if (values.imagen?.[0]) {
-      formData.append("imagen", values.imagen?.[0])
-    }
+      formData.append("id", user.id)
+      formData.append("nombre", values.nombre)
+      formData.append("email", values.email)
+      if (values.password) {
+        formData.append("password", values.password)
+      }
+      formData.append("role", values.role)
+      if (values.imagen?.[0]) {
+        formData.append("imagen", values.imagen?.[0])
+      }
 
-    mutate(formData, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["users"] })
-
-        form.reset()
-        router.refresh()
-        toast.success(`User ${values.nombre} updated.`)
-        onClose()
-      },
-      onError: (err: unknown) => {
-        const errorMessage = handleGeneralErrors(err)
-
-        if (Array.isArray(errorMessage)) {
-          errorMessage.forEach((error) => {
-            toast.error(error.message)
+      mutate(formData, {
+        onSuccess: (data) => {
+          update({
+            nombre: values.nombre,
+            email: values.email,
+            role: values.role,
+            imagen: data.image,
           })
-        } else {
-          toast.error(errorMessage)
-        }
-      },
-    })
+          queryClient.invalidateQueries({ queryKey: ["users"] })
+
+          form.reset()
+          router.refresh()
+          toast.success(`Usuario ${values.nombre} actualizado.`)
+          onClose()
+        },
+        onError: (err: unknown) => {
+          const errorMessage = handleGeneralErrors(err)
+
+          if (Array.isArray(errorMessage)) {
+            errorMessage.forEach((error) => {
+              toast.error(error.message)
+            })
+          } else {
+            toast.error(errorMessage)
+          }
+        },
+      })
+    }
   }
 
   return (

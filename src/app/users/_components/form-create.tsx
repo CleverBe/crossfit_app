@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { useUserModalCreate } from "../_hooks/use-user-modal"
+import { useUserModalCreate } from "../_hooks/useUserModal"
 import { handleGeneralErrors } from "@/lib/utils"
 import { useMutation } from "@tanstack/react-query"
 import { createUserFn } from "@/services/users"
@@ -61,7 +61,7 @@ export const FormCreate = () => {
       onSuccess: () => {
         form.reset()
         router.refresh()
-        toast.success(`User ${values.nombre} created.`)
+        toast.success(`Usuario ${values.nombre} creado.`)
         userModal.onClose()
       },
       onError: (err: unknown) => {

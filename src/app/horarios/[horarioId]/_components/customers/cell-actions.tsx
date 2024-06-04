@@ -55,7 +55,7 @@ export const CellAction = ({ plan }: CellActionProps) => {
         })
         queryClient.invalidateQueries({ queryKey: ["planes"] })
         router.refresh()
-        toast.success(`Plan deleted.`)
+        toast.success(`Plan eliminado.`)
         setOpen(false)
       },
       onError: () => {

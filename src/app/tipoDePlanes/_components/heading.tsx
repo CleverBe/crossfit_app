@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { useTipoDePlanModalCreate } from "../_hooks/use-user-modal"
+import { useTipoDePlanModalCreate } from "../_hooks/useTipoDePlanModal"
 
 interface Props {
   tipoDePlanesLength: number

@@ -35,7 +35,7 @@ export const AsistenciaCell = ({ asistencia }: Props) => {
         })
         queryClient.invalidateQueries({ queryKey: ["asistencias"] })
         router.refresh()
-        toast.success(`Asistencia deleted.`)
+        toast.success(`Asistencia eliminada.`)
         setOpen(false)
       },
       onError: () => {
@@ -53,21 +53,22 @@ export const AsistenciaCell = ({ asistencia }: Props) => {
         loading={isPending}
       />
       <TableRow key={asistencia.id}>
-        <TableCell>
-          {dayjsEs(asistencia.fecha).format(
-            "dddd D [de] MMMM [de] YYYY H:mm A",
-          )}
+        <TableCell className="p-1">
+          {dayjsEs(asistencia.fecha).format("dddd D [de] MMMM [de] YYYY")}
         </TableCell>
-        <TableCell>
+        <TableCell className="p-1">
+          {dayjsEs(asistencia.fecha).format("H:mm A")}
+        </TableCell>
+        <TableCell className="p-1">
           <Button
-            size="icon"
+            size="sm"
             variant="outline"
             className="hover:bg-red-400"
             onClick={() => {
               setOpen(true)
             }}
           >
-            <Trash className="size-5" />
+            <Trash className="size-4" />
           </Button>
         </TableCell>
       </TableRow>

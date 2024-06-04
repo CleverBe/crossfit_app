@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useUserModalCreate } from "../_hooks/use-user-modal"
+import { useUserModalCreate } from "../_hooks/useUserModal"
 import { FormCreate } from "./form-create"
 
 export function ModalCreate() {

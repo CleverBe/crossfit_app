@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { FormCreate } from "./form-create"
-import { useDescuentoModalCreate } from "../_hooks/use-user-modal"
+import { useDescuentoModalCreate } from "../_hooks/useDescuentoModal"
 
 export function ModalCreate() {
   const modalCreate = useDescuentoModalCreate()

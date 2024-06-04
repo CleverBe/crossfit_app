@@ -11,12 +11,13 @@ import { Button } from "@/components/ui/button"
 import { Edit, MoreHorizontal, Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { UserColumn } from "./columns"
-import { useUserModalUpdate } from "../_hooks/use-user-modal"
+import { useUserModalUpdate } from "../_hooks/useUserModal"
 import { AlertModal } from "@/components/modals/alertModal"
 import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { deleteUserFn } from "@/services/users"
 import { toast } from "sonner"
+import { useSession } from "next-auth/react"
 
 interface CellActionProps {
   user: UserColumn
@@ -26,6 +27,8 @@ export const CellAction = ({ user }: CellActionProps) => {
   const router = useRouter()
   const userModal = useUserModalUpdate()
   const queryClient = useQueryClient()
+  const { data: session } = useSession()
+  const userSession = session?.user
 
   const [open, setOpen] = useState(false)
 
@@ -42,7 +45,7 @@ export const CellAction = ({ user }: CellActionProps) => {
         })
         queryClient.invalidateQueries({ queryKey: ["users"] })
         router.refresh()
-        toast.success(`User ${user.name} deleted.`)
+        toast.success(`Usuario ${user.name} eliminado.`)
         setOpen(false)
       },
       onError: () => {
@@ -50,6 +53,8 @@ export const CellAction = ({ user }: CellActionProps) => {
       },
     })
   }
+
+  if (userSession?.role !== "ADMIN") return null
 
   return (
     <>

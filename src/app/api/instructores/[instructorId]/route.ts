@@ -1,14 +1,21 @@
 import prismadb from "@/lib/prismadb"
-import { Estado, Prisma } from "@prisma/client"
+import { Prisma } from "@prisma/client"
 import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { updateInstructorSchemaServer } from "@/schemas/instructores"
+import { getSessionServerSide } from "@/lib/getSession"
 
 export const GET = async (
   req: Request,
   { params }: { params: { instructorId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const instructor = await prismadb.instructor.findUnique({
       where: {
         id: params.instructorId,
@@ -37,6 +44,12 @@ export const PATCH = async (
   { params }: { params: { instructorId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await req.json()
 
     const parseResult = updateInstructorSchemaServer.safeParse(body)
@@ -103,6 +116,12 @@ export const DELETE = async (
   { params }: { params: { instructorId: string } },
 ) => {
   try {
+    const session = await getSessionServerSide()
+
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const instructorFound = await prismadb.instructor.findUnique({
       where: { id: params.instructorId },
     })

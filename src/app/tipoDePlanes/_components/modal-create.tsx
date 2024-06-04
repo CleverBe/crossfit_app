@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { FormCreate } from "./form-create"
-import { useTipoDePlanModalCreate } from "../_hooks/use-user-modal"
+import { useTipoDePlanModalCreate } from "../_hooks/useTipoDePlanModal"
 
 export function ModalCreate() {
   const modalCreate = useTipoDePlanModalCreate()

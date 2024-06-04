@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { useInstructorModalCreate } from "../_hooks/use-user-modal"
+import { useInstructorModalCreate } from "../_hooks/useInstructorModal"
 
 interface Props {
   instructoresLength: number

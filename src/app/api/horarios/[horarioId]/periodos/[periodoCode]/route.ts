@@ -1,6 +1,10 @@
+import { getSessionServerSide } from "@/lib/getSession"
 import prismadb from "@/lib/prismadb"
 import { formatErrorsToResponse } from "@/lib/utils"
-import { assignInstructorToPeriodoSchema } from "@/schemas/periodos"
+import {
+  assignInstructorToPeriodoSchema,
+  validatePeriodoStringSchema,
+} from "@/schemas/periodos"
 import { NextResponse } from "next/server"
 
 export const GET = async (
@@ -8,13 +12,44 @@ export const GET = async (
   { params }: { params: { horarioId: string; periodoCode: string } },
 ) => {
   try {
-    // TODO: VALIDAR PARAMETROS
+    const session = await getSessionServerSide()
 
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    // Check if horario exists
+    const horarioFound = await prismadb.horario.findUnique({
+      where: { id: params.horarioId },
+      include: {
+        horarioPeriodos: true,
+      },
+    })
+
+    if (!horarioFound) {
+      return NextResponse.json(
+        { message: "Horario not found" },
+        { status: 404 },
+      )
+    }
+
+    // Validate if periodoCode param satisfies format 2020-01
+    const validatePeriodoString = validatePeriodoStringSchema.safeParse(
+      params.periodoCode,
+    )
+
+    if (!validatePeriodoString.success) {
+      const errors = formatErrorsToResponse(validatePeriodoString.error.issues)
+
+      return NextResponse.json({ errors }, { status: 400 })
+    }
+
+    // Check if periodo exists
     const periodo = await prismadb.horarioPeriodo.findUnique({
       where: {
         periodo_horarioId: {
           periodo: params.periodoCode,
-          horarioId: params.horarioId,
+          horarioId: horarioFound.id,
         },
       },
     })
@@ -40,6 +75,12 @@ export const PATCH = async (
   req: Request,
   { params }: { params: { horarioId: string; periodoCode: string } },
 ) => {
+  const session = await getSessionServerSide()
+
+  if (!session) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
   const body = await req.json()
 
   // Validate body
@@ -93,8 +134,6 @@ export const PATCH = async (
         { status: 404 },
       )
     }
-
-    // TODO: VALIDATE IF INSTRUCTOR IS ASSIGNED TO ANOTHER PERIODO
 
     const updatedPeriodo = await prismadb.horarioPeriodo.update({
       where: {

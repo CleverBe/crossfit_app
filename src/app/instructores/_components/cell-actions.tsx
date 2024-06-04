@@ -15,8 +15,9 @@ import { AlertModal } from "@/components/modals/alertModal"
 import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { useInstructorModalUpdate } from "../_hooks/use-user-modal"
+import { useInstructorModalUpdate } from "../_hooks/useInstructorModal"
 import { deleteInstructorFn } from "@/services/instructores"
+import { useSession } from "next-auth/react"
 
 interface CellActionProps {
   instructor: InstructorColumn
@@ -26,6 +27,8 @@ export const CellAction = ({ instructor }: CellActionProps) => {
   const router = useRouter()
   const modalUpdate = useInstructorModalUpdate()
   const queryClient = useQueryClient()
+  const { data: session } = useSession()
+  const user = session?.user
 
   const [open, setOpen] = useState(false)
 
@@ -37,12 +40,12 @@ export const CellAction = ({ instructor }: CellActionProps) => {
     mutate(instructor.id, {
       onSuccess: () => {
         queryClient.removeQueries({
-          queryKey: ["instructors", instructor.id],
+          queryKey: ["instructores", instructor.id],
           exact: true,
         })
-        queryClient.invalidateQueries({ queryKey: ["instructors"] })
+        queryClient.invalidateQueries({ queryKey: ["instructores"] })
         router.refresh()
-        toast.success(`Instructor ${instructor.name} deleted.`)
+        toast.success(`Instructor ${instructor.name} eliminado.`)
         setOpen(false)
       },
       onError: () => {
@@ -76,14 +79,16 @@ export const CellAction = ({ instructor }: CellActionProps) => {
             <Edit className="mr-2 h-4 w-4" />
             Actualizar
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setOpen(true)
-            }}
-          >
-            <Trash className="mr-2 h-4 w-4" />
-            Eliminar
-          </DropdownMenuItem>
+          {user?.role === "ADMIN" && (
+            <DropdownMenuItem
+              onClick={() => {
+                setOpen(true)
+              }}
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Eliminar
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
