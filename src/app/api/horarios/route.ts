@@ -60,7 +60,10 @@ export const POST = async (req: Request) => {
 
     if (conflicto) {
       return NextResponse.json(
-        { message: "Existe un conflicto, no se pudo crear el horario" },
+        {
+          message:
+            "No se pudo crear el horario porque existe un conflicto con otro horario",
+        },
         { status: 400 },
       )
     }
