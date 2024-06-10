@@ -26,7 +26,7 @@ export const POST = async (req: Request) => {
 
     if (duplicateEmail) {
       return NextResponse.json(
-        { message: "Email already exists" },
+        { message: "Ya existe un usuario con este email" },
         { status: 400 },
       )
     }

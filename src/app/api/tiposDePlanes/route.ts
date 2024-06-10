@@ -3,6 +3,7 @@ import { NextResponse } from "next/server"
 import { formatErrorsToResponse } from "@/lib/utils"
 import { createTipoDePlanSchemaServer } from "@/schemas/tipoDePlanes"
 import { getSessionServerSide } from "@/lib/getSession"
+import { Prisma } from "@prisma/client"
 
 export const GET = async (req: Request) => {
   try {
@@ -58,6 +59,17 @@ export const POST = async (req: Request) => {
     return NextResponse.json(newTipoDePlan)
   } catch (error) {
     console.log("[TIPODEPLAN-POST]", error)
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        // @ts-ignore
+        if (error.meta?.target?.includes("tipo")) {
+          return NextResponse.json(
+            { message: "El tipo de plan ya existe" },
+            { status: 400 },
+          )
+        }
+      }
+    }
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

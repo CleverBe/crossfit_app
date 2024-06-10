@@ -23,18 +23,20 @@ export const formattedTipoDePlan = z.object({
 export type FormattedTipoDePlan = z.infer<typeof formattedTipoDePlan>
 
 const createTipoDePlanSchema = z.object({
-  tipo: z.string().min(4),
-  costo: z.union([z.string(), z.number()]).pipe(z.coerce.number().positive()),
+  tipo: z.string().min(4, "Debe tener al menos 4 caracteres"),
+  costo: z
+    .union([z.string(), z.number()])
+    .pipe(z.coerce.number().positive("Valor invalido")),
   cantidadDeClases: z
     .union([z.string(), z.number()])
-    .pipe(z.coerce.number().int().positive()),
+    .pipe(z.coerce.number().int().positive("Valor invalido")),
 })
 
 export const createTipoDePlanSchemaClient = z.object({
   ...createTipoDePlanSchema.shape,
   dias: z
     .array(z.object({ label: z.string(), value: z.nativeEnum(Dias) }))
-    .min(1),
+    .min(1, "Debe seleccionar al menos 1 dia"),
 })
 
 export type CreateTipoDePlanInputClient = z.input<

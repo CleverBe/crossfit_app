@@ -16,19 +16,20 @@ export const getCustomerSchema = z.object({
 export type CustomerFromApi = z.infer<typeof getCustomerSchema>
 
 const createCustomerSchema = z.object({
-  nombre_completo: z.string().min(3),
+  nombre_completo: z.string().min(6, "Debe tener al menos 6 caracteres"),
   genero: z.nativeEnum(Genero),
-  celular: z.string().min(7),
-  cedula: z.string().min(6).max(7),
+  celular: z.string().min(7, "Debe tener al menos 7 caracteres"),
+  cedula: z
+    .string()
+    .min(6, "Debe tener entre 6 y 7 caracteres")
+    .max(7, "Debe tener entre 6 y 7 caracteres"),
   peso_cliente: z
     .string()
     .optional()
     .refine((val) => {
       if (val === "" || val === undefined) return true
 
-      const valNum = z.coerce
-        .number()
-        .positive({ message: "Value must be positive" })
+      const valNum = z.coerce.number().positive({ message: "Valor invalido" })
       const validationNum = valNum.safeParse(val)
 
       if (!validationNum.success) {
@@ -44,9 +45,7 @@ const createCustomerSchema = z.object({
     .refine((val) => {
       if (val === "" || val === undefined) return true
 
-      const valNum = z.coerce
-        .number()
-        .positive({ message: "Value must be positive" })
+      const valNum = z.coerce.number().positive({ message: "Valor invalido" })
       const validationNum = valNum.safeParse(val)
 
       if (!validationNum.success) {
@@ -65,9 +64,7 @@ export const createCustomerSchemaClient = z
     fecha_nacimiento: z.string().date("Este campo es requerido"),
     fecha_inicio: z.string().date("Este campo es requerido"),
     fecha_fin: z.string().date("Este campo es requerido"),
-    tipoDePlanId: z
-      .string({ invalid_type_error: "Value must be a string" })
-      .uuid("Seleccione un tipo de plan"),
+    tipoDePlanId: z.string().uuid("Seleccione un tipo de plan"),
     descuentoId: z
       .union([z.string().uuid(), z.literal("unassigned")])
       .transform((value) => (value === "unassigned" ? undefined : value)),
@@ -128,19 +125,20 @@ export const createCustomerSchemaServer = z
 
 const updateCustomerSchema = z
   .object({
-    nombre_completo: z.string().min(3),
+    nombre_completo: z.string().min(3, "Debe tener al menos 3 caracteres"),
     genero: z.nativeEnum(Genero),
-    celular: z.string().min(7),
-    cedula: z.string().min(6).max(7),
+    celular: z.string().min(7, "Debe tener al menos 7 caracteres"),
+    cedula: z
+      .string()
+      .min(6, "Debe tener entre 6 y 7 caracteres")
+      .max(7, "Debe tener entre 6 y 7 caracteres"),
     peso_cliente: z
       .string()
       .optional()
       .refine((val) => {
         if (val === "" || val === undefined) return true
 
-        const valNum = z.coerce
-          .number()
-          .positive({ message: "Value must be positive" })
+        const valNum = z.coerce.number().positive({ message: "Valor invalido" })
         const validationNum = valNum.safeParse(val)
 
         if (!validationNum.success) {
@@ -156,9 +154,7 @@ const updateCustomerSchema = z
       .refine((val) => {
         if (val === "" || val === undefined) return true
 
-        const valNum = z.coerce
-          .number()
-          .positive({ message: "Value must be positive" })
+        const valNum = z.coerce.number().positive({ message: "Valor invalido" })
         const validationNum = valNum.safeParse(val)
 
         if (!validationNum.success) {

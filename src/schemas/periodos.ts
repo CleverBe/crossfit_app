@@ -1,9 +1,5 @@
 import { z } from "zod"
 
-export const periodoSearchParamsSchema = z.object({
-  periodo: z.string().regex(/^(?:20\d{2})-(?:0[1-9]|1[0-2])$/),
-})
-
 export const validatePeriodoStringSchema = z
   .string()
   .regex(

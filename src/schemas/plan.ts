@@ -35,9 +35,7 @@ const updatePlanSchema = z.object({
     .refine((val) => {
       if (val === "" || val === undefined) return true
 
-      const valNum = z.coerce
-        .number()
-        .positive({ message: "Value must be positive" })
+      const valNum = z.coerce.number().positive({ message: "Valor invalido" })
       const validationNum = valNum.safeParse(val)
 
       if (!validationNum.success) {
@@ -53,9 +51,7 @@ const updatePlanSchema = z.object({
     .refine((val) => {
       if (val === "" || val === undefined) return true
 
-      const valNum = z.coerce
-        .number()
-        .positive({ message: "Value must be positive" })
+      const valNum = z.coerce.number().positive({ message: "Valor invalido" })
       const validationNum = valNum.safeParse(val)
 
       if (!validationNum.success) {
@@ -73,9 +69,7 @@ export const updatePlanSchemaClient = z
     ...updatePlanSchema.shape,
     fecha_inicio: z.string().date("Este campo es requerido"),
     fecha_fin: z.string().date("Este campo es requerido"),
-    tipoDePlanId: z
-      .string({ invalid_type_error: "Value must be a string" })
-      .uuid("Seleccione un tipo de plan"),
+    tipoDePlanId: z.string().uuid("Seleccione un tipo de plan"),
     descuentoId: z
       .union([z.string().uuid(), z.literal("unassigned")])
       .transform((value) => (value === "unassigned" ? undefined : value))

@@ -60,7 +60,7 @@ export const POST = async (req: Request) => {
 
     if (conflicto) {
       return NextResponse.json(
-        { message: "There is a conflict with an existing schedule" },
+        { message: "Existe un conflicto, no se pudo crear el horario" },
         { status: 400 },
       )
     }

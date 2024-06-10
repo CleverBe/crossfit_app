@@ -94,9 +94,9 @@ export const PATCH = async (
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         // @ts-ignore
-        if (error.meta?.target?.[0] === "email") {
+        if (error.meta?.target?.includes("email")) {
           return NextResponse.json(
-            { message: "That email is already taken" },
+            { message: "Ya existe un instructor con este email" },
             {
               status: 400,
             },

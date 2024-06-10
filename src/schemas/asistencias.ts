@@ -8,7 +8,7 @@ export const getAsistenciaSchema = z.object({
 export type AsistenciaFromApi = z.infer<typeof getAsistenciaSchema>
 
 const createAsistenciaSchema = z.object({
-  codigo: z.string().min(6).max(7),
+  codigo: z.string(),
 })
 
 export const createAsistenciaSchemaClient = z.object({

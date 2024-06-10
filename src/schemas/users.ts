@@ -17,24 +17,9 @@ export const getUserSchema = z.object({
 export type UserFromApi = z.infer<typeof getUserSchema>
 
 const createUserSchema = z.object({
-  nombre: z
-    .string({
-      required_error: "Username is required",
-      invalid_type_error: "Username must be a string",
-    })
-    .min(4, "Username must be at least 4 characters long"),
-  email: z
-    .string({
-      required_error: "Email is required",
-      invalid_type_error: "Email must be a string",
-    })
-    .email("Email must be a valid email"),
-  password: z
-    .string({
-      required_error: "password is required",
-      invalid_type_error: "password must be a string",
-    })
-    .min(4, "Password must be at least 4 characters long"),
+  nombre: z.string().min(4, "Debe tener al menos 4 caracteres"),
+  email: z.string().email("Debe ser un correo valido"),
+  password: z.string().min(4, "Debe tener al menos 4 caracteres"),
   role: z.nativeEnum(Role),
 })
 
@@ -47,26 +32,26 @@ export const createUserSchemaClient = z.object({
       if (files instanceof FileList === false) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Invalid value",
+          message: "Valor invalido",
         })
       }
       if (files?.length > 1) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "You can select only one file",
+          message: "Solo puede subir un archivo",
         })
       }
       if (files?.length === 1) {
         if (files?.[0]?.size > MAX_FILE_SIZE) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Max file size is 2MB.",
+            message: "El archivo no debe superar los 2MB",
           })
         }
         if (!ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: ".jpg, .jpeg, .png and .webp files are accepted.",
+            message: "Solo se aceptan .jpg, .jpeg, .png y .webp",
           })
         }
       }
@@ -77,12 +62,12 @@ export const createUserSchemaClient = z.object({
 export const createUserSchemaServer = z.object({
   ...createUserSchema.shape,
   imagen: z
-    .instanceof(File, { message: "Image must be an instance of File" })
+    .instanceof(File, { message: "Debe ser un archivo" })
     .refine((image) => image.size < MAX_FILE_SIZE, {
-      message: "Max file size is 2MB.",
+      message: "El archivo no debe superar los 2MB",
     })
     .refine((image) => ACCEPTED_IMAGE_TYPES.includes(image.type), {
-      message: ".jpg, .jpeg, .png and .webp files are accepted.",
+      message: "Solo se aceptan .jpg, .jpeg, .png y .webp",
     })
     .optional(),
 })
@@ -91,18 +76,9 @@ export type CreateUserInput = z.infer<typeof createUserSchemaClient>
 
 export const updateUserSchemaClient = z.object({
   ...createUserSchemaClient.shape,
-  password: z.preprocess(
-    (password) => {
-      return password === "" ? undefined : password
-    },
-    z
-      .string({
-        required_error: "password is required",
-        invalid_type_error: "password must be a string",
-      })
-      .min(4, "Password must be at least 4 characters long")
-      .optional(),
-  ),
+  password: z.preprocess((password) => {
+    return password === "" ? undefined : password
+  }, z.string().min(4, "Debe tener al menos 4 caracteres").optional()),
 })
 
 export type UpdateUserInput = z.infer<typeof updateUserSchemaClient>

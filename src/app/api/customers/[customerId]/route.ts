@@ -104,7 +104,7 @@ export const PATCH = async (
         // @ts-ignore
         if (error.meta?.target?.includes("cedula")) {
           return NextResponse.json(
-            { message: "El usuario con esa cedula ya existe" },
+            { message: "Ya existe un cliente con esta cédula" },
             {
               status: 400,
             },

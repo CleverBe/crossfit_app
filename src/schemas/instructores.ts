@@ -18,11 +18,11 @@ export const getInstructoresSchema = z.array(getInstructorSchema)
 export type InstructoresFromApi = z.infer<typeof getInstructoresSchema>
 
 const createInstructorSchema = z.object({
-  nombre: z.string().min(4),
-  apellido: z.string().min(4),
-  email: z.string().email(),
+  nombre: z.string().min(4, "Debe tener al menos 4 caracteres"),
+  apellido: z.string().min(4, "Debe tener al menos 4 caracteres"),
+  email: z.string().email("Debe ser un correo valido"),
   genero: z.nativeEnum(Genero),
-  celular: z.string(),
+  celular: z.string().min(7, "Debe tener al menos 7 caracteres"),
 })
 
 export const createInstructorSchemaClient = z.object({

@@ -13,10 +13,15 @@ export type DescuentoFromApi = z.infer<typeof getDescuentoSchema>
 export const getDescuentosSchema = z.array(getDescuentoSchema)
 
 const createDescuentoSchema = z.object({
-  titulo: z.string().min(4),
+  titulo: z.string().min(4, "Debe tener al menos 4 caracteres"),
   porcentaje: z
     .union([z.string(), z.number()])
-    .pipe(z.coerce.number().positive().min(1).max(100)),
+    .pipe(
+      z.coerce
+        .number()
+        .positive("Valor invalido")
+        .max(100, "Debe ser menor a 100"),
+    ),
 })
 
 export const createDescuentoSchemaClient = z.object({

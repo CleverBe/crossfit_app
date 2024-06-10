@@ -99,7 +99,7 @@ enum Dias {
 
 model TipoDePlan {
   id               String   @id @default(uuid())
-  tipo             String
+  tipo             String   @unique
   costo            Decimal
   cantidadDeClases Int
   dias             Dias[]

@@ -13,8 +13,12 @@ export const getHorarioSchema = z.object({
 export type HorarioFromApi = z.infer<typeof getHorarioSchema>
 
 const createHorarioSchema = z.object({
-  hora_inicio: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
-  hora_fin: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
+  hora_inicio: z
+    .string()
+    .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, "Formato de hora incorrecto"),
+  hora_fin: z
+    .string()
+    .regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, "Formato de hora incorrecto"),
 })
 
 export const createHorarioSchemaClient = z

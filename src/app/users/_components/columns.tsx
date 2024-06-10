@@ -48,7 +48,6 @@ export const columns: ColumnDef<UserColumn>[] = [
       </Badge>
     ),
   },
-
   {
     id: "actions",
     cell: ({ row }) => <CellAction user={row.original} />,

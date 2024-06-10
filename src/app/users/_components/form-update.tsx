@@ -43,7 +43,7 @@ interface Props {
 export const FormUpdate = ({ user, onClose }: Props) => {
   const queryClient = useQueryClient()
   const router = useRouter()
-  const { data: session, status, update } = useSession()
+  const { status, update } = useSession()
 
   const form = useForm<UpdateUserInput>({
     resolver: zodResolver(updateUserSchemaClient),
@@ -189,13 +189,23 @@ export const FormUpdate = ({ user, onClose }: Props) => {
           )}
         />
         <div className="col-span-10 space-y-2">
-          <Label htmlFor="image">Imagen</Label>
+          <Label
+            htmlFor="image"
+            className={form.formState.errors.imagen && "text-destructive"}
+          >
+            Imagen
+          </Label>
           <Input
             id="image"
             type="file"
             {...form.register("imagen")}
             className="w-full"
           />
+          {form.formState.errors.imagen && (
+            <p className="text-sm font-medium text-destructive">
+              {form.formState.errors.imagen.message?.toString()}
+            </p>
+          )}
         </div>
         <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
