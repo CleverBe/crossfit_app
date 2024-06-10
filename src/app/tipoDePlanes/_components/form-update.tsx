@@ -83,12 +83,15 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="grid grid-cols-12 gap-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="tipo"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-12">
               <FormLabel>Nombre del plan</FormLabel>
               <FormControl>
                 <Input placeholder="Completo, Básico" {...field} />
@@ -101,7 +104,7 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
           control={form.control}
           name="dias"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-12">
               <FormLabel>Dias</FormLabel>
               <MultiSelect
                 selected={field.value}
@@ -117,7 +120,7 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
           control={form.control}
           name="costo"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Costo en bs</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
@@ -130,7 +133,7 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
           control={form.control}
           name="cantidadDeClases"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="col-span-6">
               <FormLabel>Cantidad de clases</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
@@ -139,7 +142,7 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
             </FormItem>
           )}
         />
-        <div className="flex w-full items-center justify-end">
+        <div className="col-span-12 flex w-full items-center justify-end">
           <Button disabled={isPending} type="submit">
             Actualizar
           </Button>
@@ -151,24 +154,24 @@ export const FormUpdate = ({ tipoDePlan, onClose }: Props) => {
 
 FormUpdate.Skeleton = function FormUpdateSkeleton() {
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
+    <div className="grid grid-cols-12 gap-2">
+      <div className="col-span-12 space-y-2">
         <Label>Nombre del plan</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
+      <div className="col-span-12 space-y-2">
         <Label>Dias</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
+      <div className="col-span-6 space-y-2">
         <Label>Costo</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="space-y-2">
+      <div className="col-span-6 space-y-2">
         <Label>Cantidad de clases</Label>
         <Skeleton className="h-10 bg-neutral-200" />
       </div>
-      <div className="flex items-center justify-end">
+      <div className="col-span-12 flex items-center justify-end">
         <Skeleton className="h-10 w-32 bg-neutral-200" />
       </div>
     </div>
