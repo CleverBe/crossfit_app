@@ -98,7 +98,7 @@ export const FormCreate = ({ periodo }: Props) => {
           form.reset()
 
           router.refresh()
-          toast.success(`Customer created.`)
+          toast.success(`Registrado con exito.`)
 
           modalCreate.onClose()
         },
