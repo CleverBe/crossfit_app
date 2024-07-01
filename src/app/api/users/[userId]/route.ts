@@ -1,6 +1,6 @@
 import { deleteImage, uploadImageBuffer } from "@/lib/cloudinary"
 import prismadb from "@/lib/prismadb"
-import { Prisma, Imagen } from "@prisma/client"
+import { Imagen } from "@prisma/client"
 import { NextResponse } from "next/server"
 import bcrypt from "bcrypt"
 import { updateUserSchemaServer } from "@/schemas/users"
@@ -73,6 +73,24 @@ export const PATCH = async (
 
     const { nombre, email, password, role, imagen } = parseResult.data
 
+    if (email) {
+      const duplicateEmail = await prismadb.usuario.findUnique({
+        where: {
+          email: email.toLocaleLowerCase(),
+          NOT: {
+            id: params.userId,
+          },
+        },
+      })
+
+      if (duplicateEmail) {
+        return NextResponse.json(
+          { message: "Ya existe un usuario con este email" },
+          { status: 400 },
+        )
+      }
+    }
+
     const userFound = await prismadb.usuario.findUnique({
       where: { id: params.userId },
       include: { imagen: true },
@@ -94,7 +112,7 @@ export const PATCH = async (
       },
       data: {
         nombre,
-        email,
+        email: email ? email.toLocaleLowerCase() : undefined,
         role,
         password: hashedPassword ? hashedPassword : undefined,
       },
@@ -142,19 +160,6 @@ export const PATCH = async (
     return NextResponse.json(formattedUser)
   } catch (error) {
     console.log("[USER-PATCH]", error)
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        // @ts-ignore
-        if (error.meta?.target?.includes("email")) {
-          return NextResponse.json(
-            { message: "Ya existe un usuario con este email" },
-            {
-              status: 400,
-            },
-          )
-        }
-      }
-    }
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

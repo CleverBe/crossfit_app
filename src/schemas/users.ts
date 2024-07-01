@@ -18,7 +18,7 @@ export type UserFromApi = z.infer<typeof getUserSchema>
 
 const createUserSchema = z.object({
   nombre: z.string().min(4, "Debe tener al menos 4 caracteres"),
-  email: z.string().email("Debe ser un correo valido"),
+  email: z.string().email("Debe ser un correo valido").toLowerCase(),
   password: z.string().min(4, "Debe tener al menos 4 caracteres"),
   role: z.nativeEnum(Role),
 })

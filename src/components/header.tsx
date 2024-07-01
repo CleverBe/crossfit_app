@@ -22,8 +22,10 @@ import {
 export const Header = () => {
   const [showNav, setShowNav] = useState(false)
   const [userMenu, setUserMenu] = useState(false)
-  // TODO: add loading state for session
+
   const { data: session, status } = useSession()
+  const user = session?.user
+
   const changeShowNav = (newState: boolean) => {
     setShowNav(newState)
   }
@@ -131,7 +133,7 @@ export const Header = () => {
             !showNav && "hidden",
           )}
         >
-          {session ? (
+          {user && (
             <ul className="mt-4 flex flex-col font-medium lg:mt-0 lg:flex-row lg:space-x-8">
               {routes.map((route) => (
                 <li key={route.href}>
@@ -144,16 +146,12 @@ export const Header = () => {
                 </li>
               ))}
             </ul>
-          ) : (
+          )}
+          {!user && status !== "loading" && (
             <ul className="mt-4 flex flex-col font-medium lg:mt-0 lg:flex-row lg:space-x-8">
               <li>
                 <NavBarLink navigateTo="/login" setShowNav={changeShowNav}>
                   Login
-                </NavBarLink>
-              </li>
-              <li>
-                <NavBarLink navigateTo="/register" setShowNav={changeShowNav}>
-                  Register
                 </NavBarLink>
               </li>
             </ul>

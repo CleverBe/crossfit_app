@@ -1,5 +1,5 @@
 import prismadb from "@/lib/prismadb"
-import { Prisma, Imagen } from "@prisma/client"
+import { Imagen } from "@prisma/client"
 import { NextResponse } from "next/server"
 import bcrypt from "bcrypt"
 import { uploadImageBuffer } from "@/lib/cloudinary"
@@ -60,12 +60,25 @@ export const POST = async (req: Request) => {
 
     const { nombre, email, password, role, imagen } = parseResult.data
 
+    const duplicateEmail = await prismadb.usuario.findUnique({
+      where: {
+        email: email.toLocaleLowerCase(),
+      },
+    })
+
+    if (duplicateEmail) {
+      return NextResponse.json(
+        { message: "Ya existe un usuario con este email" },
+        { status: 400 },
+      )
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const user = await prismadb.usuario.create({
       data: {
         nombre,
-        email,
+        email: email.toLocaleLowerCase(),
         password: hashedPassword,
         role,
       },
@@ -101,17 +114,6 @@ export const POST = async (req: Request) => {
     return NextResponse.json(formattedUser)
   } catch (error) {
     console.log("[USERS-POST]", error)
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        // @ts-ignore
-        if (error.meta?.target?.includes("email")) {
-          return NextResponse.json(
-            { message: "Ya existe un usuario con este correo" },
-            { status: 400 },
-          )
-        }
-      }
-    }
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
