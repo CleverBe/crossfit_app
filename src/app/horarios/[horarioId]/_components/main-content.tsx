@@ -1,27 +1,36 @@
 "use client"
 
-import { Instructor } from "@prisma/client"
-import { PlanColumn, columns } from "./customers/columns"
-import { HorarioWithPeriodos } from "@/types"
+import { Horario, HorarioPeriodo, Instructor } from "@prisma/client"
 import { Heading } from "./heading"
-import { DataTable } from "@/components/ui/data-table"
 import { useState } from "react"
+import { TableContent } from "./tableContent"
 
 interface Props {
-  horario: HorarioWithPeriodos
+  horario: Horario
   instructores: Instructor[]
-  customers: PlanColumn[]
+  horarioPeriodos: HorarioPeriodo[]
 }
 
-export const MainContent = ({ horario, instructores, customers }: Props) => {
-  const [periodoFiltro, setPeriodoFiltro] = useState<string | null>(() => {
-    return horario.horarioPeriodos.length > 0
-      ? horario.horarioPeriodos[0].periodo
-      : null
+export const MainContent = ({
+  horarioPeriodos,
+  horario,
+  instructores,
+}: Props) => {
+  const [periodoFilter, setPeriodoFilter] = useState<string>(() => {
+    return horarioPeriodos.length > 0
+      ? horarioPeriodos[0].periodo
+      : "unassigned"
   })
 
-  const changePeriodoFiltro = (newValue: string | null) => {
-    setPeriodoFiltro(newValue)
+  const currentHorarioPeriodo =
+    horarioPeriodos.length > 0
+      ? horarioPeriodos.find(
+          (horarioPeriodo) => horarioPeriodo.periodo === periodoFilter,
+        )
+      : undefined
+
+  const handlePeriodoFilter = (periodo: string) => {
+    setPeriodoFilter(periodo)
   }
 
   return (
@@ -29,10 +38,13 @@ export const MainContent = ({ horario, instructores, customers }: Props) => {
       <Heading
         horario={horario}
         instructores={instructores}
-        periodoFiltro={periodoFiltro}
-        changePeriodoFiltro={changePeriodoFiltro}
+        horarioPeriodos={horarioPeriodos}
+        currentHorarioPeriodo={currentHorarioPeriodo}
+        handlePeriodoFilter={handlePeriodoFilter}
       />
-      <DataTable columns={columns} data={customers} />
+      {currentHorarioPeriodo?.id && (
+        <TableContent periodoHorarioId={currentHorarioPeriodo.id} />
+      )}
     </>
   )
 }

@@ -8,8 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { HorarioWithPeriodos } from "@/types"
-import { Instructor } from "@prisma/client"
+import { Horario, HorarioPeriodo, Instructor } from "@prisma/client"
 import { useHorarioPeriodoModalCreate } from "../_hooks/useHorarioPeriodoModal"
 import { ModalCreatePeriodo } from "./modal-create-periodo"
 import { useMutation } from "@tanstack/react-query"
@@ -21,17 +20,19 @@ import { useCustomerModalCreate } from "../_hooks/useCustomerModal"
 import { Modals } from "./customers/modals"
 
 interface Props {
-  horario: HorarioWithPeriodos
+  horario: Horario
   instructores: Instructor[]
-  periodoFiltro: string | null
-  changePeriodoFiltro: (newValue: string | null) => void
+  horarioPeriodos: HorarioPeriodo[]
+  currentHorarioPeriodo?: HorarioPeriodo
+  handlePeriodoFilter: (periodo: string) => void
 }
 
 export const Heading = ({
   horario,
   instructores,
-  periodoFiltro,
-  changePeriodoFiltro,
+  horarioPeriodos,
+  currentHorarioPeriodo,
+  handlePeriodoFilter,
 }: Props) => {
   const router = useRouter()
 
@@ -39,22 +40,18 @@ export const Heading = ({
 
   const modalCreate = useHorarioPeriodoModalCreate()
 
-  const currentPeriodo = horario.horarioPeriodos.find(
-    (periodo) => periodo.periodo === periodoFiltro,
-  )
-
   const { mutate, isPending } = useMutation({
     mutationFn: assignInstructoToPeriodoFn,
   })
 
   const onAssignInstructorToPeriodo = async (instructorId: string) => {
-    if (!currentPeriodo) return
+    if (!currentHorarioPeriodo) return
 
     mutate(
       {
         instructorId,
         horarioId: horario.id,
-        periodoCode: currentPeriodo?.periodo,
+        periodoCode: currentHorarioPeriodo.periodo,
       },
       {
         onSuccess: () => {
@@ -86,18 +83,18 @@ export const Heading = ({
         <p>Estado del horario: {horario.estado}</p>
         <div className="flex items-center gap-2 py-3">
           <p>Periodo:</p>
-          {periodoFiltro && (
+          {currentHorarioPeriodo?.periodo && (
             <Select
               onValueChange={(value) => {
-                changePeriodoFiltro(value)
+                handlePeriodoFilter(value)
               }}
-              value={periodoFiltro}
+              defaultValue={currentHorarioPeriodo.periodo}
             >
               <SelectTrigger className="h-8 w-full px-1 sm:w-32 md:px-2">
-                <SelectValue placeholder="Todos" />
+                <SelectValue placeholder="Invalid" />
               </SelectTrigger>
               <SelectContent>
-                {horario.horarioPeriodos.map((periodo) => (
+                {horarioPeriodos.map((periodo) => (
                   <SelectItem value={periodo.periodo} key={periodo.id}>
                     {periodo.periodo}
                   </SelectItem>
@@ -114,43 +111,45 @@ export const Heading = ({
             Crear nuevo
           </Button>
         </div>
-        {periodoFiltro && (
-          <div className="flex items-center gap-2">
-            <p>Instructor: </p>
-            <Select
-              onValueChange={(value) => {
-                onAssignInstructorToPeriodo(value)
-              }}
-              disabled={isPending}
-              value={currentPeriodo?.instructor?.id || "unassigned"}
-            >
-              <SelectTrigger className="h-8 w-full px-1 sm:w-48 md:px-2">
-                <SelectValue placeholder="Sin asignar" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="unassigned">Sin asignar</SelectItem>
-                {instructores.map((instructor) => (
-                  <SelectItem value={instructor.id} key={instructor.id}>
-                    {instructor.nombre + " " + instructor.apellido}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        {currentHorarioPeriodo && (
+          <>
+            <div className="flex items-center gap-2">
+              <p>Instructor: </p>
+              <Select
+                onValueChange={(value) => {
+                  onAssignInstructorToPeriodo(value)
+                }}
+                disabled={isPending}
+                value={currentHorarioPeriodo.instructorId ?? "unassigned"}
+              >
+                <SelectTrigger className="h-8 w-full px-1 sm:w-48 md:px-2">
+                  <SelectValue placeholder="Sin asignar" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="unassigned">Sin asignar</SelectItem>
+                  {instructores.map((instructor) => (
+                    <SelectItem value={instructor.id} key={instructor.id}>
+                      {instructor.nombre + " " + instructor.apellido}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="py-3">
+              <Button
+                className="h-8"
+                onClick={() => {
+                  modalCreateCustomer.onOpen()
+                }}
+              >
+                Añadir cliente
+              </Button>
+            </div>
+          </>
         )}
-        <div className="py-3">
-          <Button
-            className="h-8"
-            onClick={() => {
-              modalCreateCustomer.onOpen()
-            }}
-          >
-            Añadir cliente
-          </Button>
-        </div>
       </div>
-      <ModalCreatePeriodo changePeriodoFiltro={changePeriodoFiltro} />
-      <Modals periodo={periodoFiltro} />
+      <ModalCreatePeriodo changePeriodoFiltro={handlePeriodoFilter} />
+      <Modals periodo={currentHorarioPeriodo?.periodo} />
     </>
   )
 }

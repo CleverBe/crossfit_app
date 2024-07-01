@@ -10,7 +10,7 @@ import { FormCreate } from "./form-create"
 import { useHorarioPeriodoModalCreate } from "../_hooks/useHorarioPeriodoModal"
 
 interface Props {
-  changePeriodoFiltro: (newValue: string | null) => void
+  changePeriodoFiltro: (newValue: string) => void
 }
 
 export function ModalCreatePeriodo({ changePeriodoFiltro }: Props) {

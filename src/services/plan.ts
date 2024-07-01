@@ -1,5 +1,23 @@
 import { axiosInstance } from "@/lib/axios"
-import { UpdatePlanSchemaOutput, getPlanSchema } from "@/schemas/plan"
+import {
+  UpdatePlanSchemaOutput,
+  getPlanSchema,
+  getPlansSchema,
+} from "@/schemas/plan"
+
+export const getPlansFn = async ({
+  horario_periodo_id,
+}: {
+  horario_periodo_id: string
+}) => {
+  const response = await axiosInstance.get(
+    `api/horarios_periodos/${horario_periodo_id}/planes`,
+  )
+
+  const validatedData = getPlansSchema.parse(response.data)
+
+  return validatedData
+}
 
 export const getPlanFn = async (id: string) => {
   const response = await axiosInstance.get(`api/planes/${id}`)

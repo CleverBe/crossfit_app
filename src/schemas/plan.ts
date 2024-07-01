@@ -26,6 +26,20 @@ export const getPlanSchema = z.object({
   asistencias: z.array(getAsistenciaSchema),
 })
 
+export const getPlansSchema = z
+  .object({
+    id: z.string(),
+    fecha_inscripcion: z.string(),
+    fecha_inicio: z.string(),
+    fecha_fin: z.string(),
+    peso_cliente: z.string().nullable(),
+    estatura_cliente: z.string().nullable(),
+    estado: z.nativeEnum(PlanEstado),
+    tipoDePlan: getTipoDePlanSchema,
+    cliente: getCustomerSchema,
+  })
+  .array()
+
 export type PlanFromApi = z.infer<typeof getPlanSchema>
 
 const updatePlanSchema = z.object({

@@ -2,7 +2,6 @@ import prismadb from "@/lib/prismadb"
 import { notFound } from "next/navigation"
 import { Estado } from "@prisma/client"
 import { MainContent } from "./_components/main-content"
-import { dayjsEs } from "@/lib/dayjs"
 
 interface Props {
   params: {
@@ -14,16 +13,6 @@ const Page = async ({ params }: Props) => {
   const horario = await prismadb.horario.findUnique({
     where: {
       id: params.horarioId,
-    },
-    include: {
-      horarioPeriodos: {
-        include: {
-          instructor: true,
-        },
-        orderBy: {
-          periodo: "desc",
-        },
-      },
     },
   })
 
@@ -37,30 +26,13 @@ const Page = async ({ params }: Props) => {
     notFound()
   }
 
-  const planes = await prismadb.plan.findMany({
+  const horarioPeriodos = await prismadb.horarioPeriodo.findMany({
     where: {
-      horarioPeriodoId: horario.horarioPeriodos[0]?.id ?? "", // TODO: Fix this
+      horarioId: horario.id,
     },
-    include: {
-      tipoDePlan: true,
-      cliente: true,
+    orderBy: {
+      periodo: "desc",
     },
-  })
-
-  const formattedPlanes = planes.map((plan) => {
-    return {
-      id: plan.id,
-      customerId: plan.cliente.id,
-      nombre: plan.cliente.nombre_completo,
-      celular: plan.cliente.celular,
-      cedula: plan.cliente.cedula,
-      tipoDePlan: plan.tipoDePlan.tipo,
-      fecha_inscripcion: dayjsEs(plan.fecha_inscripcion).format(
-        "DD/MM/YYYY HH:mm",
-      ),
-      fecha_inicio: dayjsEs(plan.fecha_inicio).format("DD/MM/YYYY"),
-      fecha_fin: dayjsEs(plan.fecha_fin).format("DD/MM/YYYY"),
-    }
   })
 
   return (
@@ -68,7 +40,7 @@ const Page = async ({ params }: Props) => {
       <MainContent
         horario={horario}
         instructores={instructores}
-        customers={formattedPlanes}
+        horarioPeriodos={horarioPeriodos}
       />
     </main>
   )

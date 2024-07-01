@@ -64,8 +64,8 @@ export const FormUpdateCustomer = ({ customer, onClose }: Props) => {
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["customers"] })
+          queryClient.invalidateQueries({ queryKey: ["planes"] })
           form.reset()
-          router.refresh()
           toast.success(`Cliente actualizado.`)
           onClose()
         },

@@ -29,8 +29,8 @@ import { getDescuentosFn } from "@/services/descuentos"
 import { getTiposDePlanesFn } from "@/services/tipoDePlanes"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Genero, TipoDePago } from "@prisma/client"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { useParams, useRouter } from "next/navigation"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useParams } from "next/navigation"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { useCustomerModalCreate } from "../../_hooks/useCustomerModal"
@@ -47,8 +47,8 @@ export const FormCreate = ({ periodo }: Props) => {
   const ref = useRef(null)
 
   const params = useParams<{ horarioId: string }>()
-  const router = useRouter()
-
+  // const router = useRouter()
+  const queryClient = useQueryClient()
   const modalCreate = useCustomerModalCreate()
 
   const { data: descuentos } = useQuery({
@@ -97,7 +97,8 @@ export const FormCreate = ({ periodo }: Props) => {
         onSuccess: () => {
           form.reset()
 
-          router.refresh()
+          // router.refresh()
+          queryClient.invalidateQueries({ queryKey: ["planes"] })
           toast.success(`Registrado con exito.`)
 
           modalCreate.onClose()

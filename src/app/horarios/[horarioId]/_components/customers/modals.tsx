@@ -9,7 +9,7 @@ import { ModalUpdateCustomer } from "./modal-update"
 import { ModalUpdatePlan } from "./modalUpdatePlan"
 
 interface Props {
-  periodo: string | null
+  periodo?: string
 }
 
 export const Modals = ({ periodo }: Props) => {

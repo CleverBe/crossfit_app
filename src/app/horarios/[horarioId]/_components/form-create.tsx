@@ -33,12 +33,12 @@ import { getInstructoresFn } from "@/services/instructores"
 import { getCurrentPeriodoYYYYMM } from "@/utils"
 
 interface Props {
-  changePeriodoFiltro: (newValue: string | null) => void
+  changePeriodoFiltro: (newValue: string) => void
 }
 
 export const FormCreate = ({ changePeriodoFiltro }: Props) => {
-  const router = useRouter()
   const params = useParams<{ horarioId: string }>()
+  const router = useRouter()
 
   const modalCreate = useHorarioPeriodoModalCreate()
 
