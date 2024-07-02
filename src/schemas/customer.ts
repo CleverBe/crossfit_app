@@ -1,6 +1,7 @@
 import { checkTwoDates } from "@/utils"
-import { Genero, TipoDePago } from "@prisma/client"
+import { Genero, PlanEstado, TipoDePago } from "@prisma/client"
 import { z } from "zod"
+import { getAsistenciaSchema } from "./asistencias"
 
 export const getCustomerSchema = z.object({
   id: z.string(),
@@ -14,6 +15,29 @@ export const getCustomerSchema = z.object({
 })
 
 export type CustomerFromApi = z.infer<typeof getCustomerSchema>
+
+export const getCustomerPlansSchema = z.object({
+  id: z.string(),
+  nombre_completo: z.string(),
+  genero: z.nativeEnum(Genero),
+  celular: z.string(),
+  cedula: z.string().min(6).max(7),
+  fecha_nacimiento: z.string().date(),
+  peso: z.string().nullish(),
+  estatura: z.string().nullish(),
+  planes: z.array(
+    z.object({
+      id: z.string(),
+      fecha_inscripcion: z.string(),
+      fecha_inicio: z.string(),
+      fecha_fin: z.string(),
+      peso_cliente: z.string().nullable(),
+      estatura_cliente: z.string().nullable(),
+      estado: z.nativeEnum(PlanEstado),
+      asistencias: z.array(getAsistenciaSchema),
+    }),
+  ),
+})
 
 const createCustomerSchema = z.object({
   nombre_completo: z.string().min(6, "Debe tener al menos 6 caracteres"),

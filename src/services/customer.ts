@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/lib/axios"
 import {
   CreateCustomerOutput,
+  getCustomerPlansSchema,
   getCustomerSchema,
   updateCustomerSchemaClientOutput,
 } from "@/schemas/customer"
@@ -17,6 +18,14 @@ export const getCustomerFn = async (id: string) => {
   const response = await axiosInstance.get(`api/customers/${id}`)
 
   const validatedData = getCustomerSchema.parse(response.data)
+
+  return validatedData
+}
+
+export const getCustomerPlansFn = async (id: string) => {
+  const response = await axiosInstance.get(`api/customers/${id}/plans`)
+
+  const validatedData = getCustomerPlansSchema.parse(response.data)
 
   return validatedData
 }

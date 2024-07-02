@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Edit, MoreHorizontal, Trash } from "lucide-react"
+import { Edit, MoreHorizontal, NotepadText, Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { AlertModal } from "@/components/modals/alertModal"
 import { useState } from "react"
@@ -18,6 +18,7 @@ import { CustomerColumn } from "./columns"
 import { useCustomerModalUpdate } from "../_hooks/useCustomerModal"
 import { deleteDescuentoFn } from "@/services/descuentos"
 import { useSession } from "next-auth/react"
+import { useCustomerPlansModal } from "../_hooks/useCustomerPlansModal"
 
 interface CellActionProps {
   customer: CustomerColumn
@@ -30,6 +31,7 @@ export const CellAction = ({ customer }: CellActionProps) => {
   const user = session?.user
 
   const modalUpdate = useCustomerModalUpdate()
+  const modalCustomerPlans = useCustomerPlansModal()
 
   const [open, setOpen] = useState(false)
 
@@ -72,6 +74,14 @@ export const CellAction = ({ customer }: CellActionProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={() => {
+              modalCustomerPlans.onOpen(customer.id)
+            }}
+          >
+            <NotepadText className="mr-2 h-4 w-4" />
+            Ver detalles
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
               modalUpdate.onOpen(customer.id)
