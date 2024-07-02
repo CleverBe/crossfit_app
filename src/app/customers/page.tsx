@@ -1,9 +1,9 @@
 import prismadb from "@/lib/prismadb"
 import { CustomerColumn, columns } from "./_components/columns"
 import { Heading } from "./_components/heading"
-import { DataTable } from "@/components/ui/data-table"
 import { Modals } from "./_components/modals"
 import { calcularEdad } from "@/utils"
+import { DataTableSearch } from "@/components/ui/data-table-search"
 
 const Page = async () => {
   const customers = await prismadb.cliente.findMany({
@@ -24,7 +24,7 @@ const Page = async () => {
   return (
     <main>
       <Heading customersLength={formattedCustomers.length} />
-      <DataTable columns={columns} data={formattedCustomers} />
+      <DataTableSearch columns={columns} data={formattedCustomers} />
       <Modals />
     </main>
   )
