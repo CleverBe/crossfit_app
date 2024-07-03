@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog"
 import { toast } from "sonner"
 import { FormUpdatePlan } from "./formUpdatePlan"
-import { usePlan } from "../../_hooks/usePlan"
+import { usePlan } from "../_hooks/usePlan"
 
 interface Props {
   id: string

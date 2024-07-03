@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { Edit, MoreHorizontal, NotepadText, Trash } from "lucide-react"
+import { Contact, MoreHorizontal, NotepadText, Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { AlertModal } from "@/components/modals/alertModal"
 import { useState } from "react"
@@ -30,7 +30,7 @@ export const CellAction = ({ customer }: CellActionProps) => {
   const { data: session } = useSession()
   const user = session?.user
 
-  const modalUpdate = useCustomerModalUpdate()
+  const modalUpdateCustomer = useCustomerModalUpdate()
   const modalCustomerPlans = useCustomerPlansModal()
 
   const [open, setOpen] = useState(false)
@@ -80,15 +80,15 @@ export const CellAction = ({ customer }: CellActionProps) => {
             }}
           >
             <NotepadText className="mr-2 h-4 w-4" />
-            Ver detalles
+            Ver planes
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              modalUpdate.onOpen(customer.id)
+              modalUpdateCustomer.onOpen(customer.id)
             }}
           >
-            <Edit className="mr-2 h-4 w-4" />
-            Actualizar
+            <Contact className="mr-2 h-4 w-4" />
+            Actualizar cliente
           </DropdownMenuItem>
           {user?.role === "ADMIN" && (
             <DropdownMenuItem

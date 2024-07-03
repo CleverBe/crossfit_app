@@ -9,7 +9,7 @@ import {
 import { toast } from "sonner"
 import { useCustomerPlans } from "../_hooks/useCustomerPlans"
 import { dayjsEs } from "@/lib/dayjs"
-import { AsistenciasList } from "@/app/horarios/[horarioId]/_components/customers/asistencias/asistenciasList"
+import { AsistenciasList } from "./asistencias/asistenciasList"
 
 interface Props {
   id: string

@@ -50,41 +50,40 @@ model Usuario {
 }
 
 model Instructor {
-  id              String           @id @default(uuid())
-  nombre          String
-  apellido        String
-  email           String           @unique
-  genero          Genero
-  celular         String
-  estado          Estado           @default(ACTIVO)
-  horarioPeriodos HorarioPeriodo[]
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id        String   @id @default(uuid())
+  nombre    String
+  apellido  String
+  email     String   @unique
+  genero    Genero
+  celular   String
+  estado    Estado   @default(ACTIVO)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Horario {
-  id              String           @id @default(uuid())
-  hora_inicio     String
-  hora_fin        String
-  turno           Turno
-  estado          Estado           @default(ACTIVO)
-  horarioPeriodos HorarioPeriodo[]
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id          String   @id @default(uuid())
+  hora_inicio String
+  hora_fin    String
+  turno       Turno
+  estado      Estado   @default(ACTIVO)
+  planes      Plan[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
-model HorarioPeriodo {
-  id           String      @id @default(uuid())
-  periodo      String
-  horarioId    String
-  horario      Horario     @relation(fields: [horarioId], references: [id], onDelete: Cascade)
-  instructorId String?
-  instructor   Instructor? @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-  planes       Plan[]
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+enum EstadoContrato {
+  ACTIVO
+  FINALIZADO
+}
 
-  @@unique([periodo, horarioId])
+model ContratoInstructor {
+  id                 String         @id @default(uuid())
+  fecha_inicio       String
+  fecha_finalizacion String
+  estado             EstadoContrato @default(ACTIVO)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
 }
 
 enum Dias {
@@ -140,26 +139,26 @@ enum PlanEstado {
 }
 
 model Plan {
-  id                String         @id @default(uuid())
+  id                String        @id @default(uuid())
   fecha_inscripcion DateTime
   fecha_inicio      String
   fecha_fin         String
   peso_cliente      Decimal?
   estatura_cliente  Decimal?
-  estado            PlanEstado     @default(VIGENTE)
+  estado            PlanEstado    @default(VIGENTE)
   clienteId         String
-  cliente           Cliente        @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  cliente           Cliente       @relation(fields: [clienteId], references: [id], onDelete: Cascade)
   tipoDePlanId      String
-  tipoDePlan        TipoDePlan     @relation(fields: [tipoDePlanId], references: [id], onDelete: Cascade)
-  horarioPeriodoId  String
-  horarioPeriodo    HorarioPeriodo @relation(fields: [horarioPeriodoId], references: [id], onDelete: Cascade)
+  tipoDePlan        TipoDePlan    @relation(fields: [tipoDePlanId], references: [id], onDelete: Cascade)
   asistencias       Asistencias[]
-  pagoId            String         @unique // 1 to 1
-  pago              Pago           @relation(fields: [pagoId], references: [id], onDelete: Cascade)
+  pagoId            String        @unique // 1 to 1
+  pago              Pago          @relation(fields: [pagoId], references: [id], onDelete: Cascade)
   descuentoId       String?
-  descuento         Descuento?     @relation(fields: [descuentoId], references: [id], onDelete: Cascade)
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  descuento         Descuento?    @relation(fields: [descuentoId], references: [id], onDelete: Cascade)
+  horario           Horario       @relation(fields: [horarioId], references: [id])
+  horarioId         String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 }
 
 model Asistencias {

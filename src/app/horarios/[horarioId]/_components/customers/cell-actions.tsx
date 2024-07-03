@@ -8,13 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import {
-  CalendarDays,
-  Contact,
-  MoreHorizontal,
-  NotepadText,
-  Trash,
-} from "lucide-react"
+import { Contact, MoreHorizontal, Trash } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { AlertModal } from "@/components/modals/alertModal"
 import { useState } from "react"
@@ -22,10 +16,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { PlanColumn } from "./columns"
 import { useCustomerModalUpdate } from "../../_hooks/useCustomerModal"
-import { usePlanModalUpdate } from "../../_hooks/usePlanModal"
 import { deletePlanFn } from "@/services/plan"
-import { useAsistenciasModal } from "../../_hooks/useAsistenciasModal"
-
 interface CellActionProps {
   plan: PlanColumn
 }
@@ -37,10 +28,6 @@ export const CellAction = ({ plan }: CellActionProps) => {
   const [open, setOpen] = useState(false)
 
   const modalUpdateCustomer = useCustomerModalUpdate()
-
-  const modalUpdatePlan = usePlanModalUpdate()
-
-  const modalAsistencias = useAsistenciasModal()
 
   const { mutate, isPending } = useMutation({
     mutationFn: deletePlanFn,
@@ -88,22 +75,6 @@ export const CellAction = ({ plan }: CellActionProps) => {
           >
             <Contact className="mr-2 h-4 w-4" />
             Detalles cliente
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              modalUpdatePlan.onOpen(plan.id)
-            }}
-          >
-            <NotepadText className="mr-2 h-4 w-4" />
-            Detalles plan
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              modalAsistencias.onOpen(plan.id)
-            }}
-          >
-            <CalendarDays className="mr-2 h-4 w-4" />
-            Asistencias
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server"
 
 export const GET = async (
   req: Request,
-  { params }: { params: { horarioPeriodoId: string } },
+  { params }: { params: { horarioId: string } },
 ) => {
   try {
     const session = await getSessionServerSide()
@@ -15,9 +15,8 @@ export const GET = async (
 
     const planes = await prismadb.plan.findMany({
       where: {
-        horarioPeriodoId: params.horarioPeriodoId,
+        horarioId: params.horarioId,
       },
-      orderBy: { createdAt: "desc" },
       include: {
         cliente: true,
         tipoDePlan: true,
@@ -26,7 +25,7 @@ export const GET = async (
 
     return NextResponse.json(planes)
   } catch (error) {
-    console.log("[HORARIOS_PERIODOS_PLAN-GET]", error)
+    console.log("[PLANES-GET]", error)
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },

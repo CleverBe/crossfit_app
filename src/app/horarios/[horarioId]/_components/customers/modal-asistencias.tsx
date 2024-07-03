@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { toast } from "sonner"
-import { AsistenciasList } from "./asistencias/asistenciasList"
+import { AsistenciasList } from "../../../../customers/_components/asistencias/asistenciasList"
 import { usePlan } from "../../_hooks/usePlan"
 import { Skeleton } from "@/components/ui/skeleton"
 

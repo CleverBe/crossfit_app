@@ -6,14 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { FormCreate } from "./form-create"
-import { useCustomerModalCreate } from "../../_hooks/useCustomerModal"
+import { FormCreate } from "./form-create-plan"
+import { useCustomerModalCreate } from "../_hooks/useCustomerModal"
 
-interface Props {
-  periodo: string
-}
-
-export function ModalCreateCustomer({ periodo }: Props) {
+export function ModalCreateCustomer() {
   const modalCreate = useCustomerModalCreate()
 
   return (
@@ -23,7 +19,7 @@ export function ModalCreateCustomer({ periodo }: Props) {
           <DialogTitle>Registrar cliente</DialogTitle>
         </DialogHeader>
         <div className="flex items-center justify-center">
-          <FormCreate periodo={periodo} />
+          <FormCreate />
         </div>
       </DialogContent>
     </Dialog>

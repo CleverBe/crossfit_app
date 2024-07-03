@@ -30,30 +30,31 @@ import { getTiposDePlanesFn } from "@/services/tipoDePlanes"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Genero, TipoDePago } from "@prisma/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { useCustomerModalCreate } from "../../_hooks/useCustomerModal"
 import { formatDays } from "@/utils"
 import { useRef, useState } from "react"
 import { useOnClickOutside } from "usehooks-ts"
+import { useCustomerModalCreate } from "../_hooks/useCustomerModal"
+import { getHorariosFn } from "@/services/horarios"
 
-interface Props {
-  periodo: string
-}
-
-export const FormCreate = ({ periodo }: Props) => {
+export const FormCreate = () => {
   const [suggestions, setSuggestions] = useState<string[]>([])
   const ref = useRef(null)
 
-  const params = useParams<{ horarioId: string }>()
-  // const router = useRouter()
+  const router = useRouter()
   const queryClient = useQueryClient()
   const modalCreate = useCustomerModalCreate()
 
   const { data: descuentos } = useQuery({
     queryKey: ["descuentos", { estado: "ACTIVO" }],
     queryFn: () => getDescuentosFn({ estado: "ACTIVO" }),
+  })
+
+  const { data: horarios } = useQuery({
+    queryKey: ["horarios"],
+    queryFn: () => getHorariosFn(),
   })
 
   const { data: tiposDePlanes } = useQuery({
@@ -79,6 +80,7 @@ export const FormCreate = ({ periodo }: Props) => {
       fecha_fin: "",
       cedula: "",
       tipoDePago: TipoDePago.EFECTIVO,
+      horarioId: "unassigned",
       tipoDePlanId: "unassigned",
       descuentoId: "unassigned",
     },
@@ -91,31 +93,28 @@ export const FormCreate = ({ periodo }: Props) => {
   const onSubmit: SubmitHandler<CreateCustomerInput> = async (data) => {
     const values = data as CreateCustomerOutput
 
-    mutate(
-      { ...values, horarioId: params.horarioId, periodoCode: periodo },
-      {
-        onSuccess: () => {
-          form.reset()
+    mutate(values, {
+      onSuccess: () => {
+        form.reset()
 
-          // router.refresh()
-          queryClient.invalidateQueries({ queryKey: ["planes"] })
-          toast.success(`Registrado con exito.`)
+        router.refresh()
+        queryClient.invalidateQueries({ queryKey: ["planes"] })
+        toast.success(`Registrado con exito.`)
 
-          modalCreate.onClose()
-        },
-        onError: (err: unknown) => {
-          const errorMessage = handleGeneralErrors(err)
-
-          if (Array.isArray(errorMessage)) {
-            errorMessage.forEach((error) => {
-              toast.error(error.message)
-            })
-          } else {
-            toast.error(errorMessage)
-          }
-        },
+        modalCreate.onClose()
       },
-    )
+      onError: (err: unknown) => {
+        const errorMessage = handleGeneralErrors(err)
+
+        if (Array.isArray(errorMessage)) {
+          errorMessage.forEach((error) => {
+            toast.error(error.message)
+          })
+        } else {
+          toast.error(errorMessage)
+        }
+      },
+    })
   }
 
   const handleClickOutside = () => {
@@ -359,6 +358,41 @@ export const FormCreate = ({ periodo }: Props) => {
             <div className="grid grid-cols-12 gap-2">
               <FormField
                 control={form.control}
+                name="horarioId"
+                render={({ field }) => (
+                  <FormItem className="col-span-12">
+                    <FormLabel>Horario</FormLabel>
+                    <Select
+                      disabled={isPending}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            defaultValue={field.value}
+                            placeholder="Seleccione un horario"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="unassigned">
+                          Seleccione un horario
+                        </SelectItem>
+                        {horarios?.map((horario) => (
+                          <SelectItem key={horario.id} value={horario.id}>
+                            {`${horario.hora_inicio} - ${horario.hora_fin}`}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="fecha_inicio"
                 render={({ field }) => (
                   <FormItem className="col-span-6">
@@ -450,6 +484,7 @@ export const FormCreate = ({ periodo }: Props) => {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="descuentoId"

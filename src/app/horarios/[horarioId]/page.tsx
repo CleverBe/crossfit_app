@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb"
 import { notFound } from "next/navigation"
-import { Estado } from "@prisma/client"
 import { MainContent } from "./_components/main-content"
+import { Modals } from "./_components/customers/modals"
 
 interface Props {
   params: {
@@ -16,32 +16,14 @@ const Page = async ({ params }: Props) => {
     },
   })
 
-  const instructores = await prismadb.instructor.findMany({
-    where: {
-      estado: Estado.ACTIVO,
-    },
-  })
-
   if (!horario) {
     notFound()
   }
 
-  const horarioPeriodos = await prismadb.horarioPeriodo.findMany({
-    where: {
-      horarioId: horario.id,
-    },
-    orderBy: {
-      periodo: "desc",
-    },
-  })
-
   return (
     <main>
-      <MainContent
-        horario={horario}
-        instructores={instructores}
-        horarioPeriodos={horarioPeriodos}
-      />
+      <MainContent horario={horario} />
+      <Modals />
     </main>
   )
 }

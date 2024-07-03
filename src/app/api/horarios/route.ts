@@ -18,7 +18,7 @@ export const GET = async (req: Request) => {
       orderBy: { createdAt: "asc" },
     })
 
-    return NextResponse.json({ horarios })
+    return NextResponse.json(horarios)
   } catch (error) {
     console.log("[HORARIOS-GET]", error)
     return NextResponse.json(

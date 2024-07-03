@@ -26,6 +26,7 @@ export const GET = async (
         descuento: true,
         pago: true,
         asistencias: true,
+        horario: true,
       },
     })
 

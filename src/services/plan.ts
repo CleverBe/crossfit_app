@@ -5,14 +5,12 @@ import {
   getPlansSchema,
 } from "@/schemas/plan"
 
-export const getPlansFn = async ({
-  horario_periodo_id,
+export const getHorarioPlansFn = async ({
+  horarioId,
 }: {
-  horario_periodo_id: string
+  horarioId: string
 }) => {
-  const response = await axiosInstance.get(
-    `api/horarios_periodos/${horario_periodo_id}/planes`,
-  )
+  const response = await axiosInstance.get(`api/planes/horario/${horarioId}`)
 
   const validatedData = getPlansSchema.parse(response.data)
 

@@ -5,6 +5,14 @@ import {
   getHorarioSchema,
 } from "@/schemas/horarios"
 
+export const getHorariosFn = async () => {
+  const response = await axiosInstance.get(`api/horarios`)
+
+  const validatedData = getHorarioSchema.array().parse(response.data)
+
+  return validatedData
+}
+
 export const getHorarioFn = async (id: string) => {
   const response = await axiosInstance.get(`api/horarios/${id}`)
 

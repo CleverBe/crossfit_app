@@ -31,14 +31,9 @@ export const getCustomerPlansFn = async (id: string) => {
 }
 
 export const createCustomerFn = async (
-  data: CreateCustomerOutput & { horarioId: string; periodoCode: string },
+  data: CreateCustomerOutput & { horarioId: string },
 ) => {
-  const { horarioId, periodoCode, ...rest } = data
-
-  const response = await axiosInstance.post(
-    `api/horarios/${horarioId}/periodos/${periodoCode}/addCustomer`,
-    rest,
-  )
+  const response = await axiosInstance.post(`api/planes`, data)
 
   return response.data
 }

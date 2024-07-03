@@ -88,6 +88,7 @@ export const createCustomerSchemaClient = z
     fecha_nacimiento: z.string().date("Este campo es requerido"),
     fecha_inicio: z.string().date("Este campo es requerido"),
     fecha_fin: z.string().date("Este campo es requerido"),
+    horarioId: z.string().uuid("Seleccione un horario"),
     tipoDePlanId: z.string().uuid("Seleccione un tipo de plan"),
     descuentoId: z
       .union([z.string().uuid(), z.literal("unassigned")])
@@ -127,6 +128,7 @@ export const createCustomerSchemaServer = z
       .string()
       .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
     tipoDePlanId: z.string().uuid(),
+    horarioId: z.string().uuid(),
     descuentoId: z.string().uuid().optional(),
   })
   .refine(

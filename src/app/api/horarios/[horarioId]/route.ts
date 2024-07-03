@@ -67,9 +67,6 @@ export const PATCH = async (
     // Check if horario exists
     const horarioFound = await prismadb.horario.findUnique({
       where: { id: params.horarioId },
-      include: {
-        horarioPeriodos: true,
-      },
     })
 
     if (!horarioFound) {
@@ -126,16 +123,6 @@ export const PATCH = async (
           { status: 400 },
         )
       }
-    }
-
-    if (horarioFound.horarioPeriodos.length > 0) {
-      return NextResponse.json(
-        {
-          message:
-            "No es posible actualizar el horario ya que existen registros relacionados a este horario, cree otro horario",
-        },
-        { status: 400 },
-      )
     }
 
     // Update turno if hora_inicio is provided based on hora_inicio
