@@ -90,9 +90,9 @@ export const PATCH = async (
         genero,
         cedula,
         celular,
-        fecha_nacimiento,
-        estatura,
-        peso: peso_cliente,
+        fecha_nacimiento: fecha_nacimiento ?? null,
+        estatura: estatura ?? null,
+        peso: peso_cliente ?? null,
       },
     })
 

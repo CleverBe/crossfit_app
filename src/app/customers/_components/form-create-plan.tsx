@@ -178,7 +178,9 @@ export const FormCreate = () => {
     form.setValue("nombre_completo", customerData.nombre_completo)
     form.setValue("cedula", customerData.cedula)
     form.setValue("celular", customerData.celular)
-    form.setValue("fecha_nacimiento", customerData.fecha_nacimiento)
+    if (customerData.fecha_nacimiento) {
+      form.setValue("fecha_nacimiento", customerData.fecha_nacimiento)
+    }
     form.setValue("genero", customerData.genero)
     form.setValue("peso_cliente", customerData.peso ?? "")
     form.setValue("estatura", customerData.estatura ?? "")

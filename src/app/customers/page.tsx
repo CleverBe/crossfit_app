@@ -18,7 +18,9 @@ const Page = async () => {
     genero: customer.genero,
     celular: customer.celular,
     cedula: customer.cedula,
-    edad: calcularEdad(customer.fecha_nacimiento).toString(),
+    edad: customer.fecha_nacimiento
+      ? calcularEdad(customer.fecha_nacimiento).toString()
+      : "-",
   }))
 
   return (

@@ -9,7 +9,7 @@ export const getCustomerSchema = z.object({
   genero: z.nativeEnum(Genero),
   celular: z.string(),
   cedula: z.string().min(6).max(7),
-  fecha_nacimiento: z.string().date(),
+  fecha_nacimiento: z.string().date().nullable(),
   peso: z.string().nullable(),
   estatura: z.string().nullable(),
 })
@@ -22,7 +22,7 @@ export const getCustomerPlansSchema = z.object({
   genero: z.nativeEnum(Genero),
   celular: z.string(),
   cedula: z.string().min(6).max(7),
-  fecha_nacimiento: z.string().date(),
+  fecha_nacimiento: z.string().date().nullable(),
   peso: z.string().nullish(),
   estatura: z.string().nullish(),
   planes: z.array(
@@ -85,7 +85,9 @@ const createCustomerSchema = z.object({
 export const createCustomerSchemaClient = z
   .object({
     ...createCustomerSchema.shape,
-    fecha_nacimiento: z.string().date("Este campo es requerido"),
+    fecha_nacimiento: z
+      .union([z.string().date(), z.literal("")])
+      .transform((val) => (val === "" ? undefined : val)),
     fecha_inicio: z.string().date("Este campo es requerido"),
     fecha_fin: z.string().date("Este campo es requerido"),
     horarioId: z.string().uuid("Seleccione un horario"),
@@ -107,8 +109,9 @@ export const createCustomerSchemaClient = z
       return false
     },
     {
-      message: "La fecha de inicio no puede ser posterior a la fecha de fin",
-      path: ["fecha_inicio"],
+      message:
+        "La fecha de finalización no puede ser inferior a la fecha de inicio",
+      path: ["fecha_fin"],
     },
   )
 
@@ -120,7 +123,8 @@ export const createCustomerSchemaServer = z
     ...createCustomerSchema.shape,
     fecha_nacimiento: z
       .string()
-      .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
+      .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01")
+      .optional(),
     fecha_inicio: z
       .string()
       .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
@@ -144,8 +148,9 @@ export const createCustomerSchemaServer = z
       return false
     },
     {
-      message: "La fecha de inicio no puede ser posterior a la fecha de fin",
-      path: ["fecha_inicio"],
+      message:
+        "La fecha de finalización no puede ser inferior a la fecha de inicio",
+      path: ["fecha_fin"],
     },
   )
 
@@ -190,12 +195,14 @@ const updateCustomerSchema = z
         return true
       })
       .transform((val) => (val === "" ? undefined : val)),
+    fecha_nacimiento: z
+      .union([z.string().date(), z.literal("")])
+      .transform((val) => (val === "" ? undefined : val)),
   })
   .partial()
 
 export const updateCustomerSchemaClient = z.object({
   ...updateCustomerSchema.shape,
-  fecha_nacimiento: z.string().date("Este campo es requerido."),
 })
 
 export type updateCustomerSchemaClientInput = z.input<
@@ -210,5 +217,6 @@ export const updateCustomerSchemaServer = z.object({
   ...updateCustomerSchema.shape,
   fecha_nacimiento: z
     .string()
-    .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
+    .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01")
+    .optional(),
 })

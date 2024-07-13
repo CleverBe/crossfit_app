@@ -47,7 +47,7 @@ export const FormUpdate = ({ customer, onClose }: Props) => {
       nombre_completo: customer.nombre_completo,
       cedula: customer.cedula,
       celular: customer.celular,
-      fecha_nacimiento: customer.fecha_nacimiento,
+      fecha_nacimiento: customer.fecha_nacimiento ?? "",
       genero: customer.genero,
       peso_cliente: customer.peso ?? "",
       estatura: customer.estatura ?? "",
