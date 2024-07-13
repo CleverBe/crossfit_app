@@ -15,7 +15,7 @@ export const GET = async (req: Request) => {
     }
 
     const horarios = await prismadb.horario.findMany({
-      orderBy: { createdAt: "asc" },
+      orderBy: { hora_inicio: "asc" },
     })
 
     return NextResponse.json(horarios)
