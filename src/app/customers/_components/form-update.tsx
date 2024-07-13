@@ -166,7 +166,7 @@ export const FormUpdate = ({ customer, onClose }: Props) => {
           name="fecha_nacimiento"
           render={({ field }) => (
             <FormItem className="col-span-6">
-              <FormLabel>Fecha de nacimiento</FormLabel>
+              <FormLabel>Fecha de nacim. {"(opcional)"}</FormLabel>
               <FormControl>
                 <Input type="date" {...field} />
               </FormControl>
