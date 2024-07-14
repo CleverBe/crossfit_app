@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-actions"
-import { PlanEstado } from "@prisma/client"
 
 export type CustomerColumn = {
   id: string
@@ -11,7 +10,8 @@ export type CustomerColumn = {
   celular: string
   cedula: string
   edad: string
-  planEstado: PlanEstado
+  fecha_inicio: string
+  fecha_fin: string
 }
 
 export const columns: ColumnDef<CustomerColumn>[] = [
@@ -36,8 +36,12 @@ export const columns: ColumnDef<CustomerColumn>[] = [
     header: "Edad",
   },
   {
-    accessorKey: "planEstado",
-    header: "Plan",
+    accessorKey: "fecha_inicio",
+    header: "Fecha inicio",
+  },
+  {
+    accessorKey: "fecha_fin",
+    header: "Fecha fin",
   },
   {
     id: "actions",

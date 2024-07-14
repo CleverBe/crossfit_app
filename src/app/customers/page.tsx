@@ -6,6 +6,7 @@ import { calcularEdad } from "@/utils"
 import { DataTableSearch } from "@/components/ui/data-table-search"
 import { PlanEstado } from "@prisma/client"
 import { z } from "zod"
+import { dayjsEs } from "@/lib/dayjs"
 
 const Page = async ({
   searchParams,
@@ -65,7 +66,8 @@ const Page = async ({
       edad: customerPlan.cliente.fecha_nacimiento
         ? calcularEdad(customerPlan.cliente.fecha_nacimiento).toString()
         : "-",
-      planEstado: customerPlan.estado,
+      fecha_inicio: dayjsEs(customerPlan.fecha_inicio).format("DD/MM/YYYY"),
+      fecha_fin: dayjsEs(customerPlan.fecha_fin).format("DD/MM/YYYY"),
     }),
   )
 

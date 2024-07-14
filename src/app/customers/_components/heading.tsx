@@ -49,10 +49,6 @@ export const Heading = ({ customersLength, horarios }: Props) => {
         <h1 className="text-2xl font-bold">{`Clientes (${customersLength})`}</h1>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <Button onClick={() => modalCreate.onOpen()}>
-          <Plus className="mr h-4 w-4" />
-          Añadir nuevo
-        </Button>
         <Select
           onValueChange={(value) => {
             handleChangeFilter({
@@ -105,6 +101,10 @@ export const Heading = ({ customersLength, horarios }: Props) => {
             ))}
           </SelectContent>
         </Select>
+        <Button onClick={() => modalCreate.onOpen()}>
+          <Plus className="mr h-4 w-4" />
+          Añadir nuevo
+        </Button>
       </div>
     </div>
   )
