@@ -177,8 +177,8 @@ export const PUT = async (
         data: {
           fecha_inicio,
           fecha_fin,
-          peso_cliente,
-          estatura_cliente: estatura,
+          peso_cliente: peso_cliente ?? null,
+          estatura_cliente: estatura ?? null,
           tipoDePlanId,
           descuentoId: descuentoId ?? null,
         },
