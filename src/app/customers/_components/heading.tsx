@@ -46,7 +46,7 @@ export const Heading = ({ customersLength, horarios }: Props) => {
   return (
     <div className="flex items-center justify-between">
       <div className="p-5">
-        <h1 className="text-2xl font-bold">{`Clientes (${customersLength})`}</h1>
+        <h1 className="text-2xl font-bold">{`Planes (${customersLength})`}</h1>
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <Select
