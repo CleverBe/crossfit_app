@@ -57,10 +57,10 @@ export const Heading = ({ customersLength, horarios }: Props) => {
           onValueChange={(value) => {
             handleChangeFilter({
               key: "estado",
-              term: value !== "unassigned" ? value : null,
+              term: value,
             })
           }}
-          defaultValue={searchParams.get("estado") || "unassigned"}
+          defaultValue={searchParams.get("estado") || PlanEstado.VIGENTE}
         >
           <SelectTrigger
             className={cn(
@@ -72,7 +72,6 @@ export const Heading = ({ customersLength, horarios }: Props) => {
             <SelectValue placeholder="Vigentes" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="unassigned">Todos los estados</SelectItem>
             {Object.values(PlanEstado).map((estado) => (
               <SelectItem value={estado} key={estado}>
                 {estado}

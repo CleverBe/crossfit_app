@@ -5,6 +5,7 @@ import { Modals } from "./_components/modals"
 import { calcularEdad } from "@/utils"
 import { DataTableSearch } from "@/components/ui/data-table-search"
 import { PlanEstado } from "@prisma/client"
+import { z } from "zod"
 
 const Page = async ({
   searchParams,
@@ -17,12 +18,14 @@ const Page = async ({
   let horarioSp = searchParams?.horario
   let estadoSp = searchParams?.estado
 
-  if (estadoSp) {
-    const isValid = estadoSp in PlanEstado
+  const validateParams = z.object({
+    estadoSp: z.nativeEnum(PlanEstado),
+  })
 
-    if (!isValid) {
-      estadoSp = undefined
-    }
+  const validation = validateParams.safeParse({ estadoSp })
+
+  if (!validation.success) {
+    estadoSp = PlanEstado.VIGENTE
   }
 
   if (horarioSp) {
@@ -40,7 +43,7 @@ const Page = async ({
   const customersPlans = await prismadb.plan.findMany({
     where: {
       horarioId: horarioSp,
-      estado: estadoSp as PlanEstado | undefined,
+      estado: estadoSp as PlanEstado,
     },
     orderBy: {
       cliente: {
