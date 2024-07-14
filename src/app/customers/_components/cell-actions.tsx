@@ -14,14 +14,15 @@ import { AlertModal } from "@/components/modals/alertModal"
 import { useState } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { CustomerColumn } from "./columns"
+import { CustomerPlanColumn } from "./columns"
 import { useCustomerModalUpdate } from "../_hooks/useCustomerModal"
 import { deleteDescuentoFn } from "@/services/descuentos"
 import { useSession } from "next-auth/react"
 import { useCustomerPlansModal } from "../_hooks/useCustomerPlansModal"
+import { usePlanModalUpdate } from "../_hooks/usePlanModal"
 
 interface CellActionProps {
-  customer: CustomerColumn
+  customer: CustomerPlanColumn
 }
 
 export const CellAction = ({ customer }: CellActionProps) => {
@@ -31,6 +32,7 @@ export const CellAction = ({ customer }: CellActionProps) => {
   const user = session?.user
 
   const modalUpdateCustomer = useCustomerModalUpdate()
+  const modalUpdatePlan = usePlanModalUpdate()
   const modalCustomerPlans = useCustomerPlansModal()
 
   const [open, setOpen] = useState(false)
@@ -40,10 +42,10 @@ export const CellAction = ({ customer }: CellActionProps) => {
   })
 
   const onDelete = async () => {
-    mutate(customer.id, {
+    mutate(customer.planId, {
       onSuccess: () => {
         queryClient.removeQueries({
-          queryKey: ["customers", customer.id],
+          queryKey: ["customers", customer.planId],
           exact: true,
         })
         queryClient.invalidateQueries({ queryKey: ["customers"] })
@@ -76,7 +78,7 @@ export const CellAction = ({ customer }: CellActionProps) => {
           <DropdownMenuLabel>Acciones</DropdownMenuLabel>
           <DropdownMenuItem
             onClick={() => {
-              modalCustomerPlans.onOpen(customer.id)
+              modalCustomerPlans.onOpen(customer.clienteId)
             }}
           >
             <NotepadText className="mr-2 h-4 w-4" />
@@ -84,11 +86,19 @@ export const CellAction = ({ customer }: CellActionProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              modalUpdateCustomer.onOpen(customer.id)
+              modalUpdateCustomer.onOpen(customer.clienteId)
             }}
           >
             <Contact className="mr-2 h-4 w-4" />
             Actualizar cliente
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              modalUpdatePlan.onOpen(customer.planId)
+            }}
+          >
+            <Contact className="mr-2 h-4 w-4" />
+            Actualizar plan
           </DropdownMenuItem>
           {user?.role === "ADMIN" && (
             <DropdownMenuItem

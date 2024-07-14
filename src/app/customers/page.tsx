@@ -1,5 +1,5 @@
 import prismadb from "@/lib/prismadb"
-import { CustomerColumn, columns } from "./_components/columns"
+import { CustomerPlanColumn, columns } from "./_components/columns"
 import { Heading } from "./_components/heading"
 import { Modals } from "./_components/modals"
 import { calcularEdad } from "@/utils"
@@ -56,9 +56,10 @@ const Page = async ({
     },
   })
 
-  const formattedCustomers: CustomerColumn[] = customersPlans.map(
+  const formattedCustomers: CustomerPlanColumn[] = customersPlans.map(
     (customerPlan) => ({
-      id: customerPlan.cliente.id,
+      planId: customerPlan.id,
+      clienteId: customerPlan.cliente.id,
       nombre: customerPlan.cliente.nombre_completo,
       genero: customerPlan.cliente.genero,
       celular: customerPlan.cliente.celular,

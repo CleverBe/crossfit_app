@@ -3,8 +3,9 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-actions"
 
-export type CustomerColumn = {
-  id: string
+export type CustomerPlanColumn = {
+  clienteId: string
+  planId: string
   nombre: string
   celular: string
   cedula: string
@@ -13,7 +14,7 @@ export type CustomerColumn = {
   fecha_fin: string
 }
 
-export const columns: ColumnDef<CustomerColumn>[] = [
+export const columns: ColumnDef<CustomerPlanColumn>[] = [
   {
     accessorKey: "nombre",
     header: "Nombre",

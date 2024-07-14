@@ -1,5 +1,3 @@
-"use client"
-
 import {
   Dialog,
   DialogContent,
@@ -16,7 +14,7 @@ interface Props {
   onClose: () => void
 }
 
-export function ModalUpdate({ id, isOpen, onClose }: Props) {
+export function ModalUpdateCustomer({ id, isOpen, onClose }: Props) {
   const { data, isFetching, isError } = useCustomer(id)
 
   if (isError && !isFetching) {

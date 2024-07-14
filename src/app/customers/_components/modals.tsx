@@ -3,9 +3,9 @@
 import { useCustomerModalUpdate } from "../_hooks/useCustomerModal"
 import { useCustomerPlansModal } from "../_hooks/useCustomerPlansModal"
 import { usePlanModalUpdate } from "../_hooks/usePlanModal"
-import { ModalCreateCustomer } from "./modal-create-customer"
-import { ModalCustomerPlans } from "./modal-customer-plans"
-import { ModalUpdate } from "./modal-update"
+import { ModalCreateCustomer } from "./modalCreateCustomerPlan"
+import { ModalCustomerPlans } from "./modalCustomerPlans"
+import { ModalUpdateCustomer } from "./modalUpdateCustomer"
 import { ModalUpdatePlan } from "./modalUpdatePlan"
 
 export const Modals = () => {
@@ -17,7 +17,7 @@ export const Modals = () => {
     <>
       <ModalCreateCustomer />
       {modalUpdate.id && (
-        <ModalUpdate
+        <ModalUpdateCustomer
           id={modalUpdate.id}
           isOpen={modalUpdate.isOpen}
           onClose={modalUpdate.onClose}

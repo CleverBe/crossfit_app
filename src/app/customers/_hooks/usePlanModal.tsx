@@ -6,6 +6,7 @@ type ModalUpdateType = {
   onOpen: (id?: string) => void
   onClose: () => void
 }
+
 export const usePlanModalUpdate = create<ModalUpdateType>((set) => ({
   id: null,
   isOpen: false,
