@@ -38,6 +38,12 @@ export const FormCard = () => {
   })
 
   const onSubmit = (data: CreateAsistenciaInputClient) => {
+    if (data.codigo === "") {
+      toast.info("Por favor ingrese un código.")
+
+      return
+    }
+
     mutate(data, {
       onSuccess: () => {
         form.reset()
@@ -64,7 +70,6 @@ export const FormCard = () => {
     <div className="flex h-[calc(100vh-210px)] items-center justify-center">
       <Card className="w-96">
         <CardHeader>
-          {/* <CardTitle>Sign in to your account</CardTitle> */}
           <p>Por favor ingrese su código para registrar su asistencia</p>
         </CardHeader>
         <CardContent>
