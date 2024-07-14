@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
+import { PlanEstado } from "@prisma/client"
 
 export const Header = () => {
   const [showNav, setShowNav] = useState(false)
@@ -36,7 +37,7 @@ export const Header = () => {
     { label: "Horarios", href: "/horarios" },
     { label: "Tipos de planes", href: "/tipoDePlanes" },
     { label: "Descuentos", href: "/descuentos" },
-    { label: "Clientes", href: "/customers" },
+    { label: "Clientes", href: `/customers?estado=${PlanEstado.VIGENTE}` },
     { label: "Asistencias", href: "/asistencias" },
   ]
 

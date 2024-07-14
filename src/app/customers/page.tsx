@@ -11,9 +11,19 @@ const Page = async ({
 }: {
   searchParams?: {
     horario?: string
+    estado?: string
   }
 }) => {
   let horarioSp = searchParams?.horario
+  let estadoSp = searchParams?.estado
+
+  if (estadoSp) {
+    const isValid = estadoSp in PlanEstado
+
+    if (!isValid) {
+      estadoSp = undefined
+    }
+  }
 
   if (horarioSp) {
     const horarioFound = await prismadb.horario.findUnique({
@@ -30,7 +40,7 @@ const Page = async ({
   const customersPlans = await prismadb.plan.findMany({
     where: {
       horarioId: horarioSp,
-      estado: PlanEstado.VIGENTE,
+      estado: estadoSp as PlanEstado | undefined,
     },
     orderBy: {
       cliente: {

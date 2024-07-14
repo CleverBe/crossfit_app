@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Horario } from "@prisma/client"
+import { Horario, PlanEstado } from "@prisma/client"
 import { cn } from "@/lib/utils"
 
 interface Props {
@@ -53,6 +53,33 @@ export const Heading = ({ customersLength, horarios }: Props) => {
           <Plus className="mr h-4 w-4" />
           Añadir nuevo
         </Button>
+        <Select
+          onValueChange={(value) => {
+            handleChangeFilter({
+              key: "estado",
+              term: value !== "unassigned" ? value : null,
+            })
+          }}
+          defaultValue={searchParams.get("estado") || "unassigned"}
+        >
+          <SelectTrigger
+            className={cn(
+              "w-[200px]",
+              searchParams.get("estado") !== PlanEstado.VIGENTE &&
+                "border-red-300",
+            )}
+          >
+            <SelectValue placeholder="Vigentes" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="unassigned">Todos los estados</SelectItem>
+            {Object.values(PlanEstado).map((estado) => (
+              <SelectItem value={estado} key={estado}>
+                {estado}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Select
           onValueChange={(value) => {
             handleChangeFilter({
