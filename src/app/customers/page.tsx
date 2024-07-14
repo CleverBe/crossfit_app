@@ -54,7 +54,7 @@ const Page = async ({
 
   const formattedCustomers: CustomerColumn[] = customersPlans.map(
     (customerPlan) => ({
-      id: customerPlan.id,
+      id: customerPlan.cliente.id,
       nombre: customerPlan.cliente.nombre_completo,
       genero: customerPlan.cliente.genero,
       celular: customerPlan.cliente.celular,
