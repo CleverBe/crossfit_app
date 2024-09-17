@@ -48,6 +48,10 @@ export const createTipoDePlanSchemaServer = z.object({
   dias: z.array(z.nativeEnum(Dias)).min(1),
 })
 
+export type CreateTipoDePlanInputServer = z.input<
+  typeof createTipoDePlanSchemaServer
+>
+
 export const updateTipoDePlanSchemaClient = z.object({
   ...createTipoDePlanSchemaClient.shape,
 })

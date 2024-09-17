@@ -10,6 +10,12 @@ import { dayjsEs } from "@/lib/dayjs"
 import { AsistenciasList } from "./asistencias/asistenciasList"
 import { cn } from "@/lib/utils"
 import { PlanEstado } from "@prisma/client"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 interface Props {
   id: string
@@ -26,7 +32,7 @@ export function ModalCustomerPlans({ id, isOpen, onClose }: Props) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[calc(100vh-210px)] w-11/12 overflow-auto sm:max-w-lg">
+      <DialogContent className="max-h-[calc(100vh-200px)] w-11/12 overflow-auto sm:max-w-2xl">
         <DialogHeader>
           {data && (
             <DialogTitle>
@@ -35,7 +41,28 @@ export function ModalCustomerPlans({ id, isOpen, onClose }: Props) {
           )}
         </DialogHeader>
         {!data || isFetching ? (
-          <>Cargando...</>
+          <div className="flex items-center justify-center p-5">
+            <svg
+              className="h-5 w-5 animate-spin text-primary"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          </div>
         ) : (
           <ul className="space-y-4">
             {data.planes.map((plan) => (
@@ -50,34 +77,46 @@ export function ModalCustomerPlans({ id, isOpen, onClose }: Props) {
                 >
                   {plan.estado}
                 </h1>
+                <div className="">
+                  <p className="text-base">
+                    {`Duración: `}
+                    <span className="font-medium">{`${dayjsEs(plan.fecha_inicio).format("DD/MM/YYYY")}`}</span>
+                    {" - "}
+                    <span className="font-medium">{`${dayjsEs(plan.fecha_fin).format("DD/MM/YYYY")}`}</span>
+                  </p>
+                </div>
                 <p className="text-base">
-                  Inicio:{" "}
-                  <span className="font-medium">{`${dayjsEs(plan.fecha_inicio).format("DD/MM/YYYY")}`}</span>
-                </p>
-                <p className="text-base">
-                  Fin:{" "}
-                  <span className="font-medium">{`${dayjsEs(plan.fecha_fin).format("DD/MM/YYYY")}`}</span>
+                  Instructor:{" "}
+                  <span className="font-medium">
+                    {`${plan.instructor.nombre} ${plan.instructor.apellido}`}
+                  </span>
                 </p>
                 <p className="text-base">
                   Peso:{" "}
                   <span className="font-medium">
                     {plan.peso_cliente ?? "-"}
-                  </span>
+                  </span>{" "}
+                  kg
                 </p>
                 <p className="text-base">
                   Estatura:{" "}
                   <span className="font-medium">
                     {plan.estatura_cliente ?? "-"}
-                  </span>
+                  </span>{" "}
+                  cm
                 </p>
-                <div className="mt-2 rounded-sm border border-gray-200 p-1">
-                  <h2 className="text-center text-base font-semibold">
-                    Asistencias
-                  </h2>
-                  <ul className="text-center">
-                    <AsistenciasList asistencias={plan.asistencias} />
-                  </ul>
-                </div>
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>Asistencias</AccordionTrigger>
+                    <AccordionContent>
+                      <div className="rounded-sm border border-gray-200 p-1">
+                        <ul className="text-center">
+                          <AsistenciasList asistencias={plan.asistencias} />
+                        </ul>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </li>
             ))}
           </ul>

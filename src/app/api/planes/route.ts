@@ -66,7 +66,25 @@ export const POST = async (req: Request) => {
       tipoDePago,
       tipoDePlanId,
       horarioId,
+      instructorId,
       descuentoId,
+      back_squat,
+      bench_press,
+      press_strit,
+      clean,
+      front_squat,
+      push_press,
+      thuster,
+      dead_lift,
+      snatch,
+      squat,
+      sit_ups,
+      pushups,
+      su,
+      burpees,
+      wall_sit,
+      plank,
+      fourHundredMts,
     } = parseResult.data
 
     const horario = await prismadb.horario.findUnique({
@@ -78,6 +96,19 @@ export const POST = async (req: Request) => {
     if (!horario) {
       return NextResponse.json(
         { message: "Horario not found" },
+        { status: 404 },
+      )
+    }
+
+    const instructor = await prismadb.instructor.findUnique({
+      where: {
+        id: instructorId,
+      },
+    })
+
+    if (!instructor) {
+      return NextResponse.json(
+        { message: "Instructor not found" },
         { status: 404 },
       )
     }
@@ -185,6 +216,37 @@ export const POST = async (req: Request) => {
         },
       })
 
+      const estadisticasCliente = await tx.estadisticas.create({
+        data: {
+          back_squat: back_squat || "",
+          bench_press: bench_press || "",
+          press_strit: press_strit || "",
+          clean: clean || "",
+          front_squat: front_squat || "",
+          push_press: push_press || "",
+          thuster: thuster || "",
+          dead_lift: dead_lift || "",
+          snatch: snatch || "",
+          squat: squat || "",
+          sit_ups: sit_ups || "",
+          pushups: pushups || "",
+          su: su || "",
+          burpees: burpees || "",
+          wall_sit:
+            wall_sit && wall_sit.minutes && wall_sit.seconds
+              ? `${wall_sit.minutes}:${wall_sit.seconds}`
+              : "",
+          plank:
+            plank && plank.minutes && plank.seconds
+              ? `${plank.minutes}:${plank.seconds}`
+              : "",
+          fourHundredMts:
+            fourHundredMts && fourHundredMts.minutes && fourHundredMts.seconds
+              ? `${fourHundredMts.minutes}:${fourHundredMts.seconds}`
+              : "",
+        },
+      })
+
       const plan = await tx.plan.create({
         data: {
           clienteId: customer.id,
@@ -195,8 +257,10 @@ export const POST = async (req: Request) => {
           peso_cliente,
           estatura_cliente: estatura,
           horarioId: horario.id,
+          instructorId: instructor.id,
           descuentoId: descuento?.id,
           pagoId: pagoCliente.id,
+          estadisticasId: estadisticasCliente.id,
         },
         include: {
           tipoDePlan: true,

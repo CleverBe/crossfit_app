@@ -38,6 +38,7 @@ import { useRef, useState } from "react"
 import { useOnClickOutside } from "usehooks-ts"
 import { useCustomerModalCreate } from "../_hooks/useCustomerModal"
 import { getHorariosFn } from "@/services/horarios"
+import { getInstructoresFn } from "@/services/instructores"
 
 export const FormCreate = () => {
   const [suggestions, setSuggestions] = useState<string[]>([])
@@ -47,7 +48,7 @@ export const FormCreate = () => {
   const queryClient = useQueryClient()
   const modalCreate = useCustomerModalCreate()
 
-  const { data: descuentos } = useQuery({
+  const { data: descuentos = [] } = useQuery({
     queryKey: ["descuentos", { estado: "ACTIVO" }],
     queryFn: () => getDescuentosFn({ estado: "ACTIVO" }),
   })
@@ -57,12 +58,17 @@ export const FormCreate = () => {
     queryFn: () => getHorariosFn(),
   })
 
-  const { data: tiposDePlanes } = useQuery({
+  const { data: intructores = [] } = useQuery({
+    queryKey: ["intructores"],
+    queryFn: () => getInstructoresFn({}),
+  })
+
+  const { data: tiposDePlanes = [] } = useQuery({
     queryKey: ["tiposDePlanes"],
     queryFn: getTiposDePlanesFn,
   })
 
-  const { data: customers } = useQuery({
+  const { data: customers = [] } = useQuery({
     queryKey: ["customers"],
     queryFn: getCustomersFn,
   })
@@ -81,6 +87,7 @@ export const FormCreate = () => {
       cedula: "",
       tipoDePago: TipoDePago.EFECTIVO,
       horarioId: "unassigned",
+      instructorId: "unassigned",
       tipoDePlanId: "unassigned",
       descuentoId: "unassigned",
     },
@@ -124,11 +131,11 @@ export const FormCreate = () => {
   useOnClickOutside(ref, handleClickOutside)
 
   const costoDelPlan =
-    tiposDePlanes?.find((item) => item.id === form.watch("tipoDePlanId"))
+    tiposDePlanes.find((item) => item.id === form.watch("tipoDePlanId"))
       ?.costo ?? 0
 
   const descuentoPorcentaje =
-    descuentos?.find((item) => item.id === form.watch("descuentoId"))
+    descuentos.find((item) => item.id === form.watch("descuentoId"))
       ?.porcentaje ?? 0
 
   const errorOnCustomerTab = [
@@ -147,8 +154,7 @@ export const FormCreate = () => {
   ].some((val) => val !== undefined)
 
   const handleSuggestions = (value: string) => {
-    const customersNames =
-      customers?.map((customer) => customer.nombre_completo) ?? []
+    const customersNames = customers.map((customer) => customer.nombre_completo)
 
     if (value.length > 0) {
       const filteredSuggestions = customersNames.filter((suggestion) => {
@@ -169,7 +175,7 @@ export const FormCreate = () => {
   const handleClickOnSuggestion = (name: string) => {
     setSuggestions([])
 
-    const customerData = customers?.find(
+    const customerData = customers.find(
       (customer) => customer.nombre_completo === name,
     )
 
@@ -189,7 +195,7 @@ export const FormCreate = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Tabs defaultValue="customer" className="w-[400px]">
+        <Tabs defaultValue="customer" className="w-[500px]">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger
               value="customer"
@@ -262,7 +268,7 @@ export const FormCreate = () => {
                 name="cedula"
                 render={({ field }) => (
                   <FormItem className="col-span-6">
-                    <FormLabel>Cedula</FormLabel>
+                    <FormLabel>Cedula o carnet</FormLabel>
                     <FormControl>
                       <Input placeholder="" {...field} />
                     </FormControl>
@@ -385,6 +391,41 @@ export const FormCreate = () => {
                         {horarios?.map((horario) => (
                           <SelectItem key={horario.id} value={horario.id}>
                             {`${horario.hora_inicio} - ${horario.hora_fin}`}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="instructorId"
+                render={({ field }) => (
+                  <FormItem className="col-span-12">
+                    <FormLabel>Instructor</FormLabel>
+                    <Select
+                      disabled={isPending}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            defaultValue={field.value}
+                            placeholder="Seleccione un instructor"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="unassigned">
+                          Seleccione un instructor
+                        </SelectItem>
+                        {intructores?.map((instructor) => (
+                          <SelectItem key={instructor.id} value={instructor.id}>
+                            {`${instructor.nombre} ${instructor.apellido}`}
                           </SelectItem>
                         ))}
                       </SelectContent>

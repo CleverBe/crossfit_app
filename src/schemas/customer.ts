@@ -2,6 +2,9 @@ import { checkTwoDates } from "@/utils"
 import { Genero, PlanEstado, TipoDePago } from "@prisma/client"
 import { z } from "zod"
 import { getAsistenciaSchema } from "./asistencias"
+import { isPositiveNumber } from "./reusable"
+import { updatePlanStatsSchema } from "./stats"
+import { getInstructorSchema } from "./instructores"
 
 export const getCustomerSchema = z.object({
   id: z.string(),
@@ -35,6 +38,7 @@ export const getCustomerPlansSchema = z.object({
       estatura_cliente: z.string().nullable(),
       estado: z.nativeEnum(PlanEstado),
       asistencias: z.array(getAsistenciaSchema),
+      instructor: getInstructorSchema,
     }),
   ),
 })
@@ -53,14 +57,7 @@ const createCustomerSchema = z.object({
     .refine((val) => {
       if (val === "" || val === undefined) return true
 
-      const valNum = z.coerce.number().positive({ message: "Valor invalido" })
-      const validationNum = valNum.safeParse(val)
-
-      if (!validationNum.success) {
-        return false
-      }
-
-      return true
+      return isPositiveNumber(val)
     })
     .transform((val) => (val === "" ? undefined : val)),
   estatura: z
@@ -69,16 +66,10 @@ const createCustomerSchema = z.object({
     .refine((val) => {
       if (val === "" || val === undefined) return true
 
-      const valNum = z.coerce.number().positive({ message: "Valor invalido" })
-      const validationNum = valNum.safeParse(val)
-
-      if (!validationNum.success) {
-        return false
-      }
-
-      return true
+      return isPositiveNumber(val)
     })
     .transform((val) => (val === "" ? undefined : val)),
+  ...updatePlanStatsSchema.shape,
   tipoDePago: z.nativeEnum(TipoDePago),
 })
 
@@ -91,6 +82,7 @@ export const createCustomerSchemaClient = z
     fecha_inicio: z.string().date("Este campo es requerido"),
     fecha_fin: z.string().date("Este campo es requerido"),
     horarioId: z.string().uuid("Seleccione un horario"),
+    instructorId: z.string().uuid("Seleccione un instructor"),
     tipoDePlanId: z.string().uuid("Seleccione un tipo de plan"),
     descuentoId: z
       .union([z.string().uuid(), z.literal("unassigned")])
@@ -133,6 +125,7 @@ export const createCustomerSchemaServer = z
       .date("Formato de fecha incorrecto. Ejemplo: 2000-01-01"),
     tipoDePlanId: z.string().uuid(),
     horarioId: z.string().uuid(),
+    instructorId: z.string().uuid(),
     descuentoId: z.string().uuid().optional(),
   })
   .refine(

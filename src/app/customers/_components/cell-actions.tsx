@@ -20,6 +20,8 @@ import { deleteDescuentoFn } from "@/services/descuentos"
 import { useSession } from "next-auth/react"
 import { useCustomerPlansModal } from "../_hooks/useCustomerPlansModal"
 import { usePlanModalUpdate } from "../_hooks/usePlanModal"
+import { useGetCustomerPlanStats } from "../_hooks/useGetCustomerPlanStats"
+import { useCustomerStatsModal } from "../_hooks/useCustomerStatsModal"
 
 interface CellActionProps {
   customer: CustomerPlanColumn
@@ -34,6 +36,7 @@ export const CellAction = ({ customer }: CellActionProps) => {
   const modalUpdateCustomer = useCustomerModalUpdate()
   const modalUpdatePlan = usePlanModalUpdate()
   const modalCustomerPlans = useCustomerPlansModal()
+  const modalCustomerPlanStats = useCustomerStatsModal()
 
   const [open, setOpen] = useState(false)
 
@@ -90,7 +93,7 @@ export const CellAction = ({ customer }: CellActionProps) => {
             }}
           >
             <Contact className="mr-2 h-4 w-4" />
-            Actualizar cliente
+            Información del cliente
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
@@ -98,7 +101,15 @@ export const CellAction = ({ customer }: CellActionProps) => {
             }}
           >
             <Contact className="mr-2 h-4 w-4" />
-            Actualizar plan
+            Información del plan
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              modalCustomerPlanStats.onOpen(customer.planId)
+            }}
+          >
+            <Contact className="mr-2 h-4 w-4" />
+            Estadísticas / Marcas del plan
           </DropdownMenuItem>
           {user?.role === "ADMIN" && (
             <DropdownMenuItem

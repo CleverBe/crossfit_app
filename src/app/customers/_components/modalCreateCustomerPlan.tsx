@@ -14,7 +14,7 @@ export function ModalCreateCustomer() {
 
   return (
     <Dialog open={modalCreate.isOpen} onOpenChange={modalCreate.onClose}>
-      <DialogContent className="max-h-[calc(100vh-210px)] w-11/12 overflow-auto sm:w-[500px]">
+      <DialogContent className="max-h-[calc(100vh-200px)] w-11/12 overflow-auto sm:max-w-xl">
         <DialogHeader className="flex items-center justify-center">
           <DialogTitle>Registrar cliente</DialogTitle>
         </DialogHeader>

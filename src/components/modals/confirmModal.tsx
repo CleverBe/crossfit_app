@@ -29,7 +29,7 @@ export const ConfirmModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onChange}>
-      <DialogContent className="max-h-[calc(100vh-210px)] w-11/12 overflow-auto rounded-lg sm:max-w-md">
+      <DialogContent className="max-h-[calc(100vh-200px)] w-11/12 overflow-auto rounded-lg sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

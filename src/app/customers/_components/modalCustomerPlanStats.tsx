@@ -5,7 +5,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { toast } from "sonner"
-import { FormUpdatePlan } from "./formUpdatePlan"
+import { FormUpdateStats } from "./stats/FormUpdateStats"
 import { usePlan } from "../_hooks/usePlan"
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
   onClose: () => void
 }
 
-export function ModalUpdatePlan({ id, isOpen, onClose }: Props) {
+export function ModalCustomerPlanStats({ id, isOpen, onClose }: Props) {
   const { data, isFetching, isError } = usePlan(id)
 
   if (isError && !isFetching) {
@@ -23,14 +23,16 @@ export function ModalUpdatePlan({ id, isOpen, onClose }: Props) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-h-[calc(100vh-200px)] w-11/12 overflow-auto sm:max-w-lg">
+      <DialogContent className="max-h-[calc(100vh-200px)] w-11/12 overflow-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Editar plan</DialogTitle>
+          <DialogTitle>
+            Editar estadisticas / marcas de {data?.cliente.nombre_completo}
+          </DialogTitle>
         </DialogHeader>
         {!data || isFetching ? (
-          <FormUpdatePlan.Skeleton />
+          <FormUpdateStats.Skeleton />
         ) : (
-          <FormUpdatePlan plan={data} onClose={onClose} />
+          <FormUpdateStats plan={data} onClose={onClose} />
         )}
       </DialogContent>
     </Dialog>

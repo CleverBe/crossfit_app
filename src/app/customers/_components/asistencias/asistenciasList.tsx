@@ -17,7 +17,7 @@ interface Props {
 
 export const AsistenciasList = ({ asistencias }: Props) => {
   return (
-    <div className="max-h-96 w-full overflow-y-auto">
+    <div className="max-h-calc(100vh-300px) w-full overflow-y-auto">
       <Table>
         <TableHeader>
           <TableRow>
@@ -33,7 +33,7 @@ export const AsistenciasList = ({ asistencias }: Props) => {
           ) : (
             <TableRow>
               <TableCell colSpan={3} className="h-12 p-1 text-center">
-                Sin resultados.
+                Sin asistencias.
               </TableCell>
             </TableRow>
           )}

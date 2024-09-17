@@ -49,6 +49,19 @@ model Usuario {
   updatedAt DateTime @updatedAt
 }
 
+model Horario {
+  id          String   @id @default(uuid())
+  hora_inicio String
+  hora_fin    String
+  turno       Turno
+  estado      Estado   @default(ACTIVO)
+  planes      Plan[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([hora_inicio, hora_fin])
+}
+
 model Instructor {
   id        String   @id @default(uuid())
   nombre    String
@@ -59,32 +72,22 @@ model Instructor {
   estado    Estado   @default(ACTIVO)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  planes    Plan[]
 }
 
-model Horario {
-  id          String   @id @default(uuid())
-  hora_inicio String
-  hora_fin    String
-  turno       Turno
-  estado      Estado   @default(ACTIVO)
-  planes      Plan[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
+// enum EstadoContrato {
+//   ACTIVO
+//   FINALIZADO
+// }
 
-enum EstadoContrato {
-  ACTIVO
-  FINALIZADO
-}
-
-model ContratoInstructor {
-  id                 String         @id @default(uuid())
-  fecha_inicio       String
-  fecha_finalizacion String
-  estado             EstadoContrato @default(ACTIVO)
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-}
+// model ContratoInstructor {
+//   id                 String         @id @default(uuid())
+//   fecha_inicio       String
+//   fecha_finalizacion String
+//   estado             EstadoContrato @default(ACTIVO)
+//   createdAt          DateTime       @default(now())
+//   updatedAt          DateTime       @updatedAt
+// }
 
 enum Dias {
   LUNES
@@ -157,8 +160,37 @@ model Plan {
   descuento         Descuento?    @relation(fields: [descuentoId], references: [id], onDelete: Cascade)
   horario           Horario       @relation(fields: [horarioId], references: [id])
   horarioId         String
+  instructor        Instructor    @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  instructorId      String
+  estadisticasId    String        @unique // 1 to 1
+  estadisticas      Estadisticas  @relation(fields: [estadisticasId], references: [id], onDelete: Cascade)
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
+}
+
+model Estadisticas {
+  id             String   @id @default(uuid())
+  back_squat     String?
+  bench_press    String?
+  press_strit    String?
+  clean          String?
+  front_squat    String?
+  push_press     String?
+  thuster        String?
+  dead_lift      String?
+  snatch         String?
+  squat          String?
+  sit_ups        String?
+  pushups        String?
+  su             String?
+  burpees        String?
+  wall_sit       String?
+  plank          String?
+  fourHundredMts String?
+  plan           Plan?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  planId         String?
 }
 
 model Asistencias {

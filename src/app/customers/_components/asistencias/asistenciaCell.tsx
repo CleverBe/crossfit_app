@@ -44,6 +44,10 @@ export const AsistenciaCell = ({ asistencia }: Props) => {
     })
   }
 
+  const asistenciaDate = dayjsEs(asistencia.fecha).format(
+    "dddd D [de] MMMM [de] YYYY",
+  )
+
   return (
     <>
       <AlertModal
@@ -54,7 +58,7 @@ export const AsistenciaCell = ({ asistencia }: Props) => {
       />
       <TableRow key={asistencia.id}>
         <TableCell className="p-1">
-          {dayjsEs(asistencia.fecha).format("dddd D [de] MMMM [de] YYYY")}
+          {asistenciaDate.charAt(0).toUpperCase() + asistenciaDate.slice(1)}
         </TableCell>
         <TableCell className="p-1">
           {dayjsEs(asistencia.fecha).format("H:mm A")}

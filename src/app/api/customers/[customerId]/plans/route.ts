@@ -32,6 +32,7 @@ export const GET = async (
       },
       include: {
         asistencias: true,
+        instructor: true,
       },
       orderBy: {
         createdAt: "desc",

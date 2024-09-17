@@ -5,6 +5,7 @@ import { getDescuentoSchema } from "./descuentos"
 import { checkTwoDates } from "@/utils"
 import { getCustomerSchema } from "./customer"
 import { getAsistenciaSchema } from "./asistencias"
+import { getPlanStatsSchema } from "./stats"
 
 export const getPlanSchema = z.object({
   id: z.string(),
@@ -24,6 +25,7 @@ export const getPlanSchema = z.object({
     monto: z.string(),
   }),
   asistencias: z.array(getAsistenciaSchema),
+  estadisticas: getPlanStatsSchema,
 })
 
 export const getPlansSchema = z

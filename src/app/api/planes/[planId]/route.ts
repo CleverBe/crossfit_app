@@ -27,6 +27,7 @@ export const GET = async (
         pago: true,
         asistencias: true,
         horario: true,
+        estadisticas: true,
       },
     })
 
@@ -68,11 +69,11 @@ export const PUT = async (
     const {
       fecha_inicio,
       fecha_fin,
-      peso_cliente,
-      estatura,
       tipoDePago,
       tipoDePlanId,
       descuentoId,
+      estatura,
+      peso_cliente,
     } = parseResult.data
 
     const planFound = await prismadb.plan.findUnique({

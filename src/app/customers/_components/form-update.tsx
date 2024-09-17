@@ -1,5 +1,3 @@
-"use client"
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -108,7 +106,7 @@ export const FormUpdate = ({ customer, onClose }: Props) => {
           name="cedula"
           render={({ field }) => (
             <FormItem className="col-span-6">
-              <FormLabel>Cedula</FormLabel>
+              <FormLabel>Cedula o carnet</FormLabel>
               <FormControl>
                 <Input placeholder="" {...field} />
               </FormControl>

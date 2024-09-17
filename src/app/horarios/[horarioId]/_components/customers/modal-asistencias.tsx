@@ -26,7 +26,7 @@ export function ModalAsistenciasList({ planId, isOpen, onClose }: Props) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-11/12 overflow-auto sm:max-w-lg">
+      <DialogContent className="w-11/12 overflow-auto sm:max-w-2xl">
         <DialogHeader>
           {!data || isFetching ? (
             <Skeleton className="h-5 w-3/4 bg-neutral-200" />
